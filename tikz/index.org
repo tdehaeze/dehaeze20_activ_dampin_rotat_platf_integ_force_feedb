@@ -1,0 +1,27 @@
+#+TITLE: Tikz Figures
+:DRAWER:
+#+HTML_LINK_HOME: ../index.html
+#+HTML_LINK_UP: ../index.html
+
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="../css/htmlize.css"/>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="../css/readtheorg.css"/>
+#+HTML_HEAD: <script src="../js/jquery.min.js"></script>
+#+HTML_HEAD: <script src="../js/bootstrap.min.js"></script>
+#+HTML_HEAD: <script src="../js/jquery.stickytableheaders.min.js"></script>
+#+HTML_HEAD: <script src="../js/readtheorg.js"></script>
+
+#+PROPERTY: header-args:latex  :headers '("\\usepackage{tikz}" "\\usepackage{import}" "\\import{/home/thomas/Cloud/thesis/papers/dehaeze20_contr_stewa_platf/tikz}{config.tex}")
+#+PROPERTY: header-args:latex+ :imagemagick t :fit yes
+#+PROPERTY: header-args:latex+ :iminoptions -scale 100% -density 150
+#+PROPERTY: header-args:latex+ :imoutoptions -quality 100
+#+PROPERTY: header-args:latex+ :results raw replace :buffer no
+#+PROPERTY: header-args:latex+ :eval no-export
+#+PROPERTY: header-args:latex+ :exports both
+#+PROPERTY: header-args:latex+ :mkdirp yes
+#+PROPERTY: header-args:latex+ :noweb yes
+#+PROPERTY: header-args:latex+ :output-dir figs
+#+PROPERTY: header-args:latex+ :post pdf2svg(file=*this*, ext="png")
+:END:
+
+Configuration file is accessible [[file:config.org][here]].
+

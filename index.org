@@ -1,0 +1,29 @@
+#+TITLE: Vibration Control of a Rotating Stewart Platform
+:DRAWER:
+#+OPTIONS: toc:nil
+#+OPTIONS: html-postamble:nil
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/htmlize.css"/>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/readtheorg.css"/>
+#+HTML_HEAD: <script src="js/jquery.min.js"></script>
+#+HTML_HEAD: <script src="js/bootstrap.min.js"></script>
+#+HTML_HEAD: <script src="js/jquery.stickytableheaders.min.js"></script>
+#+HTML_HEAD: <script src="js/readtheorg.js"></script>
+:END:
+
+* Paper
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+The PDF version of the paper is accessible [[file:paper/paper.pdf][here]].
+
+* Matlab Scripts
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+The Matlab scripts that permits to obtain all the results presented in the paper are accessible [[file:matlab/index.org][here]].
+
+* Tikz Figures
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+All the figures in the paper are generated using [[https://sourceforge.net/projects/pgf/][TikZ]]. The code snippets that was used to generate the figures are accessible [[file:tikz/index.org][here]].

@@ -1,0 +1,69 @@
+#+TITLE: Vibration control of a rotating Stewart platform
+:DRAWER:
+#+LATEX_CLASS: ISMA_USD2020
+#+OPTIONS: toc:nil
+#+STARTUP: overview
+
+#+DATE:
+#+AUTHOR:
+
+#+LATEX_HEADER_EXTRA: \author[1,3] {T. Dehaeze}
+#+LATEX_HEADER_EXTRA: \author[1,2] {C. Collette}
+
+#+LATEX_HEADER_EXTRA: \affil[1] {Precision Mechatronics Laboratory\NewLineAffil University of Liege, Belgium \NewAffil}
+#+LATEX_HEADER_EXTRA: \affil[2] {BEAMS Department\NewLineAffil Free University of Brussels, Belgium \NewAffil}
+#+LATEX_HEADER_EXTRA: \affil[3] {European Synchrotron Radiation Facility \NewLineAffil Grenoble, France e-mail: \textbf{thomas.dehaeze@esrf.fr}}
+
+#+LATEX_HEADER: \usepackage{amsmath,amssymb,amsfonts, cases}
+#+LATEX_HEADER: \usepackage{algorithmic, graphicx, textcomp}
+#+LATEX_HEADER: \usepackage{xcolor, import, hyperref}
+#+LATEX_HEADER: \usepackage[USenglish]{babel}
+
+#+LATEX_HEADER: \setcounter{footnote}{1}
+#+LATEX_HEADER: \input{config.tex}
+
+\bibliographystyle{IEEEtran}
+:END:
+
+* LaTeX Config                                                     :noexport:
+#+begin_src latex :tangle config.tex
+
+#+end_src
+
+* Build                                                            :noexport:
+#+NAME: startblock
+#+BEGIN_SRC emacs-lisp :results none
+  (add-to-list 'org-latex-classes
+               '("ISMA_USD2020"
+                 "\\documentclass{ISMA_USD2020}"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
+               )
+#+END_SRC
+
+* Abstract                                                           :ignore:
+#+BEGIN_EXPORT latex
+\abstract{
+    Abstract text to be done
+}
+#+END_EXPORT
+
+* Introduction
+<<sec:introduction>>
+
+
+* Theory
+<<sec:theory>>
+
+* Conclusion
+<<sec:conclusion>>
+
+
+* Acknowledgment
+
+
+* Bibliography                                                       :ignore:
+\bibliography{ref}
