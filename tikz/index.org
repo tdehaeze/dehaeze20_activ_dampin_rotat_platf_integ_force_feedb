@@ -10,18 +10,86 @@
 #+HTML_HEAD: <script src="../js/jquery.stickytableheaders.min.js"></script>
 #+HTML_HEAD: <script src="../js/readtheorg.js"></script>
 
-#+PROPERTY: header-args:latex  :headers '("\\usepackage{tikz}" "\\usepackage{import}" "\\import{/home/thomas/Cloud/thesis/papers/dehaeze20_contr_stewa_platf/tikz}{config.tex}")
+#+PROPERTY: header-args:latex  :headers '("\\usepackage{tikz}" "\\usepackage{import}" "\\import{/home/thomas/Cloud/thesis/papers/dehaeze20_contr_stewa_platf/tikz/}{config.tex}")
 #+PROPERTY: header-args:latex+ :imagemagick t :fit yes
 #+PROPERTY: header-args:latex+ :iminoptions -scale 100% -density 150
 #+PROPERTY: header-args:latex+ :imoutoptions -quality 100
-#+PROPERTY: header-args:latex+ :results raw replace :buffer no
+#+PROPERTY: header-args:latex+ :results file raw replace
+#+PROPERTY: header-args:latex+ :buffer no
 #+PROPERTY: header-args:latex+ :eval no-export
 #+PROPERTY: header-args:latex+ :exports both
 #+PROPERTY: header-args:latex+ :mkdirp yes
-#+PROPERTY: header-args:latex+ :noweb yes
 #+PROPERTY: header-args:latex+ :output-dir figs
 #+PROPERTY: header-args:latex+ :post pdf2svg(file=*this*, ext="png")
 :END:
 
 Configuration file is accessible [[file:config.org][here]].
 
+* X-Y Rotating Positioning Platform
+#+begin_src latex :file rotating_xy_platform.pdf
+  \begin{tikzpicture}
+    % Angle
+    \def\thetau{25}
+
+    % Rotational Stage
+    \draw[fill=black!40!white] (0, 0) circle (4);
+
+    % Label
+    \node[anchor=north west, rotate=\thetau] at (-2.8, 2.8) {\small Rotating Stage};
+
+    % Rotating Scope
+    \begin{scope}[rotate=\thetau]
+      % Rotating Frame
+      \draw[fill=black!20!white] (-2.6, -2.6) rectangle (2.6, 2.6);
+      % Label
+      \node[anchor=north west, rotate=\thetau] at (-2.6, 2.6) {\small X-Y Stage};
+
+      % Mass
+      \draw[fill=white] (-1, -1) rectangle (1, 1);
+      % Label
+      \node[anchor=south west, rotate=\thetau] at (-1, -1) {\small Payload};
+
+      % Attached Points
+      \node[] at (-1, 0){$\bullet$};
+      \draw[] (-1, 0) -- ++(-0.2, 0) coordinate(au);
+      \node[] at (0, -1){$\bullet$};
+      \draw[] (0, -1) -- ++(0, -0.2) coordinate(av);
+
+      % Force Sensors
+      \draw[fill=white] ($(au) + (-0.2, -0.5)$) rectangle ($(au) + (0, 0.5)$);
+      \draw[] ($(au) + (-0.2, -0.5)$)coordinate(actu) -- ($(au) + (0,  0.5)$);
+      \draw[] ($(au) + (-0.2,  0.5)$)coordinate(ku)   -- ($(au) + (0, -0.5)$);
+
+      \draw[fill=white] ($(av) + (-0.5, -0.2)$) rectangle ($(av) + (0.5, 0)$);
+      \draw[] ($(av) + ( 0.5, -0.2)$)coordinate(actv)   -- ($(av) + (-0.5,  0)$);
+      \draw[] ($(av) + (-0.5, -0.2)$)coordinate(kv) -- ($(av) + ( 0.5,  0)$);
+
+      % Spring and Actuator for U
+      \draw[actuator={0.6}{0.2}] (actu) -- node[above=0.1, rotate=\thetau]{$F_u$} (actu-|-2.6,0);
+      \draw[spring=0.2] (ku) -- node[above=0.1, rotate=\thetau]{$k_u$} (ku-|-2.6,0);
+
+      \draw[actuator={0.6}{0.2}] (actv) -- node[left, rotate=\thetau]{$F_v$} (actv|-0,-2.6);
+      \draw[spring=0.2] (kv) -- node[left, rotate=\thetau]{$k_v$} (kv|-0,-2.6);
+    \end{scope}
+
+    % Inertial Frame
+    \draw[->] (-4, -4) -- ++(2, 0) node[below]{$\vec{i}_x$};
+    \draw[->] (-4, -4) -- ++(0, 2) node[left]{$\vec{i}_y$};
+    \draw[fill, color=black] (-4, -4) circle (0.06);
+    \node[draw, circle, inner sep=0pt, minimum size=0.3cm, label=left:$\vec{i}_z$] at (-4, -4){};
+
+    \draw[->] (0, 0) -- ++(\thetau:2) node[above, rotate=\thetau]{$\vec{i}_u$};
+    \draw[->] (0, 0) -- ++(\thetau+90:2) node[left, rotate=\thetau]{$\vec{i}_v$};
+    \draw[dashed] (0, 0) -- ++(2, 0);
+    \draw[] (1.5, 0) arc (0:\thetau:1.5) node[midway, right]{$\theta$};
+    \node[] at (0,0) {$\bullet$};
+    \node[left] at (0,0) {$(x, y)$};
+
+    % \draw[->] (-4, -4) -- ++(\thetau:2) node[above]{$\vec{i}_u$};
+    % \draw[->] (-4, -4) -- ++(\thetau+90:2) node[left]{$\vec{i}_u$};
+    % \draw[] (-2.5, -4) arc (0:\thetau:1.5) node[midway, right]{$\theta$};
+  \end{tikzpicture}
+#+end_src
+
+#+RESULTS:
+[[file:figs/rotating_xy_platform.png]]
