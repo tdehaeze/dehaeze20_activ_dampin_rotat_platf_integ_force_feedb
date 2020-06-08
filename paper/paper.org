@@ -58,6 +58,11 @@
 * Theory
 <<sec:theory>>
 
+#+name: fig:rotating_xy_platform
+#+caption: Figure caption
+#+attr_latex: :scale 1
+[[file:figs/rotating_xy_platform.pdf]]
+
 * Conclusion
 <<sec:conclusion>>
 
