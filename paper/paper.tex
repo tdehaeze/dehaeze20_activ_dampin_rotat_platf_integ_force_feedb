@@ -1,4 +1,4 @@
-% Created 2020-06-08 lun. 11:15
+% Created 2020-06-08 lun. 11:40
 % Intended LaTeX compiler: pdflatex
 \documentclass{ISMA_USD2020}
 \usepackage[utf8]{inputenc}
@@ -49,27 +49,56 @@
 }
 
 \section{Introduction}
-\label{sec:orgd787473}
+\label{sec:org335669b}
 \label{sec:introduction}
 
 
 \section{Theory}
-\label{sec:org808f338}
+\label{sec:org8b756e7}
 \label{sec:theory}
+
+\subsection{Rotating Positioning Stage}
+\label{sec:orgbf4a596}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[scale=1]{figs/rotating_xy_platform.pdf}
-\caption{\label{fig:figure_name}Figure caption}
+\caption{\label{fig:rotating_xy_platform}Figure caption}
 \end{figure}
 
+
+\subsection{Equation of Motion}
+\label{sec:orgaa8880a}
+
+Let's express the kinetic energy \(T\) and the potential energy \(V\) of the mass \(m\):
+\begin{align}
+\label{eq:energy_inertial_frame}
+T & = \frac{1}{2} m \left( \dot{x}^2 + \dot{y}^2 \right) \\
+V & = \frac{1}{2} k \left( x^2 + y^2 \right)
+\end{align}
+
+The Lagrangian is the kinetic energy minus the potential energy.
+\begin{equation}
+\label{eq:lagrangian_inertial_frame}
+L = T-V = \frac{1}{2} m \left( \dot{x}^2 + \dot{y}^2 \right) - \frac{1}{2} k \left( x^2 + y^2 \right)
+\end{equation}
+
+
+\subsection{Integral Force Feedback}
+\label{sec:org754b644}
+
+
+\subsection{Direct Velocity Feedback}
+\label{sec:org9cbf82a}
+
+
 \section{Conclusion}
-\label{sec:orgab2ddd2}
+\label{sec:org8d24de3}
 \label{sec:conclusion}
 
 
 \section{Acknowledgment}
-\label{sec:orga63f041}
+\label{sec:orgb252937}
 
 
 \bibliography{ref}

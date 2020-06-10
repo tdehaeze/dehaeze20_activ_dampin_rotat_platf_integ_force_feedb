@@ -58,10 +58,144 @@
 * Theory
 <<sec:theory>>
 
+** Rotating Positioning Stage
+
+# Description of the system
+
+- $k$: Actuator's Stiffness [N/m]
+- $m$: Payload's mass [kg]
+- $\omega_0 = \sqrt{\frac{k}{m}}$: Resonance of the (non-rotating) mass-spring system [rad/s]
+- $\omega_r = \dot{\theta}$: rotation speed [rad/s]
+
+
 #+name: fig:rotating_xy_platform
 #+caption: Figure caption
 #+attr_latex: :scale 1
 [[file:figs/rotating_xy_platform.pdf]]
+
+
+** Equation of Motion
+
+Let's express the kinetic energy $T$ and the potential energy $V$ of the mass $m$ (neglecting the rotational energy):
+#+name: eq:energy_inertial_frame
+\begin{subequations}
+  \begin{align}
+    T & = \frac{1}{2} m \left( \dot{x}^2 + \dot{y}^2 \right) \\
+    R & = \frac{1}{2} c \left( \dot{x}^2 + \dot{y}^2 \right) \\
+    V & = \frac{1}{2} k \left( x^2 + y^2 \right)
+  \end{align}
+\end{subequations}
+
+The Lagrangian is the kinetic energy minus the potential energy:
+#+name: eq:lagrangian_inertial_frame
+\begin{equation}
+L = T-V = \frac{1}{2} m \left( \dot{x}^2 + \dot{y}^2 \right) - \frac{1}{2} k \left( x^2 + y^2 \right)
+\end{equation}
+
+The external forces applied to the mass are:
+\begin{subequations}
+  \begin{align}
+    F_{\text{ext}, x} &= F_u \cos{\theta} - F_v \sin{\theta}\\
+    F_{\text{ext}, y} &= F_u \sin{\theta} + F_v \cos{\theta}
+  \end{align}
+\end{subequations}
+
+
+From the Lagrange's equations of the second kind eqref:eq:lagrange_second_kind, the equation of motion eqref:eq:eom_mixed is obtained.
+
+#+name: eq:lagrange_second_kind
+\begin{equation}
+  \frac{d}{dt} \left( \frac{\partial L}{\partial \dot{q}_j} \right) = \frac{\partial L}{\partial q_j}
+\end{equation}
+
+#+name: eq:eom_mixed
+\begin{subequations}
+  \begin{align}
+    m\ddot{x} + kx = F_u \cos{\theta} - F_v \sin{\theta}\\
+    m\ddot{y} + ky = F_u \sin{\theta} + F_v \cos{\theta}
+  \end{align}
+\end{subequations}
+
+Performing the change coordinates from $(x, y)$ to $(d_x, d_y, \theta)$:
+\begin{subequations}
+  \begin{align}
+    x & = d_u \cos{\theta} - d_v \sin{\theta}\\
+    y & = d_u \sin{\theta} + d_v \cos{\theta}
+  \end{align}
+\end{subequations}
+
+Gives
+#+name: eq:oem_coupled
+\begin{subequations}
+  \begin{align}
+    m \ddot{d_u} + (k - m\dot{\theta}^2) d_u &= F_u + 2 m\dot{d_v}\dot{\theta} + m d_v\ddot{\theta} \label{eq:du_coupled} \\
+    m \ddot{d_v} + (k \underbrace{-\ m\dot{\theta}^2}_{\text{Centrif.}}) d_v &= F_v \underbrace{-\ 2 m\dot{d_u}\dot{\theta}}_{\text{Coriolis}} \underbrace{-\ m d_u\ddot{\theta}}_{\text{Euler}} \label{eq:dv_coupled}
+  \end{align}
+\end{subequations}
+
+We obtain two differential equations that are coupled through:
+- *Euler forces*: $m d_v \ddot{\theta}$
+- *Coriolis forces*: $2 m \dot{d_v} \dot{\theta}$
+
+Without the coupling terms, each equation is the equation of a one degree of freedom mass-spring system with mass $m$ and stiffness $k- m\dot{\theta}^2$.
+Thus, the term $- m\dot{\theta}^2$ acts like a negative stiffness (due to *centrifugal forces*).
+
+** Constant Rotating Speed
+To simplify, let's consider a constant rotating speed $\dot{\theta} = \omega_r$ and thus $\ddot{\theta} = 0$.
+
+#+NAME: eq:coupledplant
+\begin{equation}
+\begin{bmatrix} d_u \\ d_v \end{bmatrix} =
+\frac{1}{(m s^2 + (k - m{\omega_0}^2))^2 + (2 m {\omega_0} s)^2}
+\begin{bmatrix}
+  ms^2 + (k-m{\omega_0}^2) & 2 m \omega_0 s \\
+  -2 m \omega_0 s          & ms^2 + (k-m{\omega_0}^2) \\
+\end{bmatrix}
+\begin{bmatrix} F_u \\ F_v \end{bmatrix}
+\end{equation}
+
+#+NAME: eq:coupled_plant
+\begin{equation}
+\begin{bmatrix} d_u \\ d_v \end{bmatrix} =
+\frac{\frac{1}{k}}{\left( \frac{s^2}{{\omega_0}^2} + (1 - \frac{{\omega_r}^2}{{\omega_0}^2}) \right)^2 + \left( 2 \frac{{\omega_r} s}{{\omega_0}^2} \right)^2}
+\begin{bmatrix}
+  \frac{s^2}{{\omega_0}^2} + 1 - \frac{{\omega_r}^2}{{\omega_0}^2} & 2 \frac{\omega_r s}{{\omega_0}^2} \\
+  -2 \frac{\omega_r s}{{\omega_0}^2}          & \frac{s^2}{{\omega_0}^2} + 1 - \frac{{\omega_r}^2}{{\omega_0}^2} \\
+\end{bmatrix}
+\begin{bmatrix} F_u \\ F_v \end{bmatrix}
+\end{equation}
+
+When the rotation speed is null, the coupling terms are equal to zero and the diagonal terms corresponds to one degree of freedom mass spring system.
+#+NAME: eq:coupled_plant_no_rot
+\begin{equation}
+\begin{bmatrix} d_u \\ d_v \end{bmatrix} =
+\frac{\frac{1}{k}}{\frac{s^2}{{\omega_0}^2} + 1}
+\begin{bmatrix}
+  1 & 0 \\
+  0 & 1
+\end{bmatrix}
+\begin{bmatrix} F_u \\ F_v \end{bmatrix}
+\end{equation}
+
+# Campbell Diagram
+
+When the rotation speed in not null, the resonance frequency is duplicated into two pairs of complex conjugate poles.
+As the rotation speed increases, one of the two resonant frequency goes to lower frequencies as the other one goes to higher frequencies (Figure [[fig:campbell_diagram]]).
+
+#+name: fig:campbell_diagram
+#+caption: Campbell Diagram
+[[file:figs/campbell_diagram.pdf]]
+
+# Bode Plots for different ratio wr/w0
+
+The magnitude of the coupling terms are increasing with the rotation speed.
+
+
+** Integral Force Feedback
+
+
+** Direct Velocity Feedback
+
 
 * Conclusion
 <<sec:conclusion>>

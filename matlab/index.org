@@ -24,3 +24,1548 @@
 #+PROPERTY: header-args:matlab+ :output-dir figs
 :END:
 
+* Introduction                                                        :ignore:
+Notations:
+- $k$: Actuator's Stiffness [N/m]
+- $c$: Actuator's Damping [N/(m/s)]
+- $m$: Payload's mass [kg]
+- $\omega_0 = \sqrt{\frac{k}{m}}$: Resonance of the (non-rotating) mass-spring system [rad/s]
+- $\Omega = \dot{\theta}$: rotation speed [rad/s]
+
+|                    | Mathematical Notation | Matlab | Unit    |
+|--------------------+-----------------------+--------+---------|
+| Actuator Stiffness | $k$                   | =k=    | N/m     |
+| Actuator Damping   | $c$                   | =c=    | N/(m/s) |
+
+* Matlab Init                                                :noexport:ignore:
+#+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
+  <<matlab-dir>>
+#+end_src
+
+#+begin_src matlab :exports none :results silent :noweb yes
+  <<matlab-init>>
+#+end_src
+
+#+begin_src matlab
+  addpath('./matlab/');
+#+end_src
+
+* System Description and Analysis
+<<sec:system_description>>
+
+** System description
+The system consists of one 2 degree of freedom translation stage on top of a spindle (figure [[fig:rotating_xy_platform]]).
+
+#+name: fig:rotating_xy_platform
+#+caption: Figure caption
+#+attr_latex: :scale 1
+[[file:figs/rotating_xy_platform.pdf]]
+
+The control inputs are the forces applied by the actuators of the translation stage ($F_u$ and $F_v$).
+As the translation stage is rotating around the Z axis due to the spindle, the forces are applied along $u$ and $v$.
+
+The measurement is either the $x-y$ displacement of the object located on top of the translation stage or the $u-v$ displacement of the sample with respect to a fixed reference frame.
+
+** Equations
+Based on the Figure [[fig:rotating_xy_platform]].
+
+\begin{equation}
+\begin{bmatrix} d_u \\ d_v \end{bmatrix} =
+\frac{\frac{1}{k}}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2}
+\begin{bmatrix}
+  \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} & 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \\
+  -2 \frac{\Omega}{\omega_0}\frac{s}{\omega_0}          & \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \\
+\end{bmatrix}
+\begin{bmatrix} F_u \\ F_v \end{bmatrix}
+\end{equation}
+
+** Numerical Values
+#+begin_src matlab
+  k = 2;
+  m = 1;
+  c = 0.05;
+  xi = c/(2*sqrt(k*m));
+
+  w0 = sqrt(k/m);
+#+end_src
+
+** Campbell Diagram
+Compute the poles
+#+begin_src matlab :exports code
+  wrs = linspace(0, 2, 51); % [rad/s]
+
+  polesvc = zeros(4, length(wrs));
+
+  for i = 1:length(wrs)
+      wr = wrs(i);
+      polei = pole(1/(((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (wrs(i)^2)/(w0^2))^2 + (2*wrs(i)*s/(w0^2))^2));
+      [~, i_sort] = sort(imag(polei));
+      polesvc(:, i) = polei(i_sort);
+  end
+#+end_src
+
+#+begin_src matlab :exports none
+  figure;
+
+  ax1 = subplot(1,2,1);
+  hold on;
+  for i = 1:size(polesvc, 1)
+      plot(wrs, real(polesvc(i, :)), 'k-')
+  end
+  plot(wrs, zeros(size(wrs)), 'k--')
+  hold off;
+  xlabel('Rotation Frequency [rad/s]'); ylabel('Pole Real Part');
+
+  ax2 = subplot(1,2,2);
+  hold on;
+  for i = 1:size(polesvc, 1)
+      plot(wrs,  imag(polesvc(i, :)), 'k-')
+      plot(wrs, -imag(polesvc(i, :)), 'k-')
+  end
+  hold off;
+  xlabel('Rotation Frequency [rad/s]'); ylabel('Pole Imaginary Part');
+#+end_src
+
+** Simscape Model
+#+begin_src matlab
+  open('rotating_frame.slx');
+#+end_src
+
+#+begin_src matlab
+  k = 2;
+  m = 1;
+  c = 0.05;
+  xi = c/(2*sqrt(k*m));
+
+  w0 = sqrt(k/m);
+  wr = 0.1;
+#+end_src
+
+#+begin_src matlab
+  %% Name of the Simulink File
+  mdl = 'rotating_frame';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/Fu'], 1, 'openinput');  io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/Fv'], 1, 'openinput');  io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/Tuv'], 1, 'openoutput'); io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/Tuv'], 2, 'openoutput'); io_i = io_i + 1;
+#+end_src
+
+#+begin_src matlab
+  G = linearize(mdl, io, 0);
+
+  %% Input/Output definition
+  G.InputName  = {'Fu', 'Fv'};
+  G.OutputName = {'du', 'dv'};
+#+end_src
+
+** Comparison with the model
+#+begin_src matlab
+  Ga = (1/k)/(((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (wr^2)/(w0^2))^2 + (2*wr*s/(w0^2))^2) * ...
+       [(s^2)/(w0^2) + 2*xi*s/w0 + 1 - (wr^2)/(w0^2), 2*wr*s/(w0^2) ; ...
+        -2*wr*s/(w0^2), (s^2)/(w0^2) + 2*xi*s/w0 + 1 - (wr^2)/(w0^2)];
+#+end_src
+
+#+begin_src matlab
+  figure; bode(G, 'k-', Ga, 'r--')
+#+end_src
+
+* Integral Force Feedback
+** IFF with pure integrator
+*** Numerical Values
+#+begin_src matlab
+  k = 1;
+  m = 1;
+  xi = 0.01;
+  c = 2*xi*sqrt(k*m);
+  w0 = sqrt(k/m);
+  wr = 0.1*w0;
+#+end_src
+
+*** Equations
+The sensed forces are equal to:
+\begin{equation}
+\begin{bmatrix} F_{um} \\ F_{vm} \end{bmatrix} =
+\begin{bmatrix}
+  1 & 0 \\
+  0 & 1
+\end{bmatrix}
+\begin{bmatrix} F_u \\ F_v \end{bmatrix} - (c s + k)
+\begin{bmatrix} d_u \\ d_v \end{bmatrix}
+\end{equation}
+
+#+begin_important
+\begin{equation}
+\begin{bmatrix} F_{um} \\ F_{vm} \end{bmatrix} =
+\frac{1}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2}
+\begin{bmatrix}
+  (\frac{s^2}{{\omega_0}^2} - \frac{\Omega^2}{{\omega_0}^2}) (\frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2}) + (2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0})^2 & - (2 \xi \frac{s}{\omega_0} + 1) 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \\
+  (2 \xi \frac{s}{\omega_0} + 1) 2 \frac{\Omega}{\omega_0}\frac{s}{\omega_0}          & (\frac{s^2}{{\omega_0}^2} - \frac{\Omega^2}{{\omega_0}^2}) (\frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2}) + (2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0})^2 \\
+\end{bmatrix}
+\begin{bmatrix} F_u \\ F_v \end{bmatrix}
+\end{equation}
+#+end_important
+
+#+begin_src matlab
+  Giffa = 1/(((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (wr^2)/(w0^2))^2 + (2*wr*s/(w0^2))^2) * ...
+         [(s^2/w0^2 - wr^2/w0^2)*((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (wr^2)/(w0^2)) + (2*wr*s/(w0^2))^2, - (2*xi*s/w0 + 1)*2*wr*s/(w0^2) ; ...
+          (2*xi*s/w0 + 1)*2*wr*s/(w0^2), (s^2/w0^2 - wr^2/w0^2)*((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (wr^2)/(w0^2))+ (2*wr*s/(w0^2))^2];
+#+end_src
+
+*** Poles and Zeros
+#+begin_src matlab
+  syms wr w0 xi positive
+  assumealso(w0 > wr)
+  syms x
+#+end_src
+
+#+begin_src matlab
+  z = (x^2/w0^2 - wr^2/w0^2)*((x^2)/(w0^2) + 1 - (wr^2)/(w0^2)) + (2*wr*x/(w0^2))^2 == 0
+  p = ((x^2)/(w0^2) + 1 - (wr^2)/(w0^2))^2 + (2*wr*x/(w0^2))^2 == 0
+#+end_src
+
+#+begin_src matlab
+  solve(p, x)
+#+end_src
+
+#+begin_src matlab
+  solve(z, x)
+#+end_src
+
+The zeros are the roots of:
+\begin{equation}
+  \left( \frac{s^2}{{\omega_0}^2} - \frac{\Omega^2}{{\omega_0}^2} \right) \left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right) + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2 = 0
+\end{equation}
+
+Poles (without damping)
+\begin{equation}
+  \left(\begin{array}{c} -w_{0}\,1{}\mathrm{i}-\mathrm{wr}\,1{}\mathrm{i}\\ -w_{0}\,1{}\mathrm{i}+\mathrm{wr}\,1{}\mathrm{i}\\ w_{0}\,1{}\mathrm{i}-\mathrm{wr}\,1{}\mathrm{i}\\ w_{0}\,1{}\mathrm{i}+\mathrm{wr}\,1{}\mathrm{i} \end{array}\right)
+\end{equation}
+
+Zeros (without damping)
+\begin{equation}
+  \left(\begin{array}{c} -\sqrt{-\frac{w_{0}\,\sqrt{{w_{0}}^2+8\,{\mathrm{wr}}^2}}{2}-\frac{{w_{0}}^2}{2}-{\mathrm{wr}}^2}\\ -\sqrt{\frac{w_{0}\,\sqrt{{w_{0}}^2+8\,{\mathrm{wr}}^2}}{2}-\frac{{w_{0}}^2}{2}-{\mathrm{wr}}^2}\\ \sqrt{-\frac{w_{0}\,\sqrt{{w_{0}}^2+8\,{\mathrm{wr}}^2}}{2}-\frac{{w_{0}}^2}{2}-{\mathrm{wr}}^2}\\ \sqrt{\frac{w_{0}\,\sqrt{{w_{0}}^2+8\,{\mathrm{wr}}^2}}{2}-\frac{{w_{0}}^2}{2}-{\mathrm{wr}}^2} \end{array}\right)
+\end{equation}
+
+*** Simscape Model
+#+begin_src matlab
+  %% Name of the Simulink File
+  mdl = 'rotating_frame';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/Fu'], 1, 'openinput');  io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/Fv'], 1, 'openinput');  io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/Tuv'], 5, 'openoutput'); io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/Tuv'], 6, 'openoutput'); io_i = io_i + 1;
+#+end_src
+
+#+begin_src matlab
+  Giff = linearize(mdl, io, 0);
+
+  %% Input/Output definition
+  Giff.InputName  = {'Fu', 'Fv'};
+  Giff.OutputName = {'Fmu', 'Fmv'};
+#+end_src
+
+#+begin_src matlab
+  figure; bode(Giff, Giffa)
+#+end_src
+
+*** IFF Plant
+#+begin_src matlab :exports none
+  ws = [0, 0.1, 0.3, 0.8, 1.1];
+
+  G_iff = {zeros(2, 2, length(ws))};
+
+  for i = 1:length(ws)
+      W = ws(i);
+
+      G_iff(:, :, i) = {1/(((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))^2 + (2*W*s/(w0^2))^2) * ...
+                        [(s^2/w0^2 - W^2/w0^2)*((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2)) + (2*W*s/(w0^2))^2, - (2*xi*s/w0 + 1)*2*W*s/(w0^2) ; ...
+                         (2*xi*s/w0 + 1)*2*W*s/(w0^2), (s^2/w0^2 - W^2/w0^2)*((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))+ (2*W*s/(w0^2))^2]};
+  end
+#+end_src
+
+#+begin_src matlab :exports none
+  freqs = logspace(-2, 1, 1000);
+
+  i = 2;
+
+  figure;
+  ax1 = subplot(2, 2, 1);
+  hold on;
+  plot(freqs, abs(squeeze(freqresp(G_iff{i}(1,1), freqs, 'Hz'))))
+  plot(freqs, ones(size(freqs))*(ws(i)^2/(k/m - ws(i)^2)), 'k--')
+  plot(sqrt(0.5*sqrt(k/m)*sqrt(8*ws(i)^2 + k/m) + ws(i) + 0.5*k/m)/2/pi, 1, 'ko')
+  plot(sqrt(0.5*sqrt(k/m)*sqrt(8*ws(i)^2 + k/m) - ws(i) - 0.5*k/m)/2/pi, 1, 'ko')
+  plot((sqrt(k/m) + ws(i))/2/pi, 1, 'kx')
+  plot((sqrt(k/m) - ws(i))/2/pi, 1, 'kx')
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  ylabel('Amplitude [N/N]');
+  title(['$\frac{F_{u,m}}{F_u}$' sprintf(', $\\omega = %.2f \\omega_0 $', ws(i)/w0)]);
+
+  ax3 = subplot(2, 2, 3);
+  hold on;
+  plot(freqs, 180/pi*angle(squeeze(freqresp(G_iff{i}(1, 1),  freqs, 'Hz'))));
+  hold off;
+  yticks(-180:90:180);
+  ylim([-180 180]);
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  xlabel('Frequency [Hz]'); ylabel('Phase [deg]');
+
+  ax2 = subplot(2, 2, 2);
+  hold on;
+  plot(freqs, abs(squeeze(freqresp(G_iff{i}(1,2), freqs, 'Hz'))))
+  plot((sqrt(k/m) + ws(i))/2/pi, 1, 'kx')
+  plot((sqrt(k/m) - ws(i))/2/pi, 1, 'kx')
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  title(['$\frac{F_{v,m}}{F_u}$' sprintf(', $\\omega = %.2f \\omega_0 $', ws(i)/w0)]);
+
+  ax4 = subplot(2, 2, 4);
+  hold on;
+  plot(freqs, 180/pi*angle(squeeze(freqresp(G_iff{i}(1, 2),  freqs, 'Hz'))));
+  hold off;
+  yticks(-180:90:180);
+  ylim([-180 180]);
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  xlabel('Frequency [Hz]');
+
+  linkaxes([ax1,ax2,ax3,ax4],'x');
+  linkaxes([ax1,ax2],'y');
+#+end_src
+
+#+begin_src matlab :exports none
+  freqs = logspace(-2, 1, 1000);
+
+  figure;
+
+  ax1 = subplot(2, 1, 1);
+  hold on;
+  for i = 1:length(ws)
+      plot(freqs, abs(squeeze(freqresp(G_iff{i}(1,1), freqs))), ...
+           'DisplayName', sprintf('$\\omega = %.2f \\omega_0 $', ws(i)/w0))
+  end
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  set(gca, 'XTickLabel',[]); ylabel('Amplitude [N/N]');
+  legend('location', 'northwest');
+  ylim([0, 1e3]);
+
+  ax2 = subplot(2, 1, 2);
+  hold on;
+  for i = 1:length(ws)
+      plot(freqs, 180/pi*angle(squeeze(freqresp(G_iff{i}(1,1), freqs))), ...
+           'DisplayName', sprintf('$\\omega = %.1f \\omega_0 $', ws(i)/w0))
+  end
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  xlabel('Frequency [rad/s]'); ylabel('Phase [deg]');
+  yticks(-180:90:180);
+  ylim([-180 180]);
+  hold off;
+
+  linkaxes([ax1,ax2],'x');
+  xlim([freqs(1), freqs(end)]);
+#+end_src
+
+*** Loop Gain
+Let's take $\Omega = \frac{\omega_0}{10}$.
+#+begin_src matlab
+  ws = 0.1*w0;
+  G_iff = 1/(((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (ws^2)/(w0^2))^2 + (2*ws*s/(w0^2))^2) * ...
+          [(s^2/w0^2 - ws^2/w0^2)*((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (ws^2)/(w0^2)) + (2*ws*s/(w0^2))^2, - (2*xi*s/w0 + 1)*2*ws*s/(w0^2) ; ...
+           (2*xi*s/w0 + 1)*2*ws*s/(w0^2), (s^2/w0^2 - ws^2/w0^2)*((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (ws^2)/(w0^2))+ (2*ws*s/(w0^2))^2];
+
+#+end_src
+
+#+begin_src matlab :exports none
+  g = 1;
+
+  freqs = logspace(-2, 1, 1000);
+
+  figure;
+
+  ax1 = subplot(2, 1, 1);
+  hold on;
+  for i = 1:length(ws)
+      plot(freqs, abs(squeeze(freqresp(G_iff(1,1)*g/s, freqs))), ...
+           'DisplayName', sprintf('$\\omega = %.2f \\omega_0 $', ws(i)/w0))
+  end
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  set(gca, 'XTickLabel',[]); ylabel('Amplitude [N/N]');
+  legend('location', 'northwest');
+  ylim([0, 1e3]);
+
+  ax2 = subplot(2, 1, 2);
+  hold on;
+  for i = 1:length(ws)
+      plot(freqs, 180/pi*angle(squeeze(freqresp(G_iff(1,1)*g/s, freqs))), ...
+           'DisplayName', sprintf('$\\omega = %.1f \\omega_0 $', ws(i)/w0))
+  end
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  xlabel('Frequency [rad/s]'); ylabel('Phase [deg]');
+  yticks(-180:90:180);
+  ylim([-180 180]);
+  hold off;
+
+  linkaxes([ax1,ax2],'x');
+  xlim([freqs(1), freqs(end)]);
+#+end_src
+
+*** Root Locus
+#+begin_src matlab :exports none
+  ws = [0, 0.1, 0.3, 0.8, 1.1];
+
+  G_iff = {zeros(2, 2, length(ws))};
+
+  for i = 1:length(ws)
+      W = ws(i);
+
+      G_iff(:, :, i) = {1/(((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))^2 + (2*W*s/(w0^2))^2) * ...
+                        [(s^2/w0^2 - W^2/w0^2)*((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2)) + (2*W*s/(w0^2))^2, - (2*xi*s/w0 + 1)*2*W*s/(w0^2) ; ...
+                         (2*xi*s/w0 + 1)*2*W*s/(w0^2), (s^2/w0^2 - W^2/w0^2)*((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))+ (2*W*s/(w0^2))^2]};
+  end
+#+end_src
+
+#+begin_src matlab :exports none
+  figure;
+
+  gains = logspace(-2, 4, 100);
+
+  hold on;
+  for i = 1:length(ws)
+      set(gca,'ColorOrderIndex',i);
+      plot(real(pole(G_iff{i})),  imag(pole(G_iff{i})), 'x', ...
+           'DisplayName', sprintf('$\\omega = %.2f \\omega_0 $', ws(i)/w0));
+      set(gca,'ColorOrderIndex',i);
+      plot(real(tzero(G_iff{i})),  imag(tzero(G_iff{i})), 'o', ...
+           'HandleVisibility', 'off');
+      for g_i = 1:length(gains)
+          set(gca,'ColorOrderIndex',i);
+          cl_poles = pole(feedback(G_iff{i}, gains(g_i)/s*eye(2)));
+          plot(real(cl_poles), imag(cl_poles), '.', ...
+               'HandleVisibility', 'off');
+      end
+  end
+  hold off;
+  axis square;
+  xlim([-2, 0.5]); ylim([0, 2.5]);
+
+  xlabel('Real Part'); ylabel('Imaginary Part');
+  legend('location', 'northwest');
+#+end_src
+
+** Modified IFF (pseudo integrator)
+*** Control Law
+Let's take the integral feedback controller as a low pass filter (pseudo integrator):
+\begin{equation}
+  K_{\text{IFF}} = \begin{bmatrix}
+  g\frac{\omega_i}{\omega_i + s} & 0 \\
+  0 & g\frac{\omega_i}{\omega_i + s}
+\end{bmatrix}
+\end{equation}
+
+#+begin_src matlab
+  xi = 0.005;
+  w0 = 1;
+  ws = 0.1*w0;
+
+  G_iff = 1/(((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (ws^2)/(w0^2))^2 + (2*ws*s/(w0^2))^2) * ...
+          [(s^2/w0^2 - ws^2/w0^2)*((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (ws^2)/(w0^2)) + (2*ws*s/(w0^2))^2, - (2*xi*s/w0 + 1)*2*ws*s/(w0^2) ; ...
+           (2*xi*s/w0 + 1)*2*ws*s/(w0^2), (s^2/w0^2 - ws^2/w0^2)*((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (ws^2)/(w0^2))+ (2*ws*s/(w0^2))^2];
+
+#+end_src
+
+#+begin_src matlab
+  g = 100;
+  wi = ws;
+
+  K_iff = (g/(1+s/wi))*eye(2);
+#+end_src
+
+*** Loop Gain
+#+begin_src matlab :exports none
+  freqs = logspace(-2, 1, 1000);
+
+  figure;
+
+  ax1 = subplot(2, 1, 1);
+  hold on;
+  for i = 1:length(ws)
+      plot(freqs, abs(squeeze(freqresp(G_iff(1,1)*K_iff(1,1), freqs))), ...
+           'DisplayName', sprintf('$\\omega = %.2f \\omega_0 $', ws(i)/w0))
+  end
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  set(gca, 'XTickLabel',[]); ylabel('Amplitude [N/N]');
+  legend('location', 'northwest');
+  ylim([0, 1e3]);
+
+  ax2 = subplot(2, 1, 2);
+  hold on;
+  for i = 1:length(ws)
+      plot(freqs, 180/pi*angle(squeeze(freqresp(G_iff(1,1)*K_iff(1,1), freqs))), ...
+           'DisplayName', sprintf('$\\omega = %.1f \\omega_0 $', ws(i)/w0))
+  end
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  xlabel('Frequency [rad/s]'); ylabel('Phase [deg]');
+  yticks(-180:90:180);
+  ylim([-180 180]);
+  hold off;
+
+  linkaxes([ax1,ax2],'x');
+  xlim([freqs(1), freqs(end)]);
+#+end_src
+
+*** Root Locus
+#+begin_src matlab :exports none
+  figure;
+
+  gains = logspace(-2, 4, 100);
+
+  hold on;
+  plot(real(pole(G_iff)),  imag(pole(G_iff)), 'kx', ...
+       'DisplayName', sprintf('$\\Omega = %.2f \\omega_0 $', ws/w0));
+  plot(real(tzero(G_iff)),  imag(tzero(G_iff)), 'ko', ...
+       'HandleVisibility', 'off');
+  for g_i = 1:length(gains)
+      K_iff = (gains(g_i)/(1+s/wi))*eye(2);
+      cl_poles = pole(feedback(G_iff, K_iff));
+      plot(real(cl_poles), imag(cl_poles), 'k.', ...
+           'HandleVisibility', 'off');
+  end
+  hold off;
+  axis square;
+  xlim([-2, 0.5]); ylim([0, 2.5]);
+
+  xlabel('Real Part'); ylabel('Imaginary Part');
+  legend('location', 'northwest');
+#+end_src
+
+*** Optimal Gain
+The DC gain for Giff is (for $\Omega < \omega_0$):
+\begin{equation}
+  G_{\text{IFF}}(\omega = 0) = \frac{1}{1 - \frac{{\omega_0}^2}{\Omega^2}} \begin{bmatrix}
+    1 & 0 \\
+    0 & 1
+  \end{bmatrix}
+\end{equation}
+
+The maximum gain where is system is still stable is
+\begin{equation}
+  g_\text{max} = \frac{{\omega_0}^2}{\Omega^2} - 1
+\end{equation}
+
+
+Let's find the gain that maximize the simultaneous damping of the two modes.
+#+begin_src matlab :exports none
+  gains = logspace(-2, 4, 100);
+  opt_zeta = 0;
+  opt_gain = 0;
+
+  for g_i = 1:length(gains)
+      K_iff = (gains(g_i)/(1+s/wi))*eye(2);
+
+      [w, zeta] = damp(minreal(feedback(G_iff, K_iff)));
+
+      if min(zeta) > opt_zeta && all(zeta > 0)
+        opt_zeta = min(zeta);
+        opt_gain = min(gains(g_i));
+      end
+  end
+#+end_src
+
+#+begin_src matlab
+  K_opt = (opt_gain/(1+s/wi))*eye(2);
+
+  G_cl = feedback(G_iff, K_opt);
+#+end_src
+
+#+begin_src matlab :exports none
+  freqs = logspace(-2, 1, 1000);
+
+  figure;
+
+  ax1 = subplot(2, 1, 1);
+  hold on;
+  for i = 1:length(ws)
+      plot(freqs, abs(squeeze(freqresp(G_iff(1,1)*K_opt(1,1), freqs))), ...
+           'DisplayName', sprintf('$\\omega = %.2f \\omega_0 $', ws(i)/w0))
+  end
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  set(gca, 'XTickLabel',[]); ylabel('Amplitude [N/N]');
+  legend('location', 'northwest');
+  ylim([0, 1e3]);
+
+  ax2 = subplot(2, 1, 2);
+  hold on;
+  for i = 1:length(ws)
+      plot(freqs, 180/pi*angle(squeeze(freqresp(G_iff(1,1)*K_opt(1,1), freqs))), ...
+           'DisplayName', sprintf('$\\omega = %.1f \\omega_0 $', ws(i)/w0))
+  end
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  xlabel('Frequency [rad/s]'); ylabel('Phase [deg]');
+  yticks(-180:90:180);
+  ylim([-180 180]);
+  hold off;
+
+  linkaxes([ax1,ax2],'x');
+  xlim([freqs(1), freqs(end)]);
+#+end_src
+
+#+begin_src matlab :exports none
+  freqs = logspace(-2, 1, 1000);
+
+  figure;
+
+  ax1 = subplot(2, 1, 1);
+  hold on;
+  plot(freqs, abs(squeeze(freqresp(G_iff(1,1), freqs))))
+  plot(freqs, abs(squeeze(freqresp(G_cl(1,1), freqs))))
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  set(gca, 'XTickLabel',[]); ylabel('Amplitude [N/N]');
+  legend('location', 'northwest');
+  ylim([0, 1e3]);
+
+  ax2 = subplot(2, 1, 2);
+  hold on;
+  plot(freqs, 180/pi*angle(squeeze(freqresp(G_iff(1,1), freqs))))
+  plot(freqs, 180/pi*angle(squeeze(freqresp(G_cl(1,1), freqs))))
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  xlabel('Frequency [rad/s]'); ylabel('Phase [deg]');
+  yticks(-180:90:180);
+  ylim([-180 180]);
+  hold off;
+
+  linkaxes([ax1,ax2],'x');
+  xlim([freqs(1), freqs(end)]);
+#+end_src
+
+** Stiffness in parallel with the force sensor
+*** Schematic
+
+*** Equations
+The equations should be the same as before by taking $k = k^\prime + k_a$.
+I just have to determine the measured force by the sensor
+
+*** Parameters
+#+begin_src matlab
+  k = 1;
+  m = 1;
+  c = 0.05;
+  xi = c/(2*sqrt(k*m));
+
+  w0 = sqrt(k/m);
+  wr = 0.1;
+#+end_src
+
+*** IFF Plant
+#+begin_src matlab
+  open('rotating_frame.slx');
+#+end_src
+
+#+begin_src matlab
+  %% Name of the Simulink File
+  mdl = 'rotating_frame';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/Fu'], 1, 'openinput');  io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/Fv'], 1, 'openinput');  io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/Tuv'], 5, 'openoutput'); io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/Tuv'], 6, 'openoutput'); io_i = io_i + 1;
+#+end_src
+
+#+begin_src matlab
+  kp = 0;
+  cp = 0;
+#+end_src
+
+#+begin_src matlab
+  Giff = linearize(mdl, io, 0);
+
+  %% Input/Output definition
+  Giff.InputName  = {'Fu', 'Fv'};
+  Giff.OutputName = {'Fmu', 'Fmv'};
+#+end_src
+
+#+begin_src matlab
+  kp = 0.5*m*wr^2;
+  cp = 0.01;
+#+end_src
+
+#+begin_src matlab
+  Giffa = linearize(mdl, io, 0);
+
+  %% Input/Output definition
+  Giffa.InputName  = {'Fu', 'Fv'};
+  Giffa.OutputName = {'Fmu', 'Fmv'};
+#+end_src
+
+#+begin_src matlab
+  kp = 1.5*m*wr^2;
+  cp = 0.01;
+#+end_src
+
+#+begin_src matlab
+  Giffb = linearize(mdl, io, 0);
+
+  %% Input/Output definition
+  Giffb.InputName  = {'Fu', 'Fv'};
+  Giffb.OutputName = {'Fmu', 'Fmv'};
+#+end_src
+
+Comparison with the model
+#+begin_src matlab
+  figure; bode(Giff, 'k-', Giffa, 'b--', Giffb, 'r--')
+#+end_src
+
+*** Parallel Stiffness effect
+Pure IFF controller can be used if:
+\begin{equation}
+  k_{p} > m \Omega^2
+\end{equation}
+
+However, having large values of $k_p$ may:
+- decrease the actuator stroke
+- decrease the attainable damping (section about optimal value)
+
+*** Root locus
+#+begin_src matlab :exports none
+  figure;
+
+  gains = logspace(-2, 4, 100);
+
+  hold on;
+  plot(real(pole(Giffb)),  imag(pole(Giffb)), 'kx', ...
+       'DisplayName', sprintf('$\\Omega = %.2f \\omega_0 $', wr/w0));
+  plot(real(tzero(Giffb)),  imag(tzero(Giffb)), 'ko', ...
+       'HandleVisibility', 'off');
+  for g_i = 1:length(gains)
+      K_iff = (gains(g_i)/s)*eye(2);
+      cl_poles = pole(feedback(Giffb, K_iff));
+      plot(real(cl_poles), imag(cl_poles), 'k.', ...
+           'HandleVisibility', 'off');
+  end
+  plot(real(pole(Giffa)),  imag(pole(Giffa)), 'rx', ...
+       'DisplayName', sprintf('$\\Omega = %.2f \\omega_0 $', wr/w0));
+  plot(real(tzero(Giffa)),  imag(tzero(Giffa)), 'ro', ...
+       'HandleVisibility', 'off');
+  for g_i = 1:length(gains)
+      K_iffa = (gains(g_i)/s)*eye(2);
+      cl_poles = pole(feedback(Giffa, K_iffa));
+      plot(real(cl_poles), imag(cl_poles), 'r.', ...
+           'HandleVisibility', 'off');
+  end
+  hold off;
+  axis square;
+  xlim([-2, 0.5]); ylim([0, 2.5]);
+
+  xlabel('Real Part'); ylabel('Imaginary Part');
+  legend('location', 'northwest');
+#+end_src
+
+*** Optimal value of $k_p$
+#+begin_src matlab
+  kps = [0, 0.5, 1, 2, 10]*m*wr^2;
+  cp = 0.01;
+#+end_src
+
+#+begin_src matlab :exports none
+  figure;
+
+  gains = logspace(-2, 4, 100);
+
+  hold on;
+  for kp_i = 1:length(kps)
+      kp = kps(kp_i);
+      Giff = linearize(mdl, io, 0);
+
+      set(gca,'ColorOrderIndex',kp_i);
+      plot(real(pole(Giff)),  imag(pole(Giff)), 'x', ...
+           'DisplayName', sprintf('$k_p = %.1f m \\Omega^2$', kp/(m*wr^2)));
+      set(gca,'ColorOrderIndex',kp_i);
+      plot(real(tzero(Giff)),  imag(tzero(Giff)), 'o', ...
+           'HandleVisibility', 'off');
+      for g_i = 1:length(gains)
+          K_iffa = (gains(g_i)/s)*eye(2);
+          cl_poles = pole(feedback(Giff, K_iffa));
+          set(gca,'ColorOrderIndex',kp_i);
+          plot(real(cl_poles), imag(cl_poles), '.', ...
+               'HandleVisibility', 'off');
+      end
+  end
+  hold off;
+  axis square;
+  xlim([-2, 0.5]); ylim([0, 2.5]);
+
+  xlabel('Real Part'); ylabel('Imaginary Part');
+  legend('location', 'northwest');
+#+end_src
+
+*** Physical Explanation
+Negative stiffness
+Zeros are for high loop gain: remove the force sensor
+Thus the stiffness in parallel should be higher than the virtual negative stiffness added by the gyroscopic effects
+
+** Comparison
+Fix the parameters, and see how the root locus change and the final damped system
+#+begin_src matlab
+  k = 1;
+  m = 1;
+  c = 0.05;
+
+  xi = c/(2*sqrt(k*m));
+
+  w0 = sqrt(k/m);
+  wr = 0.1;
+#+end_src
+
+#+begin_src matlab
+  kp = 0;
+  cp = 0;
+#+end_src
+
+#+begin_src matlab
+  %% Name of the Simulink File
+  mdl = 'rotating_frame';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/Fu'], 1, 'openinput');  io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/Fv'], 1, 'openinput');  io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/Tuv'], 5, 'openoutput'); io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/Tuv'], 6, 'openoutput'); io_i = io_i + 1;
+#+end_src
+
+#+begin_src matlab
+  Giff = linearize(mdl, io, 0);
+
+  %% Input/Output definition
+  Giff.InputName  = {'Fu', 'Fv'};
+  Giff.OutputName = {'Fmu', 'Fmv'};
+#+end_src
+
+Modified IFF
+#+begin_src matlab
+  wi = w0;
+#+end_src
+
+With parallel Stiffness
+#+begin_src matlab
+  kp = 2*m*wr^2;
+  cp = 0.01;
+#+end_src
+
+#+begin_src matlab
+  Giff_kp = linearize(mdl, io, 0);
+
+  %% Input/Output definition
+  Giff_kp.InputName  = {'Fu', 'Fv'};
+  Giff_kp.OutputName = {'Fmu', 'Fmv'};
+#+end_src
+
+#+begin_src matlab :exports none
+  figure;
+
+  gains = logspace(-2, 4, 100);
+
+  hold on;
+  set(gca,'ColorOrderIndex',1);
+  plot(real(pole(Giff)),  imag(pole(Giff)), 'x', ...
+       'DisplayName', 'Pseudo Integrator');
+  set(gca,'ColorOrderIndex',1);
+  plot(real(tzero(Giff)),  imag(tzero(Giff)), 'o', ...
+       'HandleVisibility', 'off');
+  for g_i = 1:length(gains)
+      K_iff = (gains(g_i)/(1 + s/wi))*eye(2);
+      cl_poles = pole(feedback(Giff, K_iff));
+      set(gca,'ColorOrderIndex',1);
+      plot(real(cl_poles), imag(cl_poles), '.', ...
+           'HandleVisibility', 'off');
+  end
+
+  set(gca,'ColorOrderIndex',2);
+  plot(real(pole(Giff_kp)),  imag(pole(Giff_kp)), 'x', ...
+       'DisplayName', 'Parallel Stiffness');
+  set(gca,'ColorOrderIndex',2);
+  plot(real(tzero(Giff_kp)),  imag(tzero(Giff_kp)), 'o', ...
+       'HandleVisibility', 'off');
+  for g_i = 1:length(gains)
+      K_iffa = (gains(g_i)/s)*eye(2);
+      cl_poles = pole(feedback(Giff_kp, K_iffa));
+      set(gca,'ColorOrderIndex',2);
+      plot(real(cl_poles), imag(cl_poles), '.', ...
+           'HandleVisibility', 'off');
+  end
+  hold off;
+  axis square;
+  xlim([-2, 0.5]); ylim([0, 2.5]);
+
+  xlabel('Real Part'); ylabel('Imaginary Part');
+  legend('location', 'northwest');
+#+end_src
+
+With parallel stiffness => unconditional stability and more damping but have to add mechanical parts
+
+* Direct Velocity Feedback
+** Equations
+The sensed relative velocity are equal to:
+
+#+begin_important
+\begin{equation}
+\begin{bmatrix} \dot{d}_u \\ \dot{d}_v \end{bmatrix} =
+\frac{s \frac{1}{k}}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2}
+\begin{bmatrix}
+  \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} & 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \\
+  -2 \frac{\Omega}{\omega_0}\frac{s}{\omega_0}          & \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \\
+\end{bmatrix}
+\begin{bmatrix} F_u \\ F_v \end{bmatrix}
+\end{equation}
+#+end_important
+
+** Numerical Values
+#+begin_src matlab
+  k = 1;
+  m = 1;
+  c = 0.05;
+  xi = c/(2*sqrt(k*m));
+
+  w0 = sqrt(k/m);
+#+end_src
+
+#+begin_src matlab
+  Ga = (s/k)/(((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (wr^2)/(w0^2))^2 + (2*wr*s/(w0^2))^2) * ...
+       [(s^2)/(w0^2) + 2*xi*s/w0 + 1 - (wr^2)/(w0^2), 2*wr*s/(w0^2) ; ...
+        -2*wr*s/(w0^2), (s^2)/(w0^2) + 2*xi*s/w0 + 1 - (wr^2)/(w0^2)];
+#+end_src
+
+** Simscape Model
+#+begin_src matlab
+  %% Name of the Simulink File
+  mdl = 'rotating_frame';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/Fu'], 1, 'openinput');  io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/Fv'], 1, 'openinput');  io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/Tuv'], 3, 'openoutput'); io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/Tuv'], 4, 'openoutput'); io_i = io_i + 1;
+#+end_src
+
+#+begin_src matlab
+  G = linearize(mdl, io, 0);
+
+  %% Input/Output definition
+  G.InputName  = {'Fu', 'Fv'};
+  G.OutputName = {'Vu', 'Vv'};
+#+end_src
+
+** DVF Plant
+#+begin_src matlab
+  figure; bode(G, Ga)
+#+end_src
+
+** Loop Gain
+Let's take $\Omega = \frac{\omega_0}{10}$.
+#+begin_src matlab
+  ws = 0.1*w0;
+  G_dvf = (s/k)/(((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (wr^2)/(w0^2))^2 + (2*wr*s/(w0^2))^2) * ...
+       [(s^2)/(w0^2) + 2*xi*s/w0 + 1 - (wr^2)/(w0^2), 2*wr*s/(w0^2) ; ...
+        -2*wr*s/(w0^2), (s^2)/(w0^2) + 2*xi*s/w0 + 1 - (wr^2)/(w0^2)];
+
+#+end_src
+
+#+begin_src matlab :exports none
+  g = 1;
+
+  freqs = logspace(-2, 1, 1000);
+
+  figure;
+
+  ax1 = subplot(2, 1, 1);
+  hold on;
+  for i = 1:length(ws)
+      plot(freqs, abs(squeeze(freqresp(G_dvf(1,1)*g, freqs))), ...
+           'DisplayName', sprintf('$\\omega = %.2f \\omega_0 $', ws(i)/w0))
+  end
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  set(gca, 'XTickLabel',[]); ylabel('Amplitude [N/N]');
+  legend('location', 'northwest');
+  ylim([0, 1e3]);
+
+  ax2 = subplot(2, 1, 2);
+  hold on;
+  for i = 1:length(ws)
+      plot(freqs, 180/pi*angle(squeeze(freqresp(G_dvf(1,1)*g, freqs))), ...
+           'DisplayName', sprintf('$\\omega = %.1f \\omega_0 $', ws(i)/w0))
+  end
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  xlabel('Frequency [rad/s]'); ylabel('Phase [deg]');
+  yticks(-180:90:180);
+  ylim([-180 180]);
+  hold off;
+
+  linkaxes([ax1,ax2],'x');
+  xlim([freqs(1), freqs(end)]);
+#+end_src
+
+** Root Locus
+#+begin_src matlab :exports none
+  ws = [0, 0.1, 0.3, 0.8, 1.1];
+
+  % G_dvf = {zeros(2, 2, length(ws))};
+  G_dvf = {zeros(length(ws), 1)};
+
+  for i = 1:length(ws)
+      W = ws(i);
+
+      G_dvf(i) = {(s/k)/(((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))^2 + (2*W*s/(w0^2))^2) * ...
+                        [(s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2), 2*W*s/(w0^2) ; ...
+                         -2*W*s/(w0^2), (s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2)]};
+  end
+#+end_src
+
+#+begin_src matlab :exports none
+  gains = logspace(-2, 4, 100);
+
+  figure;
+  hold on;
+  for i = 1:length(ws)
+      set(gca,'ColorOrderIndex',i);
+      plot(real(pole(G_dvf{i})),  imag(pole(G_dvf{i})), 'x', ...
+           'DisplayName', sprintf('$\\omega = %.2f \\omega_0 $', ws(i)/w0));
+      set(gca,'ColorOrderIndex',i);
+      plot(real(tzero(G_dvf{i})),  imag(tzero(G_dvf{i})), 'o', ...
+           'HandleVisibility', 'off');
+      for g_i = 1:length(gains)
+          set(gca,'ColorOrderIndex',i);
+          cl_poles = pole(feedback(G_dvf{i}, gains(g_i)*eye(2)));
+          plot(real(cl_poles), imag(cl_poles), '.', ...
+               'HandleVisibility', 'off');
+      end
+  end
+  hold off;
+  axis square;
+  xlim([-2, 0.5]); ylim([0, 2.5]);
+
+  xlabel('Real Part'); ylabel('Imaginary Part');
+  legend('location', 'northwest');
+#+end_src
+
+* Comparison
+** Matlab Init                                             :noexport:ignore:
+#+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
+<<matlab-dir>>
+#+end_src
+
+#+begin_src matlab :exports none :results silent :noweb yes
+<<matlab-init>>
+#+end_src
+
+#+begin_src matlab
+  addpath('./matlab/');
+#+end_src
+
+** Parameters
+#+begin_src matlab
+  k = 1;
+  m = 1;
+  c = 0.05;
+
+  xi = c/(2*sqrt(k*m));
+
+  w0 = sqrt(k/m);
+  wr = 0.1;
+#+end_src
+
+** Root Locus
+*** Pseudo Integrator IFF
+#+begin_src matlab
+  kp = 0;
+  cp = 0;
+#+end_src
+
+#+begin_src matlab
+  %% Name of the Simulink File
+  mdl = 'rotating_frame';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/K'], 1, 'openinput');  io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/G'], 2, 'openoutput'); io_i = io_i + 1;
+#+end_src
+
+#+begin_src matlab
+  Kiff = tf(zeros(2));
+  Kdvf = tf(zeros(2));
+#+end_src
+
+#+begin_src matlab
+  Giff = linearize(mdl, io, 0);
+
+  %% Input/Output definition
+  Giff.InputName  = {'Fu', 'Fv'};
+  Giff.OutputName = {'Fmu', 'Fmv'};
+#+end_src
+
+*** IFF With parallel Stiffness
+#+begin_src matlab
+  kp = 2*m*wr^2;
+  cp = 0.01;
+#+end_src
+
+#+begin_src matlab
+  %% Name of the Simulink File
+  mdl = 'rotating_frame';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/K'], 1, 'openinput');  io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/G'], 2, 'openoutput'); io_i = io_i + 1;
+#+end_src
+
+#+begin_src matlab
+  Giff_kp = linearize(mdl, io, 0);
+
+  %% Input/Output definition
+  Giff_kp.InputName  = {'Fu', 'Fv'};
+  Giff_kp.OutputName = {'Fmu', 'Fmv'};
+#+end_src
+
+*** DVF
+#+begin_src matlab
+  %% Name of the Simulink File
+  mdl = 'rotating_frame';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/K'], 1, 'openinput');  io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/G'], 1, 'openoutput'); io_i = io_i + 1;
+#+end_src
+
+#+begin_src matlab
+  Gdvf = linearize(mdl, io, 0);
+
+  %% Input/Output definition
+  Gdvf.InputName  = {'Fu', 'Fv'};
+  Gdvf.OutputName = {'Vu', 'Vv'};
+#+end_src
+
+*** Root Locus
+#+begin_src matlab
+  wi = w0;
+#+end_src
+
+#+begin_src matlab :exports none
+  figure;
+
+  gains = logspace(-2, 4, 100);
+
+  hold on;
+  set(gca,'ColorOrderIndex',1);
+  plot(real(pole(Giff)),  imag(pole(Giff)), 'x', ...
+       'DisplayName', 'Pseudo Integrator');
+  set(gca,'ColorOrderIndex',1);
+  plot(real(tzero(Giff)),  imag(tzero(Giff)), 'o', ...
+       'HandleVisibility', 'off');
+  for g_i = 1:length(gains)
+      K_iff = (gains(g_i)/(1 + s/wi))*eye(2);
+      cl_poles = pole(feedback(Giff, K_iff));
+      set(gca,'ColorOrderIndex',1);
+      plot(real(cl_poles), imag(cl_poles), '.', ...
+           'HandleVisibility', 'off');
+  end
+
+  set(gca,'ColorOrderIndex',2);
+  plot(real(pole(Giff_kp)),  imag(pole(Giff_kp)), 'x', ...
+       'DisplayName', 'Parallel Stiffness');
+  set(gca,'ColorOrderIndex',2);
+  plot(real(tzero(Giff_kp)),  imag(tzero(Giff_kp)), 'o', ...
+       'HandleVisibility', 'off');
+  for g_i = 1:length(gains)
+      K_iffa = (gains(g_i)/s)*eye(2);
+      cl_poles = pole(feedback(Giff_kp, K_iffa));
+      set(gca,'ColorOrderIndex',2);
+      plot(real(cl_poles), imag(cl_poles), '.', ...
+           'HandleVisibility', 'off');
+  end
+
+  set(gca,'ColorOrderIndex',3);
+  plot(real(pole(Gdvf)),  imag(pole(Gdvf)), 'x', ...
+       'DisplayName', 'DVF');
+  set(gca,'ColorOrderIndex',3);
+  plot(real(tzero(Gdvf)),  imag(tzero(Gdvf)), 'o', ...
+       'HandleVisibility', 'off');
+  for g_i = 1:length(gains)
+      K_dvf = gains(g_i)*eye(2);
+      cl_poles = pole(feedback(Gdvf, K_dvf));
+      set(gca,'ColorOrderIndex',3);
+      plot(real(cl_poles), imag(cl_poles), '.', ...
+           'HandleVisibility', 'off');
+  end
+  hold off;
+  axis square;
+  xlim([-2, 0.5]); ylim([0, 2.5]);
+
+  xlabel('Real Part'); ylabel('Imaginary Part');
+  legend('location', 'northwest');
+#+end_src
+
+
+** Controllers - Optimal Gains
+Estimate the controller gain that yields good damping in all cases.
+
+Pseudo integrator IFF:
+#+begin_src matlab :exports none
+  gains = logspace(-2, 4, 100);
+  opt_zeta_iff = 0;
+  opt_gain_iff = 0;
+
+  for g_i = 1:length(gains)
+      K_iff = (gains(g_i)/(1+s/wi))*eye(2);
+
+      [w, zeta] = damp(minreal(feedback(Giff, K_iff)));
+
+      if min(zeta) > opt_zeta_iff && all(zeta > 0)
+        opt_zeta_iff = min(zeta);
+        opt_gain_iff = min(gains(g_i));
+      end
+  end
+#+end_src
+
+Parallel Stiffness
+#+begin_src matlab :exports none
+  gains = logspace(-2, 4, 100);
+  opt_zeta_kp = 0;
+  opt_gain_kp = 0;
+
+  for g_i = 1:length(gains)
+      K_iff = gains(g_i)/s*eye(2);
+
+      [w, zeta] = damp(minreal(feedback(Giff_kp, K_iff)));
+
+      if min(zeta) > opt_zeta_kp && all(zeta > 0)
+        opt_zeta_kp = min(zeta);
+        opt_gain_kp = min(gains(g_i));
+      end
+  end
+#+end_src
+
+DVF:
+#+begin_src matlab :exports none
+  gains = logspace(-2, 4, 100);
+  opt_zeta_dvf = 0;
+  opt_gain_dvf = 0;
+
+  for g_i = 1:length(gains)
+      K_dvf = gains(g_i)*eye(2);
+
+      [w, zeta] = damp(minreal(feedback(Gdvf, K_dvf)));
+
+      if min(zeta) > opt_zeta_dvf && all(zeta > 0)
+        opt_zeta_dvf = min(zeta);
+        opt_gain_dvf = min(gains(g_i));
+      end
+  end
+#+end_src
+
+#+begin_src matlab
+  opt_zeta_iff, opt_zeta_kp, opt_zeta_dvf
+#+end_src
+
+** Transmissibility
+*** Open Loop
+#+begin_src matlab
+  wi = w0;
+#+end_src
+
+#+begin_src matlab
+  Kdvf = tf(zeros(2));
+  Kiff = tf(zeros(2));
+#+end_src
+
+#+begin_src matlab
+  kp = 0;
+  cp = 0;
+#+end_src
+
+#+begin_src matlab
+  %% Name of the Simulink File
+  mdl = 'rotating_frame';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/dw'], 1, 'input');  io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/Meas'], 1, 'output');  io_i = io_i + 1;
+#+end_src
+
+#+begin_src matlab
+  Tol = linearize(mdl, io, 0);
+
+  %% Input/Output definition
+  Tol.InputName  = {'Dwx', 'Dwy'};
+  Tol.OutputName = {'Dx', 'Dy'};
+#+end_src
+
+*** Pseudo Integrator IFF
+#+begin_src matlab
+  wi = w0;
+#+end_src
+
+#+begin_src matlab
+  Kdvf = tf(zeros(2));
+  Kiff = opt_gain_iff/(1 + s/wi)*tf(eye(2));
+#+end_src
+
+#+begin_src matlab
+  kp = 0;
+  cp = 0;
+#+end_src
+
+#+begin_src matlab
+  %% Name of the Simulink File
+  mdl = 'rotating_frame';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/dw'], 1, 'input');  io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/Meas'], 1, 'output');  io_i = io_i + 1;
+#+end_src
+
+#+begin_src matlab
+  Tiff = linearize(mdl, io, 0);
+
+  %% Input/Output definition
+  Tiff.InputName  = {'Dwx', 'Dwy'};
+  Tiff.OutputName = {'Dx', 'Dy'};
+#+end_src
+
+*** IFF With parallel Stiffness
+#+begin_src matlab
+  kp = 2*m*wr^2;
+  cp = 0.01;
+#+end_src
+
+#+begin_src matlab
+  Kdvf = tf(zeros(2));
+  Kiff = opt_gain_kp/s*tf(eye(2));
+#+end_src
+
+#+begin_src matlab
+  %% Name of the Simulink File
+  mdl = 'rotating_frame';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/dw'], 1, 'input');  io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/Meas'], 1, 'output');  io_i = io_i + 1;
+#+end_src
+
+#+begin_src matlab
+  Tiff_kp = linearize(mdl, io, 0);
+
+  %% Input/Output definition
+  Tiff_kp.InputName  = {'Dwx', 'Dwy'};
+  Tiff_kp.OutputName = {'Dx', 'Dy'};
+#+end_src
+
+*** DVF
+#+begin_src matlab
+  kp = 0;
+  cp = 0;
+#+end_src
+
+#+begin_src matlab
+  Kdvf = opt_gain_kp*tf(eye(2));
+  Kiff = tf(zeros(2));
+#+end_src
+
+#+begin_src matlab
+  %% Name of the Simulink File
+  mdl = 'rotating_frame';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/dw'], 1, 'input');  io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/Meas'], 1, 'output');  io_i = io_i + 1;
+#+end_src
+
+#+begin_src matlab
+  Tdvf = linearize(mdl, io, 0);
+
+  %% Input/Output definition
+  Tdvf.InputName  = {'Dwx', 'Dwy'};
+  Tdvf.OutputName = {'Dx', 'Dy'};
+#+end_src
+
+*** Transmissibility
+#+begin_src matlab
+  freqs = logspace(-2, 1, 1000);
+
+  figure;
+  hold on;
+  plot(freqs, abs(squeeze(freqresp(Tiff(1,1), freqs))), ...
+       'DisplayName', 'IFF Pseudo int')
+  plot(freqs, abs(squeeze(freqresp(Tiff_kp(1,1), freqs))), ...
+       'DisplayName', 'IFF Paral. stiff')
+  plot(freqs, abs(squeeze(freqresp(Tdvf(1,1), freqs))), ...
+       'DisplayName', 'DVF')
+  plot(freqs, abs(squeeze(freqresp(Tol(1,1), freqs))), 'k-', ...
+       'DisplayName', 'IFF Pseudo int')
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  ylabel('Frequency [rad/s]'); ylabel('Amplitude [m/m]');
+  legend('location', 'northwest');
+#+end_src
+
+** Compliance
+*** Open Loop
+#+begin_src matlab
+  Kdvf = tf(zeros(2));
+  Kiff = tf(zeros(2));
+#+end_src
+
+#+begin_src matlab
+  kp = 0;
+  cp = 0;
+#+end_src
+
+#+begin_src matlab
+  %% Name of the Simulink File
+  mdl = 'rotating_frame';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/fd'], 1, 'input');  io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/Meas'], 1, 'output');  io_i = io_i + 1;
+#+end_src
+
+#+begin_src matlab
+  Col = linearize(mdl, io, 0);
+
+  %% Input/Output definition
+  Col.InputName  = {'Fdx', 'Fdy'};
+  Col.OutputName = {'Dx', 'Dy'};
+#+end_src
+
+*** Pseudo Integrator IFF
+#+begin_src matlab
+  wi = w0;
+#+end_src
+
+#+begin_src matlab
+  Kdvf = tf(zeros(2));
+  Kiff = opt_gain_iff/(1 + s/wi)*tf(eye(2));
+#+end_src
+
+#+begin_src matlab
+  kp = 0;
+  cp = 0;
+#+end_src
+
+#+begin_src matlab
+  %% Name of the Simulink File
+  mdl = 'rotating_frame';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/fd'], 1, 'input');  io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/Meas'], 1, 'output');  io_i = io_i + 1;
+#+end_src
+
+#+begin_src matlab
+  Ciff = linearize(mdl, io, 0);
+
+  %% Input/Output definition
+  Ciff.InputName  = {'Fdx', 'Fdy'};
+  Ciff.OutputName = {'Dx', 'Dy'};
+#+end_src
+
+*** IFF With parallel Stiffness
+#+begin_src matlab
+  kp = 2*m*wr^2;
+  cp = 0.01;
+#+end_src
+
+#+begin_src matlab
+  Kdvf = tf(zeros(2));
+  Kiff = opt_gain_kp/s*tf(eye(2));
+#+end_src
+
+#+begin_src matlab
+  %% Name of the Simulink File
+  mdl = 'rotating_frame';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/fd'], 1, 'input');  io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/Meas'], 1, 'output');  io_i = io_i + 1;
+#+end_src
+
+#+begin_src matlab
+  Ciff_kp = linearize(mdl, io, 0);
+
+  %% Input/Output definition
+  Ciff_kp.InputName  = {'Fdx', 'Fdy'};
+  Ciff_kp.OutputName = {'Dx', 'Dy'};
+#+end_src
+
+*** DVF
+#+begin_src matlab
+  kp = 0;
+  cp = 0;
+#+end_src
+
+#+begin_src matlab
+  Kdvf = opt_gain_kp*tf(eye(2));
+  Kiff = tf(zeros(2));
+#+end_src
+
+#+begin_src matlab
+  %% Name of the Simulink File
+  mdl = 'rotating_frame';
+
+  %% Input/Output definition
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, '/fd'], 1, 'input');  io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/Meas'], 1, 'output');  io_i = io_i + 1;
+#+end_src
+
+#+begin_src matlab
+  Cdvf = linearize(mdl, io, 0);
+
+  %% Input/Output definition
+  Cdvf.InputName  = {'Fdx', 'Fdy'};
+  Cdvf.OutputName = {'Dx', 'Dy'};
+#+end_src
+
+*** Compliance
+#+begin_src matlab
+  freqs = logspace(-2, 1, 1000);
+
+  figure;
+  hold on;
+  plot(freqs, abs(squeeze(freqresp(Ciff(1,1), freqs))), ...
+       'DisplayName', 'IFF Pseudo int')
+  plot(freqs, abs(squeeze(freqresp(Ciff_kp(1,1), freqs))), ...
+       'DisplayName', 'IFF Paral. stiff')
+  plot(freqs, abs(squeeze(freqresp(Cdvf(1,1), freqs))), ...
+       'DisplayName', 'DVF')
+  plot(freqs, abs(squeeze(freqresp(Col(1,1), freqs))), 'k-', ...
+       'DisplayName', 'IFF Pseudo int')
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  ylabel('Frequency [rad/s]'); ylabel('Compliance [m/N]');
+  legend('location', 'northwest');
+  % ylim([0, 1e3]);
+  % xlim([freqs(1), freqs(end)]);
+#+end_src
