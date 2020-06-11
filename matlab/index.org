@@ -26,34 +26,16 @@
 
 * Introduction                                                        :ignore:
 
-|                                   | Mathematical Notation        | Matlab        | Unit    |
-|-----------------------------------+------------------------------+---------------+---------|
-| Actuator Stiffness                | $k$                          | =k=           | N/m     |
-| Actuator Damping                  | $c$                          | =c=           | N/(m/s) |
-| Payload Mass                      | $m$                          | =m=           | kg      |
-| Damping Ratio                     | $\xi = \frac{c}{2\sqrt{km}}$ | =xi=          |         |
-| Actuator Force                    | $\bm{F}, F_u, F_v$           | =F= =Fu= =Fv= | N       |
-| Force Sensor signal               | $\bm{f}, f_u, f_v$           | =f= =fu= =fv= | N       |
-| Relative Displacement             | $\bm{d}, d_u, d_v$           | =d= =du= =dv= | m       |
-| Relative Velocity                 | $\bm{v}, v_u, v_v$           | =v= =vu= =vv= | m/s     |
-| Resonance freq. when $\Omega = 0$ | $\omega_0$                   | =w0=          | rad/s   |
-| Rotation Speed                    | $\Omega = \dot{\theta}$      | =W=           | rad/s   |
-
-|                  | Mathematical Notation | Matlab | Unit    |
-|------------------+-----------------------+--------+---------|
-| Laplace variable | $s$                   | =s=    |         |
-| Complex number   | $j$                   | =j=    |         |
-| Frequency        | $\omega$              | =w=    | [rad/s] |
-
-|                | Mathematical Notation                          | Matlab | Unit    |
-|----------------+------------------------------------------------+--------+---------|
-| IFF Plant      | $\bm{G}_\text{IFF}(s) = \frac{\bm{f}}{\bm{F}}$ | =Giff= | N/N     |
-| DVF Plant      | $\bm{G}_\text{DVF}(s) = \frac{\bm{v}}{\bm{F}}$ | =Gdvf= | (m/s)/N |
-| IFF Controller | $\bm{K}_\text{IFF}(s)$                         | =Kiff= |         |
-| DVF Controller | $\bm{K}_\text{DVF}(s)$                         | =Kdvf= |         |
+- Section [[sec:system_description]]
+- Section [[sec:iff_pure_int]]
+- Section [[sec:iff_pseudo_int]]
+- Section [[sec:iff_parallel_stiffness]]
+- Section [[sec:dvf]]
+- Section [[sec:comparison]]
 
 * System Description and Analysis
 <<sec:system_description>>
+
 ** Introduction                                                      :ignore:
 ** Matlab Init                                              :noexport:ignore:
 #+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
@@ -122,14 +104,14 @@ The system becomes unstable for $\Omega > \omega_0$.
 #+begin_src matlab
   Ws = linspace(0, 2, 51); % Vector of considered rotation speed [rad/s]
 
-  polesvc = zeros(4, length(Ws));
+  p_ws = zeros(4, length(Ws));
 
-  for i = 1:length(Ws)
-      W = Ws(i);
+  for W_i = 1:length(Ws)
+      W = Ws(W_i);
 
       polei = pole(1/(((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))^2 + (2*W*s/(w0^2))^2));
       [~, i_sort] = sort(imag(polei));
-      polesvc(:, i) = polei(i_sort);
+      p_ws(:, W_i) = polei(i_sort);
   end
 #+end_src
 
@@ -138,8 +120,8 @@ The system becomes unstable for $\Omega > \omega_0$.
 
   ax1 = subplot(1,2,1);
   hold on;
-  for i = 1:size(polesvc, 1)
-      plot(Ws, real(polesvc(i, :)), 'k-')
+  for p_i = 1:size(p_ws, 1)
+      plot(Ws, real(p_ws(p_i, :)), 'k-')
   end
   plot(Ws, zeros(size(Ws)), 'k--')
   hold off;
@@ -147,9 +129,9 @@ The system becomes unstable for $\Omega > \omega_0$.
 
   ax2 = subplot(1,2,2);
   hold on;
-  for i = 1:size(polesvc, 1)
-      plot(Ws,  imag(polesvc(i, :)), 'k-')
-      plot(Ws, -imag(polesvc(i, :)), 'k-')
+  for p_i = 1:size(p_ws, 1)
+      plot(Ws,  imag(p_ws(p_i, :)), 'k-')
+      plot(Ws, -imag(p_ws(p_i, :)), 'k-')
   end
   hold off;
   xlabel('Rotation Frequency [rad/s]'); ylabel('Pole Imaginary Part');
@@ -238,7 +220,9 @@ No controller for now.
   linkaxes([ax1,ax2],'y');
 #+end_src
 
-* Integral Force Feedback
+* Problem with pure Integral Force Feedback
+<<sec:iff_pure_int>>
+
 ** Introduction                                                      :ignore:
 
 - Diagram with the controller
@@ -272,16 +256,14 @@ Let's define initial values for the model.
   w0 = sqrt(k/m); % [rad/s]
 #+end_src
 
-** IFF with pure integrator
-<<sec:pure_iff>>
-*** No parallel stiffness
+** No parallel stiffness
 We set the additional stiffness and damping to zero (this will be used later).
 #+begin_src matlab
   kp = 0; % [N/m]
   cp = 0; % [N/(m/s)]
 #+end_src
 
-*** Equations
+** Equations
 The sensed forces are equal to:
 \begin{equation}
 \begin{bmatrix} f_{u} \\ f_{v} \end{bmatrix} =
@@ -306,7 +288,7 @@ Which then gives:
 \end{equation}
 #+end_important
 
-*** Poles and Zeros without damping                               :noexport:
+** Poles and Zeros without damping                                 :noexport:
 #+begin_src matlab
   syms W w0 xi positive
   assumealso(w0 > W)
@@ -341,7 +323,7 @@ Zeros (without damping)
   \left(\begin{array}{c} -\sqrt{-\frac{w_{0}\,\sqrt{{w_{0}}^2+8\,{\mathrm{W}}^2}}{2}-\frac{{w_{0}}^2}{2}-{\mathrm{W}}^2}\\ -\sqrt{\frac{w_{0}\,\sqrt{{w_{0}}^2+8\,{\mathrm{W}}^2}}{2}-\frac{{w_{0}}^2}{2}-{\mathrm{W}}^2}\\ \sqrt{-\frac{w_{0}\,\sqrt{{w_{0}}^2+8\,{\mathrm{W}}^2}}{2}-\frac{{w_{0}}^2}{2}-{\mathrm{W}}^2}\\ \sqrt{\frac{w_{0}\,\sqrt{{w_{0}}^2+8\,{\mathrm{W}}^2}}{2}-\frac{{w_{0}}^2}{2}-{\mathrm{W}}^2} \end{array}\right)
 \end{equation}
 
-*** Simscape Model
+** Simscape Model
 The rotation speed is set to $\Omega = 0.1 \omega_0$.
 #+begin_src matlab
   W = 0.1*w0; % [rad/s]
@@ -371,7 +353,7 @@ No controller for now.
   Giff.OutputName = {'fu', 'fv'};
 #+end_src
 
-*** Comparison with the model
+** Comparison with the model
 #+begin_src matlab
   Giff_th = 1/(((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))^2 + (2*W*s/(w0^2))^2) * ...
             [(s^2/w0^2 - W^2/w0^2)*((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2)) + (2*W*s/(w0^2))^2, - (2*xi*s/w0 + 1)*2*W*s/(w0^2) ; ...
@@ -424,7 +406,7 @@ No controller for now.
   linkaxes([ax1,ax2],'y');
 #+end_src
 
-*** Influence of the rotation speed on the IFF Plant
+** Influence of the rotation speed on the IFF Plant
 #+begin_src matlab
   Ws = [0, 0.1, 0.3, 0.8, 1.1]; % Rotating Speeds [rad/s]
 #+end_src
@@ -432,10 +414,10 @@ No controller for now.
 #+begin_src matlab
   Gsiff = {zeros(2, 2, length(Ws))};
 
-  for i = 1:length(Ws)
-      W = Ws(i);
+  for W_i = 1:length(Ws)
+      W = Ws(W_i);
 
-      Gsiff(:, :, i) = {1/(((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))^2 + (2*W*s/(w0^2))^2) * ...
+      Gsiff(:, :, W_i) = {1/(((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))^2 + (2*W*s/(w0^2))^2) * ...
                         [(s^2/w0^2 - W^2/w0^2)*((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2)) + (2*W*s/(w0^2))^2, - (2*xi*s/w0 + 1)*2*W*s/(w0^2) ; ...
                          (2*xi*s/w0 + 1)*2*W*s/(w0^2), (s^2/w0^2 - W^2/w0^2)*((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))+ (2*W*s/(w0^2))^2]};
   end
@@ -448,9 +430,9 @@ No controller for now.
 
   ax1 = subplot(2, 1, 1);
   hold on;
-  for i = 1:length(Ws)
-      plot(freqs, abs(squeeze(freqresp(Gsiff{i}(1,1), freqs))), ...
-           'DisplayName', sprintf('$\\omega = %.2f \\omega_0 $', Ws(i)/w0))
+  for W_i = 1:length(Ws)
+      plot(freqs, abs(squeeze(freqresp(Gsiff{W_i}(1,1), freqs))), ...
+           'DisplayName', sprintf('$\\omega = %.2f \\omega_0 $', Ws(W_i)/w0))
   end
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
@@ -460,9 +442,8 @@ No controller for now.
 
   ax2 = subplot(2, 1, 2);
   hold on;
-  for i = 1:length(Ws)
-      plot(freqs, 180/pi*angle(squeeze(freqresp(Gsiff{i}(1,1), freqs))), ...
-           'DisplayName', sprintf('$\\omega = %.1f \\omega_0 $', Ws(i)/w0))
+  for W_i = 1:length(Ws)
+      plot(freqs, 180/pi*angle(squeeze(freqresp(Gsiff{W_i}(1,1), freqs))))
   end
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
   xlabel('Frequency [rad/s]'); ylabel('Phase [deg]');
@@ -474,7 +455,7 @@ No controller for now.
   xlim([freqs(1), freqs(end)]);
 #+end_src
 
-*** Loop Gain
+** Loop Gain
 Let's take $\Omega = \frac{\omega_0}{10}$.
 #+begin_src matlab
   W = 0.1*w0;
@@ -523,18 +504,18 @@ The decentralized controller contains pure integrators:
   xlim([freqs(1), freqs(end)]);
 #+end_src
 
-*** Root Locus
+** Root Locus
 #+begin_src matlab
   Ws = [0, 0.1, 0.3, 0.8, 1.1];
 #+end_src
 
 #+begin_src matlab
-  G_iff = {zeros(2, 2, length(Ws))};
+  Giff = {zeros(2, 2, length(Ws))};
 
-  for i = 1:length(Ws)
-      W = Ws(i);
+  for W_i = 1:length(Ws)
+      W = Ws(W_i);
 
-      G_iff(:, :, i) = {1/(((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))^2 + (2*W*s/(w0^2))^2) * ...
+      Giff(:, :, W_i) = {1/(((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))^2 + (2*W*s/(w0^2))^2) * ...
                         [(s^2/w0^2 - W^2/w0^2)*((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2)) + (2*W*s/(w0^2))^2, - (2*xi*s/w0 + 1)*2*W*s/(w0^2) ; ...
                          (2*xi*s/w0 + 1)*2*W*s/(w0^2), (s^2/w0^2 - W^2/w0^2)*((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))+ (2*W*s/(w0^2))^2]};
   end
@@ -546,16 +527,16 @@ The decentralized controller contains pure integrators:
   gains = logspace(-2, 4, 100);
 
   hold on;
-  for i = 1:length(Ws)
-      set(gca,'ColorOrderIndex',i);
-      plot(real(pole(G_iff{i})),  imag(pole(G_iff{i})), 'x', ...
-           'DisplayName', sprintf('$\\omega = %.1f \\omega_0 $', Ws(i)/w0));
-      set(gca,'ColorOrderIndex',i);
-      plot(real(tzero(G_iff{i})),  imag(tzero(G_iff{i})), 'o', ...
+  for W_i = 1:length(Ws)
+      set(gca,'ColorOrderIndex',W_i);
+      plot(real(pole(Giff{W_i})),  imag(pole(Giff{W_i})), 'x', ...
+           'DisplayName', sprintf('$\\omega = %.1f \\omega_0 $', Ws(W_i)/w0));
+      set(gca,'ColorOrderIndex',W_i);
+      plot(real(tzero(Giff{W_i})),  imag(tzero(Giff{W_i})), 'o', ...
            'HandleVisibility', 'off');
-      for g_i = 1:length(gains)
-          set(gca,'ColorOrderIndex',i);
-          cl_poles = pole(feedback(G_iff{i}, gains(g_i)/s*eye(2)));
+      for g = gains
+          set(gca,'ColorOrderIndex',W_i);
+          cl_poles = pole(feedback(Giff{W_i}, g/s*eye(2)));
           plot(real(cl_poles), imag(cl_poles), '.', ...
                'HandleVisibility', 'off');
       end
@@ -568,16 +549,50 @@ The decentralized controller contains pure integrators:
   legend('location', 'northwest');
 #+end_src
 
-** Modified IFF (pseudo integrator)
-<<sec:modified_iff>>
-*** No parallel stiffness
+* Modified IFF (pseudo integrator)
+<<sec:iff_pseudo_int>>
+
+** Introduction                                                      :ignore:
+
+- Diagram with the controller
+- Basic idea of IFF
+
+** Matlab Init                                              :noexport:ignore:
+#+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
+  <<matlab-dir>>
+#+end_src
+
+#+begin_src matlab :exports none :results silent :noweb yes
+  <<matlab-init>>
+#+end_src
+
+#+begin_src matlab
+  addpath('./matlab/');
+#+end_src
+
+#+begin_src matlab
+  open('rotating_frame.slx');
+#+end_src
+
+** Plant Parameters
+Let's define initial values for the model.
+#+begin_src matlab
+  k = 1; % [N/m]
+  m = 1; % [kg]
+  c = 0.05; % [N/(m/s)]
+
+  xi = c/(2*sqrt(k*m));
+  w0 = sqrt(k/m); % [rad/s]
+#+end_src
+
+** No parallel stiffness
 We set the additional stiffness and damping to zero (this will be used later).
 #+begin_src matlab
   kp = 0; % [N/m]
   cp = 0; % [N/(m/s)]
 #+end_src
 
-*** Plant parameters
+** Plant parameters
 #+begin_src matlab
   W = 0.1*w0;
 
@@ -587,7 +602,7 @@ We set the additional stiffness and damping to zero (this will be used later).
 
 #+end_src
 
-*** Control Law
+** Control Law
 Let's take the integral feedback controller as a low pass filter (pseudo integrator):
 \begin{equation}
   K_{\text{IFF}}(s) = g\frac{1}{1 + \frac{s}{\omega_i}} \begin{bmatrix}
@@ -605,7 +620,7 @@ Let's take the integral feedback controller as a low pass filter (pseudo integra
   Kiff = (g/(1+s/wi))*eye(2);
 #+end_src
 
-*** Loop Gain
+** Loop Gain
 #+begin_src matlab
   freqs = logspace(-2, 1, 1000);
 
@@ -631,7 +646,7 @@ Let's take the integral feedback controller as a low pass filter (pseudo integra
   xlim([freqs(1), freqs(end)]);
 #+end_src
 
-*** Root Locus
+** Root Locus
 As shown in the Root Locus plot, for some value of the gain, the system is stable.
 (The system is however still not conditionally stable).
 
@@ -643,8 +658,8 @@ As shown in the Root Locus plot, for some value of the gain, the system is stabl
   hold on;
   plot(real(pole(Giff)),  imag(pole(Giff)), 'kx');
   plot(real(tzero(Giff)),  imag(tzero(Giff)), 'ko');
-  for gi = 1:length(gains)
-      clpoles = pole(feedback(Giff, (gains(gi)/(1+s/wi))*eye(2)));
+  for g = gains
+      clpoles = pole(feedback(Giff, (g/(1+s/wi))*eye(2)));
       plot(real(clpoles), imag(clpoles), 'k.');
   end
   hold off;
@@ -654,7 +669,7 @@ As shown in the Root Locus plot, for some value of the gain, the system is stabl
   xlabel('Real Part'); ylabel('Imaginary Part');
 #+end_src
 
-*** How does $\omega_i$ influences the attainable damping? Optimal Gain
+** How does $\omega_i$ influences the attainable damping? Optimal Gain
 The DC gain for $G_\text{IFF}$ is (for $\Omega < \omega_0$):
 \begin{equation}
   G_{\text{IFF}}(\omega = 0) = \frac{1}{1 - \frac{{\omega_0}^2}{\Omega^2}} \begin{bmatrix}
@@ -686,8 +701,8 @@ Root Locus => Small $\omega_i$ seems to allow more damping but may limit the gai
       set(gca,'ColorOrderIndex',wi_i);
       wi = wis(wi_i);
       L(wi_i) = plot(nan, nan, '.', 'DisplayName', sprintf('$\\omega_i = %.1e \\omega_0$', wi./w0));
-      for gi = 1:length(gains)
-          clpoles = pole(feedback(Giff, (gains(gi)/(1+s/wi))*eye(2)));
+      for g = gains
+          clpoles = pole(feedback(Giff, (g/(1+s/wi))*eye(2)));
           set(gca,'ColorOrderIndex',wi_i);
           plot(real(clpoles), imag(clpoles), '.');
       end
@@ -711,8 +726,8 @@ Limitation of large $\omega_i$: no damping attainable
   for wi_i = 1:length(wis)
       gains = linspace(0, w0^2/W^2 - 1, 100);
 
-      for g_i = 1:length(gains)
-          Kiff = (gains(g_i)/(1+s/wis(wi_i)))*eye(2);
+      for g = gains
+          Kiff = (g/(1+s/wis(wi_i)))*eye(2);
 
           [w, zeta] = damp(minreal(feedback(Giff, Kiff)));
 
@@ -747,8 +762,8 @@ Root Locus that shows the maximum damping attainable.
   plot(real(tzero(Giff)),  imag(tzero(Giff)), 'ko', 'HandleVisibility', 'off');
   for wi_i = 1:length(wis)
       wi = wis(wi_i);
-      for gi = 1:length(gains)
-          clpoles = pole(feedback(Giff, (gains(gi)/(1+s/wi))*eye(2)));
+      for g = gains
+          clpoles = pole(feedback(Giff, (g/(1+s/wi))*eye(2)));
           set(gca,'ColorOrderIndex',wi_i);
           plot(real(clpoles), imag(clpoles), '.', 'HandleVisibility', 'off');
       end
@@ -796,15 +811,49 @@ Root Locus that shows the maximum damping attainable.
   xlim([freqs(1), freqs(end)]);
 #+end_src
 
-** Stiffness in parallel with the force sensor
-<<sec:stiffness_iff>>
-*** Schematic
+* IFF with a stiffness in parallel with the force sensor
+<<sec:iff_parallel_stiffness>>
+
+** Introduction                                                      :ignore:
+
+- Diagram with the controller
+- Basic idea of IFF
+
+** Matlab Init                                              :noexport:ignore:
+#+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
+  <<matlab-dir>>
+#+end_src
+
+#+begin_src matlab :exports none :results silent :noweb yes
+  <<matlab-init>>
+#+end_src
+
+#+begin_src matlab
+  addpath('./matlab/');
+#+end_src
+
+#+begin_src matlab
+  open('rotating_frame.slx');
+#+end_src
+
+** Plant Parameters
+Let's define initial values for the model.
+#+begin_src matlab
+  k = 1; % [N/m]
+  m = 1; % [kg]
+  c = 0.05; % [N/(m/s)]
+
+  xi = c/(2*sqrt(k*m));
+  w0 = sqrt(k/m); % [rad/s]
+#+end_src
+
+** Schematic
 
 #+name: fig:figure_name
 #+caption: Figure caption
 [[file:figs-tikz/rotating_xy_platform_springs.png]]
 
-*** Physical Explanation
+** Physical Explanation
 - Negative stiffness induced by gyroscopic effects
 - Zeros of the open-loop <=> Poles of the subsystem with the force sensors removes
 - As the zeros are the poles of the closed loop system for high gains, we want them to be in the left-half plane
@@ -821,11 +870,11 @@ And thus, the stiffness in parallel should be such that:
   k_{p} > m \Omega^2
 \end{equation}
 
-*** TODO Equations
+** TODO Equations
 The equations should be the same as before by taking $k = k^\prime + k_a$.
 I just have to determine the measured force by the sensor
 
-*** Effect of the parallel stiffness on the IFF plant
+** Effect of the parallel stiffness on the IFF plant
 Let's fix the rotating speed:
 #+begin_src matlab
   W = 0.1*w0;
@@ -918,7 +967,7 @@ And the IFF plant is identified in three different cases:
   xlim([freqs(1), freqs(end)]);
 #+end_src
 
-*** Parallel Stiffness effect
+** Parallel Stiffness effect
 Pure IFF controller can be used if:
 \begin{equation}
   k_{p} > m \Omega^2
@@ -928,7 +977,7 @@ However, having large values of $k_p$ may:
 - decrease the actuator stroke
 - decrease the attainable damping (section about optimal value)
 
-*** Root locus
+** Root locus
 #+begin_src matlab :exports none
   figure;
 
@@ -941,9 +990,9 @@ However, having large values of $k_p$ may:
   set(gca,'ColorOrderIndex',1);
   plot(real(tzero(Giff)),  imag(tzero(Giff)), 'o', ...
        'HandleVisibility', 'off');
-  for g_i = 1:length(gains)
-      cl_poles = pole(feedback(Giff, (gains(g_i)/s)*eye(2)));
-  set(gca,'ColorOrderIndex',1);
+  for g = gains
+      cl_poles = pole(feedback(Giff, (g/s)*eye(2)));
+      set(gca,'ColorOrderIndex',1);
       plot(real(cl_poles), imag(cl_poles), '.', ...
            'HandleVisibility', 'off');
   end
@@ -954,9 +1003,9 @@ However, having large values of $k_p$ may:
   set(gca,'ColorOrderIndex',2);
   plot(real(tzero(Giff_s)),  imag(tzero(Giff_s)), 'o', ...
        'HandleVisibility', 'off');
-  for g_i = 1:length(gains)
-      cl_poles = pole(feedback(Giff_s, (gains(g_i)/s)*eye(2)));
-  set(gca,'ColorOrderIndex',2);
+  for g = gains
+      cl_poles = pole(feedback(Giff_s, (g/s)*eye(2)));
+      set(gca,'ColorOrderIndex',2);
       plot(real(cl_poles), imag(cl_poles), '.', ...
            'HandleVisibility', 'off');
   end
@@ -967,9 +1016,9 @@ However, having large values of $k_p$ may:
   set(gca,'ColorOrderIndex',3);
   plot(real(tzero(Giff_l)),  imag(tzero(Giff_l)), 'o', ...
        'HandleVisibility', 'off');
-  for g_i = 1:length(gains)
-  set(gca,'ColorOrderIndex',3);
-      cl_poles = pole(feedback(Giff_l, (gains(g_i)/s)*eye(2)));
+  for g = gains
+      set(gca,'ColorOrderIndex',3);
+      cl_poles = pole(feedback(Giff_l, (g/s)*eye(2)));
       plot(real(cl_poles), imag(cl_poles), '.', ...
            'HandleVisibility', 'off');
   end
@@ -981,7 +1030,7 @@ However, having large values of $k_p$ may:
   legend('location', 'northwest');
 #+end_src
 
-*** Optimal value of $k_p$
+** Optimal value of $k_p$
 #+begin_src matlab
   kps = [0, 0.5, 1, 2, 10]*m*W^2;
   cp = 0.01;
@@ -1003,9 +1052,9 @@ However, having large values of $k_p$ may:
       set(gca,'ColorOrderIndex',kp_i);
       plot(real(tzero(Giff)),  imag(tzero(Giff)), 'o', ...
            'HandleVisibility', 'off');
-      for g_i = 1:length(gains)
-          K_iffa = (gains(g_i)/s)*eye(2);
-          cl_poles = pole(feedback(Giff, K_iffa));
+      for g = gains
+          Kiffa = (g/s)*eye(2);
+          cl_poles = pole(feedback(Giff, Kiffa));
           set(gca,'ColorOrderIndex',kp_i);
           plot(real(cl_poles), imag(cl_poles), '.', ...
                'HandleVisibility', 'off');
@@ -1026,7 +1075,7 @@ To have unconditional stability:
 
 But if $k_p$ is too late, the attainable damping is decreasing and this may as well limit the actuator stroke/force.
 
-*** Optimal Gain
+** Optimal Gain
 Let's take $k_p = 2 m \Omega^2$ and find the optimal IFF control gain.
 
 #+begin_src matlab
@@ -1042,8 +1091,8 @@ Let's take $k_p = 2 m \Omega^2$ and find the optimal IFF control gain.
 
   gains = logspace(-2, 4, 100);
 
-  for g_i = 1:length(gains)
-      Kiff = (gains(g_i)/s)*eye(2);
+  for g = gains
+      Kiff = (g/s)*eye(2);
 
       [w, zeta] = damp(minreal(feedback(Giff, Kiff)));
 
@@ -1062,8 +1111,8 @@ Let's take $k_p = 2 m \Omega^2$ and find the optimal IFF control gain.
   hold on;
   plot(real(pole(Giff)),  imag(pole(Giff)), 'kx', 'HandleVisibility', 'off');
   plot(real(tzero(Giff)),  imag(tzero(Giff)), 'ko', 'HandleVisibility', 'off');
-  for gi = 1:length(gains)
-      clpoles = pole(feedback(Giff, (gains(gi)/s)*eye(2)));
+  for g = gains
+      clpoles = pole(feedback(Giff, (g/s)*eye(2)));
       plot(real(clpoles), imag(clpoles), 'k.', 'HandleVisibility', 'off');
   end
   % Optimal Gain
@@ -1109,6 +1158,8 @@ Let's take $k_p = 2 m \Omega^2$ and find the optimal IFF control gain.
 #+end_src
 
 * Direct Velocity Feedback
+<<sec:dvf>>
+
 ** Introduction                                                      :ignore:
 ** Matlab Init                                              :noexport:ignore:
 #+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
@@ -1272,9 +1323,9 @@ The controller is a pure gain::
       plot(real(tzero(Gdvf)),  imag(tzero(Gdvf)), 'o', ...
            'HandleVisibility', 'off');
    
-      for g_i = 1:length(gains)
+      for g = gains
           set(gca,'ColorOrderIndex',W_i);
-          cl_poles = pole(feedback(Gdvf, gains(g_i)*eye(2)));
+          cl_poles = pole(feedback(Gdvf, g*eye(2)));
 
           plot(real(cl_poles), imag(cl_poles), '.', ...
                'HandleVisibility', 'off');
@@ -1289,6 +1340,8 @@ The controller is a pure gain::
 #+end_src
 
 * Comparison
+<<sec:comparison>>
+
 ** Introduction                                                      :ignore:
 ** Matlab Init                                             :noexport:ignore:
 #+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
@@ -1418,9 +1471,9 @@ The rotation speed is set to $\Omega = 0.1 \omega_0$.
   set(gca,'ColorOrderIndex',1);
   plot(real(tzero(Giff)),  imag(tzero(Giff)), 'o', ...
        'HandleVisibility', 'off');
-  for g_i = 1:length(gains)
-      K_iff = (gains(g_i)/(1 + s/wi))*eye(2);
-      cl_poles = pole(feedback(Giff, K_iff));
+  for g = gains
+      Kiff = (g/(1 + s/wi))*eye(2);
+      cl_poles = pole(feedback(Giff, Kiff));
       set(gca,'ColorOrderIndex',1);
       plot(real(cl_poles), imag(cl_poles), '.', ...
            'HandleVisibility', 'off');
@@ -1432,9 +1485,9 @@ The rotation speed is set to $\Omega = 0.1 \omega_0$.
   set(gca,'ColorOrderIndex',2);
   plot(real(tzero(Giff_kp)),  imag(tzero(Giff_kp)), 'o', ...
        'HandleVisibility', 'off');
-  for g_i = 1:length(gains)
-      K_iffa = (gains(g_i)/s)*eye(2);
-      cl_poles = pole(feedback(Giff_kp, K_iffa));
+  for g = gains
+      Kiffa = (g/s)*eye(2);
+      cl_poles = pole(feedback(Giff_kp, Kiffa));
       set(gca,'ColorOrderIndex',2);
       plot(real(cl_poles), imag(cl_poles), '.', ...
            'HandleVisibility', 'off');
@@ -1446,9 +1499,9 @@ The rotation speed is set to $\Omega = 0.1 \omega_0$.
   set(gca,'ColorOrderIndex',3);
   plot(real(tzero(Gdvf)),  imag(tzero(Gdvf)), 'o', ...
        'HandleVisibility', 'off');
-  for g_i = 1:length(gains)
-      K_dvf = gains(g_i)*eye(2);
-      cl_poles = pole(feedback(Gdvf, K_dvf));
+  for g = gains
+      Kdvf = g*eye(2);
+      cl_poles = pole(feedback(Gdvf, Kdvf));
       set(gca,'ColorOrderIndex',3);
       plot(real(cl_poles), imag(cl_poles), '.', ...
            'HandleVisibility', 'off');
@@ -1470,8 +1523,8 @@ Pseudo integrator IFF:
   opt_zeta_iff = 0;
   opt_gain_iff = 0;
 
-  for g_i = 1:length(gains)
-      Kiff = (gains(g_i)/(1+s/wi))*eye(2);
+  for g = gains
+      Kiff = (g/(1+s/wi))*eye(2);
 
       [w, zeta] = damp(minreal(feedback(Giff, Kiff)));
 
@@ -1488,8 +1541,8 @@ Parallel Stiffness
   opt_zeta_kp = 0;
   opt_gain_kp = 0;
 
-  for g_i = 1:length(gains)
-      Kiff = gains(g_i)/s*eye(2);
+  for g = gains
+      Kiff = g/s*eye(2);
 
       [w, zeta] = damp(minreal(feedback(Giff_kp, Kiff)));
 
@@ -1506,8 +1559,8 @@ DVF:
   opt_zeta_dvf = 0;
   opt_gain_dvf = 0;
 
-  for g_i = 1:length(gains)
-      Kdvf = gains(g_i)*eye(2);
+  for g = gains
+      Kdvf = g*eye(2);
 
       [w, zeta] = damp(minreal(feedback(Gdvf, Kdvf)));
 
@@ -1765,3 +1818,32 @@ DVF:
   ylabel('Frequency [rad/s]'); ylabel('Compliance [m/N]');
   legend('location', 'northwest');
 #+end_src
+
+* Notations
+<<sec:notations>>
+
+|                                   | Mathematical Notation        | Matlab        | Unit    |
+|-----------------------------------+------------------------------+---------------+---------|
+| Actuator Stiffness                | $k$                          | =k=           | N/m     |
+| Actuator Damping                  | $c$                          | =c=           | N/(m/s) |
+| Payload Mass                      | $m$                          | =m=           | kg      |
+| Damping Ratio                     | $\xi = \frac{c}{2\sqrt{km}}$ | =xi=          |         |
+| Actuator Force                    | $\bm{F}, F_u, F_v$           | =F= =Fu= =Fv= | N       |
+| Force Sensor signal               | $\bm{f}, f_u, f_v$           | =f= =fu= =fv= | N       |
+| Relative Displacement             | $\bm{d}, d_u, d_v$           | =d= =du= =dv= | m       |
+| Relative Velocity                 | $\bm{v}, v_u, v_v$           | =v= =vu= =vv= | m/s     |
+| Resonance freq. when $\Omega = 0$ | $\omega_0$                   | =w0=          | rad/s   |
+| Rotation Speed                    | $\Omega = \dot{\theta}$      | =W=           | rad/s   |
+
+|                  | Mathematical Notation | Matlab | Unit    |
+|------------------+-----------------------+--------+---------|
+| Laplace variable | $s$                   | =s=    |         |
+| Complex number   | $j$                   | =j=    |         |
+| Frequency        | $\omega$              | =w=    | [rad/s] |
+
+|                | Mathematical Notation                          | Matlab | Unit    |
+|----------------+------------------------------------------------+--------+---------|
+| IFF Plant      | $\bm{G}_\text{IFF}(s) = \frac{\bm{f}}{\bm{F}}$ | =Giff= | N/N     |
+| DVF Plant      | $\bm{G}_\text{DVF}(s) = \frac{\bm{v}}{\bm{F}}$ | =Gdvf= | (m/s)/N |
+| IFF Controller | $\bm{K}_\text{IFF}(s)$                         | =Kiff= |         |
+| DVF Controller | $\bm{K}_\text{DVF}(s)$                         | =Kdvf= |         |
