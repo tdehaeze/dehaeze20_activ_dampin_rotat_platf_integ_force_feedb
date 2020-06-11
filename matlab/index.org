@@ -125,7 +125,7 @@ The system becomes unstable for $\Omega > \omega_0$.
   end
   plot(Ws, zeros(size(Ws)), 'k--')
   hold off;
-  xlabel('Rotation Frequency [rad/s]'); ylabel('Pole Real Part');
+  xlabel('Rotation Frequency [rad/s]'); ylabel('Real Part');
 
   ax2 = subplot(1,2,2);
   hold on;
@@ -134,7 +134,7 @@ The system becomes unstable for $\Omega > \omega_0$.
       plot(Ws, -imag(p_ws(p_i, :)), 'k-')
   end
   hold off;
-  xlabel('Rotation Frequency [rad/s]'); ylabel('Pole Imaginary Part');
+  xlabel('Rotation Frequency [rad/s]'); ylabel('Imaginary Part');
 #+end_src
 
 ** Simscape Model
@@ -184,7 +184,8 @@ No controller for now.
   plot(freqs, abs(squeeze(freqresp(G_th(1,1), freqs))), '--')
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
-  set(gca, 'XTickLabel',[]); ylabel('Amplitude [m/N]');
+  set(gca, 'XTickLabel',[]); ylabel('Magnitude [m/N]');
+  title('$d_u/F_u$, $d_v/F_v$');
 
   ax3 = subplot(2, 2, 3);
   hold on;
@@ -202,21 +203,24 @@ No controller for now.
   plot(freqs, abs(squeeze(freqresp(G_th(1,2), freqs))), '--')
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
-  set(gca, 'XTickLabel',[]); ylabel('Amplitude [m/N]');
+  set(gca, 'XTickLabel',[]); ylabel('Magnitude [m/N]');
+  title('$d_u/F_v$, $d_v/F_u$');
 
   ax4 = subplot(2, 2, 4);
   hold on;
-  plot(freqs, 180/pi*angle(squeeze(freqresp(G(1,2), freqs))), '-')
-  plot(freqs, 180/pi*angle(squeeze(freqresp(G_th(1,2), freqs))), '--')
+  plot(freqs, 180/pi*angle(squeeze(freqresp(G(1,2), freqs))), '-', ...
+       'DisplayName', 'Simscape')
+  plot(freqs, 180/pi*angle(squeeze(freqresp(G_th(1,2), freqs))), '--', ...
+       'DisplayName', 'Analytical')
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
   xlabel('Frequency [rad/s]'); ylabel('Phase [deg]');
   yticks(-180:90:180);
   ylim([-180 180]);
   hold off;
+  legend('location', 'northeast');
 
   linkaxes([ax1,ax2,ax3,ax4],'x');
   xlim([freqs(1), freqs(end)]);
-
   linkaxes([ax1,ax2],'y');
 #+end_src
 
@@ -370,7 +374,8 @@ No controller for now.
   plot(freqs, abs(squeeze(freqresp(Giff_th(1,1), freqs))), '--')
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
-  set(gca, 'XTickLabel',[]); ylabel('Amplitude [N/N]');
+  set(gca, 'XTickLabel',[]); ylabel('Magnitude [N/N]');
+  title('$f_u/F_u$, $f_v/F_v$');
 
   ax3 = subplot(2, 2, 3);
   hold on;
@@ -388,21 +393,24 @@ No controller for now.
   plot(freqs, abs(squeeze(freqresp(Giff_th(1,2), freqs))), '--')
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
-  set(gca, 'XTickLabel',[]); ylabel('Amplitude [N/N]');
+  set(gca, 'XTickLabel',[]); ylabel('Magnitude [N/N]');
+  title('$f_u/F_v$, $f_v/F_u$');
 
   ax4 = subplot(2, 2, 4);
   hold on;
-  plot(freqs, 180/pi*angle(squeeze(freqresp(Giff(1,2), freqs))), '-')
-  plot(freqs, 180/pi*angle(squeeze(freqresp(Giff_th(1,2), freqs))), '--')
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Giff(1,2), freqs))), '-', ...
+       'DisplayName', 'Simscape')
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Giff_th(1,2), freqs))), '--', ...
+       'DisplayName', 'Analytical')
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
   xlabel('Frequency [rad/s]'); ylabel('Phase [deg]');
   yticks(-180:90:180);
   ylim([-180 180]);
   hold off;
+  legend('location', 'northeast');
 
   linkaxes([ax1,ax2,ax3,ax4],'x');
   xlim([freqs(1), freqs(end)]);
-
   linkaxes([ax1,ax2],'y');
 #+end_src
 
@@ -436,7 +444,7 @@ No controller for now.
   end
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
-  set(gca, 'XTickLabel',[]); ylabel('Amplitude [N/N]');
+  set(gca, 'XTickLabel',[]); ylabel('Magnitude [N/N]');
   legend('location', 'northwest');
   ylim([0, 1e3]);
 
@@ -631,7 +639,7 @@ Let's take the integral feedback controller as a low pass filter (pseudo integra
   plot(freqs, abs(squeeze(freqresp(Giff(1,1)*Kiff(1,1), freqs))))
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
-  set(gca, 'XTickLabel',[]); ylabel('Amplitude [N/N]');
+  set(gca, 'XTickLabel',[]); ylabel('Loop Gain');
 
   ax2 = subplot(2, 1, 2);
   hold on;
@@ -795,17 +803,20 @@ Root Locus that shows the maximum damping attainable.
   plot(freqs, abs(squeeze(freqresp(Giff_cl(1,1), freqs))))
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
-  set(gca, 'XTickLabel',[]); ylabel('Amplitude [N/N]');
+  set(gca, 'XTickLabel',[]); ylabel('Magnitude [N/N]');
 
   ax2 = subplot(2, 1, 2);
   hold on;
-  plot(freqs, 180/pi*angle(squeeze(freqresp(Giff(1,1), freqs))))
-  plot(freqs, 180/pi*angle(squeeze(freqresp(Giff_cl(1,1), freqs))))
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Giff(1,1), freqs))), ...
+       'DisplayName', 'Open Loop')
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Giff_cl(1,1), freqs))), ...
+       'DisplayName', 'Closed Loop')
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
   xlabel('Frequency [rad/s]'); ylabel('Phase [deg]');
   yticks(-180:90:180);
   ylim([-180 180]);
   hold off;
+  legend('location', 'northeast');
 
   linkaxes([ax1,ax2],'x');
   xlim([freqs(1), freqs(end)]);
@@ -946,7 +957,7 @@ And the IFF plant is identified in three different cases:
   plot(freqs, abs(squeeze(freqresp(Giff_l(1,1), freqs))), 'k:')
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
-  set(gca, 'XTickLabel',[]); ylabel('Amplitude [N/N]');
+  set(gca, 'XTickLabel',[]); ylabel('Magnitude [N/N]');
 
   ax2 = subplot(2, 1, 2);
   hold on;
@@ -1109,16 +1120,16 @@ Let's take $k_p = 2 m \Omega^2$ and find the optimal IFF control gain.
   gains = logspace(-2, 4, 100);
 
   hold on;
-  plot(real(pole(Giff)),  imag(pole(Giff)), 'kx', 'HandleVisibility', 'off');
-  plot(real(tzero(Giff)),  imag(tzero(Giff)), 'ko', 'HandleVisibility', 'off');
+  plot(real(pole(Giff)),  imag(pole(Giff)), 'kx');
+  plot(real(tzero(Giff)),  imag(tzero(Giff)), 'ko');
   for g = gains
       clpoles = pole(feedback(Giff, (g/s)*eye(2)));
-      plot(real(clpoles), imag(clpoles), 'k.', 'HandleVisibility', 'off');
+      plot(real(clpoles), imag(clpoles), 'k.');
   end
   % Optimal Gain
   clpoles = pole(feedback(Giff, (opt_gain/s)*eye(2)));
   set(gca,'ColorOrderIndex',1);
-  plot(real(clpoles), imag(clpoles), 'x', 'HandleVisibility', 'off');
+  plot(real(clpoles), imag(clpoles), 'x');
   hold off;
   axis square;
   xlim([-1.2, 0.05]); ylim([0, 1.25]);
@@ -1141,12 +1152,14 @@ Let's take $k_p = 2 m \Omega^2$ and find the optimal IFF control gain.
   plot(freqs, abs(squeeze(freqresp(Giff_cl(1,1), freqs))))
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
-  set(gca, 'XTickLabel',[]); ylabel('Amplitude [N/N]');
+  set(gca, 'XTickLabel',[]); ylabel('Magnitude [N/N]');
 
   ax2 = subplot(2, 1, 2);
   hold on;
-  plot(freqs, 180/pi*angle(squeeze(freqresp(Giff(1,1), freqs))))
-  plot(freqs, 180/pi*angle(squeeze(freqresp(Giff_cl(1,1), freqs))))
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Giff(1,1), freqs))), ...
+       'DisplayName', 'Open Loop')
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Giff_cl(1,1), freqs))), ...
+       'DisplayName', 'Closed Loop')
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
   xlabel('Frequency [rad/s]'); ylabel('Phase [deg]');
   yticks(-180:90:180);
@@ -1155,6 +1168,8 @@ Let's take $k_p = 2 m \Omega^2$ and find the optimal IFF control gain.
 
   linkaxes([ax1,ax2],'x');
   xlim([freqs(1), freqs(end)]);
+ 
+  legend('location', 'southwest');
 #+end_src
 
 * Direct Velocity Feedback
@@ -1257,7 +1272,8 @@ The DVF plant is identified from the Simscape model and compared with the analyt
   plot(freqs, abs(squeeze(freqresp(Gdvf_th(1,1), freqs))), '--')
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
-  set(gca, 'XTickLabel',[]); ylabel('Amplitude [m/s/N]');
+  set(gca, 'XTickLabel',[]); ylabel('Magnitude [$\frac{m/s}{N}$]');
+  title('$v_u/F_u$, $v_v/F_v$');
 
   ax3 = subplot(2, 2, 3);
   hold on;
@@ -1275,7 +1291,8 @@ The DVF plant is identified from the Simscape model and compared with the analyt
   plot(freqs, abs(squeeze(freqresp(Gdvf_th(1,2), freqs))), '--')
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
-  set(gca, 'XTickLabel',[]); ylabel('Amplitude [m/s/N]');
+  set(gca, 'XTickLabel',[]); ylabel('Magnitude [$\frac{m/s}{N}$]');
+  title('$v_u/F_v$, $v_v/F_u$');
 
   ax4 = subplot(2, 2, 4);
   hold on;
@@ -1499,7 +1516,7 @@ The rotation speed is set to $\Omega = 0.1 \omega_0$.
   set(gca,'ColorOrderIndex',3);
   plot(real(tzero(Gdvf)),  imag(tzero(Gdvf)), 'o', ...
        'HandleVisibility', 'off');
-  for g = gains
+  for g_i = gains
       Kdvf = g*eye(2);
       cl_poles = pole(feedback(Gdvf, Kdvf));
       set(gca,'ColorOrderIndex',3);
@@ -1708,7 +1725,7 @@ DVF:
        'DisplayName', 'IFF Pseudo int')
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
-  ylabel('Frequency [rad/s]'); ylabel('Amplitude [m/m]');
+  ylabel('Frequency [rad/s]'); ylabel('Transmissibility [m/m]');
   legend('location', 'northwest');
 #+end_src
 
