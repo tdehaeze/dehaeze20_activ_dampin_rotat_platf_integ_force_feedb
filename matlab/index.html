@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-06-10 mer. 10:17 -->
+<!-- 2020-06-10 mer. 17:21 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>Matlab Computation</title>
 <meta name="generator" content="Org mode" />
@@ -34,43 +34,92 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org2941be5">1. System Description and Analysis</a>
+<li><a href="#orgbc04ff4">1. System Description and Analysis</a>
 <ul>
-<li><a href="#org4222b45">1.1. System description</a></li>
-<li><a href="#org80f8141">1.2. Equations</a></li>
-<li><a href="#orgbb90994">1.3. Numerical Values</a></li>
-<li><a href="#org3d04be0">1.4. Campbell Diagram</a></li>
-<li><a href="#org8144360">1.5. Simscape Model</a></li>
-<li><a href="#orga371e09">1.6. Comparison with the model</a></li>
+<li><a href="#org058d645">1.1. System description</a></li>
+<li><a href="#org54ea227">1.2. Equations</a></li>
+<li><a href="#org5f266e8">1.3. Numerical Values</a></li>
+<li><a href="#org588cd59">1.4. Campbell Diagram</a></li>
+<li><a href="#orgf591691">1.5. Simscape Model</a></li>
+<li><a href="#orgbe6ea10">1.6. Comparison with the model</a></li>
 </ul>
 </li>
-<li><a href="#org912df6c">2. Integral Force Feedback</a>
+<li><a href="#orgc4efb28">2. Integral Force Feedback</a>
 <ul>
-<li><a href="#orge201c80">2.1. Numerical Values</a></li>
-<li><a href="#orgbc26950">2.2. Equations</a></li>
-<li><a href="#org92d4b18">2.3. Poles and Zeros</a></li>
-<li><a href="#orgbb768e3">2.4. Simscape Model</a></li>
-<li><a href="#orgdf8d677">2.5. IFF Plant</a></li>
-<li><a href="#org3f264f4">2.6. Loop Gain</a></li>
-<li><a href="#org7c25fbe">2.7. Root Locus</a></li>
-<li><a href="#org82271cf">2.8. Modified IFF</a>
+<li><a href="#org5cbf694">2.1. IFF with pure integrator</a>
 <ul>
-<li><a href="#org60bb927">2.8.1. Control Law</a></li>
-<li><a href="#org6850379">2.8.2. Loop Gain</a></li>
-<li><a href="#org7314eea">2.8.3. Root Locus</a></li>
-<li><a href="#orgb4641d2">2.8.4. Optimal Gain</a></li>
+<li><a href="#org28b79cc">2.1.1. Numerical Values</a></li>
+<li><a href="#orgc38fc7b">2.1.2. Equations</a></li>
+<li><a href="#orgc9cd07d">2.1.3. Poles and Zeros</a></li>
+<li><a href="#org5be1acd">2.1.4. Simscape Model</a></li>
+<li><a href="#orge670c8b">2.1.5. IFF Plant</a></li>
+<li><a href="#org7bd7a37">2.1.6. Loop Gain</a></li>
+<li><a href="#org1174ac8">2.1.7. Root Locus</a></li>
 </ul>
 </li>
+<li><a href="#org6f58989">2.2. Modified IFF (pseudo integrator)</a>
+<ul>
+<li><a href="#orgfd6364e">2.2.1. Control Law</a></li>
+<li><a href="#orgcab6c75">2.2.2. Loop Gain</a></li>
+<li><a href="#org6177c20">2.2.3. Root Locus</a></li>
+<li><a href="#org9667dd5">2.2.4. Optimal Gain</a></li>
 </ul>
 </li>
-<li><a href="#orgbdc5c77">3. Direct Velocity Feedback</a>
+<li><a href="#org4a90f1c">2.3. Stiffness in parallel with the force sensor</a>
 <ul>
-<li><a href="#org3f7448e">3.1. Equations</a></li>
-<li><a href="#org84263dc">3.2. Numerical Values</a></li>
-<li><a href="#orgbdad8de">3.3. Simscape Model</a></li>
-<li><a href="#orge253615">3.4. DVF Plant</a></li>
-<li><a href="#orgd61ece4">3.5. Loop Gain</a></li>
-<li><a href="#orgce2b090">3.6. Root Locus</a></li>
+<li><a href="#orgbd5b934">2.3.1. Schematic</a></li>
+<li><a href="#org5e51f3b">2.3.2. Equations</a></li>
+<li><a href="#org132cc96">2.3.3. Parameters</a></li>
+<li><a href="#org414647b">2.3.4. IFF Plant</a></li>
+<li><a href="#orgf3b249f">2.3.5. Parallel Stiffness effect</a></li>
+<li><a href="#orga696cea">2.3.6. Root locus</a></li>
+<li><a href="#org9d81b62">2.3.7. Optimal value of \(k_p\)</a></li>
+<li><a href="#org5a568dc">2.3.8. Physical Explanation</a></li>
+</ul>
+</li>
+<li><a href="#orgf0ed39f">2.4. Comparison</a></li>
+</ul>
+</li>
+<li><a href="#org70529a6">3. Direct Velocity Feedback</a>
+<ul>
+<li><a href="#org40fd3fb">3.1. Equations</a></li>
+<li><a href="#orgaac9727">3.2. Numerical Values</a></li>
+<li><a href="#orgf82512b">3.3. Simscape Model</a></li>
+<li><a href="#orgb699e22">3.4. DVF Plant</a></li>
+<li><a href="#orgd8a021b">3.5. Loop Gain</a></li>
+<li><a href="#org5c9a44e">3.6. Root Locus</a></li>
+</ul>
+</li>
+<li><a href="#org4c243ba">4. Comparison</a>
+<ul>
+<li><a href="#org0c93fbf">4.1. Parameters</a></li>
+<li><a href="#org04cc967">4.2. Root Locus</a>
+<ul>
+<li><a href="#org75379f3">4.2.1. Pseudo Integrator IFF</a></li>
+<li><a href="#org9af9134">4.2.2. IFF With parallel Stiffness</a></li>
+<li><a href="#org32bc14b">4.2.3. DVF</a></li>
+<li><a href="#orgf0fac99">4.2.4. Root Locus</a></li>
+</ul>
+</li>
+<li><a href="#org7365a99">4.3. Controllers - Optimal Gains</a></li>
+<li><a href="#orgbfffd45">4.4. Transmissibility</a>
+<ul>
+<li><a href="#orgf99657d">4.4.1. Open Loop</a></li>
+<li><a href="#org185df48">4.4.2. Pseudo Integrator IFF</a></li>
+<li><a href="#org80e2386">4.4.3. IFF With parallel Stiffness</a></li>
+<li><a href="#orgca56c46">4.4.4. DVF</a></li>
+<li><a href="#orge2e2bcc">4.4.5. Transmissibility</a></li>
+</ul>
+</li>
+<li><a href="#org9d63ab6">4.5. Compliance</a>
+<ul>
+<li><a href="#org7cb0bf5">4.5.1. Open Loop</a></li>
+<li><a href="#org7b57600">4.5.2. Pseudo Integrator IFF</a></li>
+<li><a href="#org095c02b">4.5.3. IFF With parallel Stiffness</a></li>
+<li><a href="#org1d52ab1">4.5.4. DVF</a></li>
+<li><a href="#org8521cde">4.5.5. Compliance</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -125,28 +174,31 @@ Notations:
 </tbody>
 </table>
 
-<div id="outline-container-org2941be5" class="outline-2">
-<h2 id="org2941be5"><span class="section-number-2">1</span> System Description and Analysis</h2>
+<div id="outline-container-orgbc04ff4" class="outline-2">
+<h2 id="orgbc04ff4"><span class="section-number-2">1</span> System Description and Analysis</h2>
 <div class="outline-text-2" id="text-1">
 <p>
-<a id="org72741bf"></a>
+<a id="org1917d7d"></a>
 </p>
 </div>
 
-<div id="outline-container-org4222b45" class="outline-3">
-<h3 id="org4222b45"><span class="section-number-3">1.1</span> System description</h3>
+<div id="outline-container-org058d645" class="outline-3">
+<h3 id="org058d645"><span class="section-number-3">1.1</span> System description</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
-The system consists of one 2 degree of freedom translation stage on top of a spindle (figure <a href="#org3ee83a5">1</a>).
+The system consists of one 2 degree of freedom translation stage on top of a spindle (figure <a href="#orga45a31f">1</a>).
 </p>
 
-<p>
-<a href="figs/rotating_xy_platform.pdf">figs/rotating_xy_platform.pdf</a>
+
+<div id="orga45a31f" class="figure">
+<p><img src="figs-tikz/rotating_xy_platform.png" alt="rotating_xy_platform.png" />
 </p>
+<p><span class="figure-number">Figure 1: </span>Figure caption</p>
+</div>
 
 <p>
 The control inputs are the forces applied by the actuators of the translation stage (\(F_u\) and \(F_v\)).
-As the translation stage is rotating around the Z axis due to the spindle, the forces are applied along \(u\) and \(v\).
+As the translation stage is rotating around the Z axis due to the spindle, the forces are applied along \(\vec{i}_u\) and \(\vec{i}_v\).
 </p>
 
 <p>
@@ -155,11 +207,11 @@ The measurement is either the \(x-y\) displacement of the object located on top 
 </div>
 </div>
 
-<div id="outline-container-org80f8141" class="outline-3">
-<h3 id="org80f8141"><span class="section-number-3">1.2</span> Equations</h3>
+<div id="outline-container-org54ea227" class="outline-3">
+<h3 id="org54ea227"><span class="section-number-3">1.2</span> Equations</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
-Based on the Figure <a href="#org3ee83a5">1</a>.
+Based on the Figure <a href="#orga45a31f">1</a>.
 </p>
 
 \begin{equation}
@@ -174,8 +226,8 @@ Based on the Figure <a href="#org3ee83a5">1</a>.
 </div>
 </div>
 
-<div id="outline-container-orgbb90994" class="outline-3">
-<h3 id="orgbb90994"><span class="section-number-3">1.3</span> Numerical Values</h3>
+<div id="outline-container-org5f266e8" class="outline-3">
+<h3 id="org5f266e8"><span class="section-number-3">1.3</span> Numerical Values</h3>
 <div class="outline-text-3" id="text-1-3">
 <div class="org-src-container">
 <pre class="src src-matlab">k = 2;
@@ -189,8 +241,8 @@ w0 = sqrt(k/m);
 </div>
 </div>
 
-<div id="outline-container-org3d04be0" class="outline-3">
-<h3 id="org3d04be0"><span class="section-number-3">1.4</span> Campbell Diagram</h3>
+<div id="outline-container-org588cd59" class="outline-3">
+<h3 id="org588cd59"><span class="section-number-3">1.4</span> Campbell Diagram</h3>
 <div class="outline-text-3" id="text-1-4">
 <p>
 Compute the poles
@@ -211,8 +263,8 @@ end
 </div>
 </div>
 
-<div id="outline-container-org8144360" class="outline-3">
-<h3 id="org8144360"><span class="section-number-3">1.5</span> Simscape Model</h3>
+<div id="outline-container-orgf591691" class="outline-3">
+<h3 id="orgf591691"><span class="section-number-3">1.5</span> Simscape Model</h3>
 <div class="outline-text-3" id="text-1-5">
 <div class="org-src-container">
 <pre class="src src-matlab">open('rotating_frame.slx');
@@ -254,8 +306,8 @@ G.OutputName = {'du', 'dv'};
 </div>
 </div>
 
-<div id="outline-container-orga371e09" class="outline-3">
-<h3 id="orga371e09"><span class="section-number-3">1.6</span> Comparison with the model</h3>
+<div id="outline-container-orgbe6ea10" class="outline-3">
+<h3 id="orgbe6ea10"><span class="section-number-3">1.6</span> Comparison with the model</h3>
 <div class="outline-text-3" id="text-1-6">
 <div class="org-src-container">
 <pre class="src src-matlab">Ga = (1/k)/(((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (wr^2)/(w0^2))^2 + (2*wr*s/(w0^2))^2) * ...
@@ -272,13 +324,17 @@ G.OutputName = {'du', 'dv'};
 </div>
 </div>
 
-<div id="outline-container-org912df6c" class="outline-2">
-<h2 id="org912df6c"><span class="section-number-2">2</span> Integral Force Feedback</h2>
+<div id="outline-container-orgc4efb28" class="outline-2">
+<h2 id="orgc4efb28"><span class="section-number-2">2</span> Integral Force Feedback</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orge201c80" class="outline-3">
-<h3 id="orge201c80"><span class="section-number-3">2.1</span> Numerical Values</h3>
+<div id="outline-container-org5cbf694" class="outline-3">
+<h3 id="org5cbf694"><span class="section-number-3">2.1</span> IFF with pure integrator</h3>
 <div class="outline-text-3" id="text-2-1">
+</div>
+<div id="outline-container-org28b79cc" class="outline-4">
+<h4 id="org28b79cc"><span class="section-number-4">2.1.1</span> Numerical Values</h4>
+<div class="outline-text-4" id="text-2-1-1">
 <div class="org-src-container">
 <pre class="src src-matlab">k = 1;
 m = 1;
@@ -291,9 +347,9 @@ wr = 0.1*w0;
 </div>
 </div>
 
-<div id="outline-container-orgbc26950" class="outline-3">
-<h3 id="orgbc26950"><span class="section-number-3">2.2</span> Equations</h3>
-<div class="outline-text-3" id="text-2-2">
+<div id="outline-container-orgc38fc7b" class="outline-4">
+<h4 id="orgc38fc7b"><span class="section-number-4">2.1.2</span> Equations</h4>
+<div class="outline-text-4" id="text-2-1-2">
 <p>
 The sensed forces are equal to:
 </p>
@@ -329,9 +385,9 @@ The sensed forces are equal to:
 </div>
 </div>
 
-<div id="outline-container-org92d4b18" class="outline-3">
-<h3 id="org92d4b18"><span class="section-number-3">2.3</span> Poles and Zeros</h3>
-<div class="outline-text-3" id="text-2-3">
+<div id="outline-container-orgc9cd07d" class="outline-4">
+<h4 id="orgc9cd07d"><span class="section-number-4">2.1.3</span> Poles and Zeros</h4>
+<div class="outline-text-4" id="text-2-1-3">
 <div class="org-src-container">
 <pre class="src src-matlab">syms wr w0 xi positive
 assumealso(w0 &gt; wr)
@@ -378,9 +434,9 @@ Zeros (without damping)
 </div>
 </div>
 
-<div id="outline-container-orgbb768e3" class="outline-3">
-<h3 id="orgbb768e3"><span class="section-number-3">2.4</span> Simscape Model</h3>
-<div class="outline-text-3" id="text-2-4">
+<div id="outline-container-org5be1acd" class="outline-4">
+<h4 id="org5be1acd"><span class="section-number-4">2.1.4</span> Simscape Model</h4>
+<div class="outline-text-4" id="text-2-1-4">
 <div class="org-src-container">
 <pre class="src src-matlab">%% Name of the Simulink File
 mdl = 'rotating_frame';
@@ -410,12 +466,12 @@ Giff.OutputName = {'Fmu', 'Fmv'};
 </div>
 </div>
 
-<div id="outline-container-orgdf8d677" class="outline-3">
-<h3 id="orgdf8d677"><span class="section-number-3">2.5</span> IFF Plant</h3>
+<div id="outline-container-orge670c8b" class="outline-4">
+<h4 id="orge670c8b"><span class="section-number-4">2.1.5</span> IFF Plant</h4>
 </div>
-<div id="outline-container-org3f264f4" class="outline-3">
-<h3 id="org3f264f4"><span class="section-number-3">2.6</span> Loop Gain</h3>
-<div class="outline-text-3" id="text-2-6">
+<div id="outline-container-org7bd7a37" class="outline-4">
+<h4 id="org7bd7a37"><span class="section-number-4">2.1.6</span> Loop Gain</h4>
+<div class="outline-text-4" id="text-2-1-6">
 <p>
 Let&rsquo;s take \(\Omega = \frac{\omega_0}{10}\).
 </p>
@@ -430,16 +486,17 @@ G_iff = 1/(((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (ws^2)/(w0^2))^2 + (2*ws*s/(w0^2))^2)
 </div>
 </div>
 
-<div id="outline-container-org7c25fbe" class="outline-3">
-<h3 id="org7c25fbe"><span class="section-number-3">2.7</span> Root Locus</h3>
+<div id="outline-container-org1174ac8" class="outline-4">
+<h4 id="org1174ac8"><span class="section-number-4">2.1.7</span> Root Locus</h4>
 </div>
-<div id="outline-container-org82271cf" class="outline-3">
-<h3 id="org82271cf"><span class="section-number-3">2.8</span> Modified IFF</h3>
-<div class="outline-text-3" id="text-2-8">
 </div>
-<div id="outline-container-org60bb927" class="outline-4">
-<h4 id="org60bb927"><span class="section-number-4">2.8.1</span> Control Law</h4>
-<div class="outline-text-4" id="text-2-8-1">
+<div id="outline-container-org6f58989" class="outline-3">
+<h3 id="org6f58989"><span class="section-number-3">2.2</span> Modified IFF (pseudo integrator)</h3>
+<div class="outline-text-3" id="text-2-2">
+</div>
+<div id="outline-container-orgfd6364e" class="outline-4">
+<h4 id="orgfd6364e"><span class="section-number-4">2.2.1</span> Control Law</h4>
+<div class="outline-text-4" id="text-2-2-1">
 <p>
 Let&rsquo;s take the integral feedback controller as a low pass filter (pseudo integrator):
 </p>
@@ -472,15 +529,15 @@ K_iff = (g/(1+s/wi))*eye(2);
 </div>
 </div>
 
-<div id="outline-container-org6850379" class="outline-4">
-<h4 id="org6850379"><span class="section-number-4">2.8.2</span> Loop Gain</h4>
+<div id="outline-container-orgcab6c75" class="outline-4">
+<h4 id="orgcab6c75"><span class="section-number-4">2.2.2</span> Loop Gain</h4>
 </div>
-<div id="outline-container-org7314eea" class="outline-4">
-<h4 id="org7314eea"><span class="section-number-4">2.8.3</span> Root Locus</h4>
+<div id="outline-container-org6177c20" class="outline-4">
+<h4 id="org6177c20"><span class="section-number-4">2.2.3</span> Root Locus</h4>
 </div>
-<div id="outline-container-orgb4641d2" class="outline-4">
-<h4 id="orgb4641d2"><span class="section-number-4">2.8.4</span> Optimal Gain</h4>
-<div class="outline-text-4" id="text-2-8-4">
+<div id="outline-container-org9667dd5" class="outline-4">
+<h4 id="org9667dd5"><span class="section-number-4">2.2.4</span> Optimal Gain</h4>
+<div class="outline-text-4" id="text-2-2-4">
 <p>
 The DC gain for Giff is (for \(\Omega < \omega_0\)):
 </p>
@@ -511,14 +568,248 @@ G_cl = feedback(G_iff, K_opt);
 </div>
 </div>
 </div>
+
+<div id="outline-container-org4a90f1c" class="outline-3">
+<h3 id="org4a90f1c"><span class="section-number-3">2.3</span> Stiffness in parallel with the force sensor</h3>
+<div class="outline-text-3" id="text-2-3">
+</div>
+<div id="outline-container-orgbd5b934" class="outline-4">
+<h4 id="orgbd5b934"><span class="section-number-4">2.3.1</span> Schematic</h4>
 </div>
 
-<div id="outline-container-orgbdc5c77" class="outline-2">
-<h2 id="orgbdc5c77"><span class="section-number-2">3</span> Direct Velocity Feedback</h2>
+<div id="outline-container-org5e51f3b" class="outline-4">
+<h4 id="org5e51f3b"><span class="section-number-4">2.3.2</span> Equations</h4>
+<div class="outline-text-4" id="text-2-3-2">
+<p>
+The equations should be the same as before by taking \(k = k^\prime + k_a\).
+I just have to determine the measured force by the sensor
+</p>
+</div>
+</div>
+
+<div id="outline-container-org132cc96" class="outline-4">
+<h4 id="org132cc96"><span class="section-number-4">2.3.3</span> Parameters</h4>
+<div class="outline-text-4" id="text-2-3-3">
+<div class="org-src-container">
+<pre class="src src-matlab">k = 1;
+m = 1;
+c = 0.05;
+xi = c/(2*sqrt(k*m));
+
+w0 = sqrt(k/m);
+wr = 0.1;
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org414647b" class="outline-4">
+<h4 id="org414647b"><span class="section-number-4">2.3.4</span> IFF Plant</h4>
+<div class="outline-text-4" id="text-2-3-4">
+<div class="org-src-container">
+<pre class="src src-matlab">open('rotating_frame.slx');
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">%% Name of the Simulink File
+mdl = 'rotating_frame';
+
+%% Input/Output definition
+clear io; io_i = 1;
+io(io_i) = linio([mdl, '/Fu'], 1, 'openinput');  io_i = io_i + 1;
+io(io_i) = linio([mdl, '/Fv'], 1, 'openinput');  io_i = io_i + 1;
+io(io_i) = linio([mdl, '/Tuv'], 5, 'openoutput'); io_i = io_i + 1;
+io(io_i) = linio([mdl, '/Tuv'], 6, 'openoutput'); io_i = io_i + 1;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">kp = 0;
+cp = 0;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">Giff = linearize(mdl, io, 0);
+
+%% Input/Output definition
+Giff.InputName  = {'Fu', 'Fv'};
+Giff.OutputName = {'Fmu', 'Fmv'};
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">kp = 0.5*m*wr^2;
+cp = 0.01;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">Giffa = linearize(mdl, io, 0);
+
+%% Input/Output definition
+Giffa.InputName  = {'Fu', 'Fv'};
+Giffa.OutputName = {'Fmu', 'Fmv'};
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">kp = 1.5*m*wr^2;
+cp = 0.01;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">Giffb = linearize(mdl, io, 0);
+
+%% Input/Output definition
+Giffb.InputName  = {'Fu', 'Fv'};
+Giffb.OutputName = {'Fmu', 'Fmv'};
+</pre>
+</div>
+
+<p>
+Comparison with the model
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">figure; bode(Giff, 'k-', Giffa, 'b--', Giffb, 'r--')
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf3b249f" class="outline-4">
+<h4 id="orgf3b249f"><span class="section-number-4">2.3.5</span> Parallel Stiffness effect</h4>
+<div class="outline-text-4" id="text-2-3-5">
+<p>
+Pure IFF controller can be used if:
+</p>
+\begin{equation}
+  k_{p} > m \Omega^2
+\end{equation}
+
+<p>
+However, having large values of \(k_p\) may:
+</p>
+<ul class="org-ul">
+<li>decrease the actuator stroke</li>
+<li>decrease the attainable damping (section about optimal value)</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orga696cea" class="outline-4">
+<h4 id="orga696cea"><span class="section-number-4">2.3.6</span> Root locus</h4>
+</div>
+<div id="outline-container-org9d81b62" class="outline-4">
+<h4 id="org9d81b62"><span class="section-number-4">2.3.7</span> Optimal value of \(k_p\)</h4>
+<div class="outline-text-4" id="text-2-3-7">
+<div class="org-src-container">
+<pre class="src src-matlab">kps = [0, 0.5, 1, 2, 10]*m*wr^2;
+cp = 0.01;
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5a568dc" class="outline-4">
+<h4 id="org5a568dc"><span class="section-number-4">2.3.8</span> Physical Explanation</h4>
+<div class="outline-text-4" id="text-2-3-8">
+<p>
+Negative stiffness
+Zeros are for high loop gain: remove the force sensor
+Thus the stiffness in parallel should be higher than the virtual negative stiffness added by the gyroscopic effects
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf0ed39f" class="outline-3">
+<h3 id="orgf0ed39f"><span class="section-number-3">2.4</span> Comparison</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+Fix the parameters, and see how the root locus change and the final damped system
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">k = 1;
+m = 1;
+c = 0.05;
+
+xi = c/(2*sqrt(k*m));
+
+w0 = sqrt(k/m);
+wr = 0.1;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">kp = 0;
+cp = 0;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">%% Name of the Simulink File
+mdl = 'rotating_frame';
+
+%% Input/Output definition
+clear io; io_i = 1;
+io(io_i) = linio([mdl, '/Fu'], 1, 'openinput');  io_i = io_i + 1;
+io(io_i) = linio([mdl, '/Fv'], 1, 'openinput');  io_i = io_i + 1;
+io(io_i) = linio([mdl, '/Tuv'], 5, 'openoutput'); io_i = io_i + 1;
+io(io_i) = linio([mdl, '/Tuv'], 6, 'openoutput'); io_i = io_i + 1;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">Giff = linearize(mdl, io, 0);
+
+%% Input/Output definition
+Giff.InputName  = {'Fu', 'Fv'};
+Giff.OutputName = {'Fmu', 'Fmv'};
+</pre>
+</div>
+
+<p>
+Modified IFF
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">wi = w0;
+</pre>
+</div>
+
+<p>
+With parallel Stiffness
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">kp = 2*m*wr^2;
+cp = 0.01;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">Giff_kp = linearize(mdl, io, 0);
+
+%% Input/Output definition
+Giff_kp.InputName  = {'Fu', 'Fv'};
+Giff_kp.OutputName = {'Fmu', 'Fmv'};
+</pre>
+</div>
+
+<p>
+With parallel stiffness =&gt; unconditional stability and more damping but have to add mechanical parts
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org70529a6" class="outline-2">
+<h2 id="org70529a6"><span class="section-number-2">3</span> Direct Velocity Feedback</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org3f7448e" class="outline-3">
-<h3 id="org3f7448e"><span class="section-number-3">3.1</span> Equations</h3>
+<div id="outline-container-org40fd3fb" class="outline-3">
+<h3 id="org40fd3fb"><span class="section-number-3">3.1</span> Equations</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 The sensed relative velocity are equal to:
@@ -539,8 +830,8 @@ The sensed relative velocity are equal to:
 </div>
 </div>
 
-<div id="outline-container-org84263dc" class="outline-3">
-<h3 id="org84263dc"><span class="section-number-3">3.2</span> Numerical Values</h3>
+<div id="outline-container-orgaac9727" class="outline-3">
+<h3 id="orgaac9727"><span class="section-number-3">3.2</span> Numerical Values</h3>
 <div class="outline-text-3" id="text-3-2">
 <div class="org-src-container">
 <pre class="src src-matlab">k = 1;
@@ -561,8 +852,8 @@ w0 = sqrt(k/m);
 </div>
 </div>
 
-<div id="outline-container-orgbdad8de" class="outline-3">
-<h3 id="orgbdad8de"><span class="section-number-3">3.3</span> Simscape Model</h3>
+<div id="outline-container-orgf82512b" class="outline-3">
+<h3 id="orgf82512b"><span class="section-number-3">3.3</span> Simscape Model</h3>
 <div class="outline-text-3" id="text-3-3">
 <div class="org-src-container">
 <pre class="src src-matlab">%% Name of the Simulink File
@@ -588,8 +879,8 @@ G.OutputName = {'Vu', 'Vv'};
 </div>
 </div>
 
-<div id="outline-container-orge253615" class="outline-3">
-<h3 id="orge253615"><span class="section-number-3">3.4</span> DVF Plant</h3>
+<div id="outline-container-orgb699e22" class="outline-3">
+<h3 id="orgb699e22"><span class="section-number-3">3.4</span> DVF Plant</h3>
 <div class="outline-text-3" id="text-3-4">
 <div class="org-src-container">
 <pre class="src src-matlab">figure; bode(G, Ga)
@@ -598,8 +889,8 @@ G.OutputName = {'Vu', 'Vv'};
 </div>
 </div>
 
-<div id="outline-container-orgd61ece4" class="outline-3">
-<h3 id="orgd61ece4"><span class="section-number-3">3.5</span> Loop Gain</h3>
+<div id="outline-container-orgd8a021b" class="outline-3">
+<h3 id="orgd8a021b"><span class="section-number-3">3.5</span> Loop Gain</h3>
 <div class="outline-text-3" id="text-3-5">
 <p>
 Let&rsquo;s take \(\Omega = \frac{\omega_0}{10}\).
@@ -615,14 +906,535 @@ G_dvf = (s/k)/(((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (wr^2)/(w0^2))^2 + (2*wr*s/(w0^2)
 </div>
 </div>
 
-<div id="outline-container-orgce2b090" class="outline-3">
-<h3 id="orgce2b090"><span class="section-number-3">3.6</span> Root Locus</h3>
+<div id="outline-container-org5c9a44e" class="outline-3">
+<h3 id="org5c9a44e"><span class="section-number-3">3.6</span> Root Locus</h3>
+</div>
+</div>
+<div id="outline-container-org4c243ba" class="outline-2">
+<h2 id="org4c243ba"><span class="section-number-2">4</span> Comparison</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-org0c93fbf" class="outline-3">
+<h3 id="org0c93fbf"><span class="section-number-3">4.1</span> Parameters</h3>
+<div class="outline-text-3" id="text-4-1">
+<div class="org-src-container">
+<pre class="src src-matlab">k = 1;
+m = 1;
+c = 0.05;
+
+xi = c/(2*sqrt(k*m));
+
+w0 = sqrt(k/m);
+wr = 0.1;
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org04cc967" class="outline-3">
+<h3 id="org04cc967"><span class="section-number-3">4.2</span> Root Locus</h3>
+<div class="outline-text-3" id="text-4-2">
+</div>
+<div id="outline-container-org75379f3" class="outline-4">
+<h4 id="org75379f3"><span class="section-number-4">4.2.1</span> Pseudo Integrator IFF</h4>
+<div class="outline-text-4" id="text-4-2-1">
+<div class="org-src-container">
+<pre class="src src-matlab">kp = 0;
+cp = 0;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">%% Name of the Simulink File
+mdl = 'rotating_frame';
+
+%% Input/Output definition
+clear io; io_i = 1;
+io(io_i) = linio([mdl, '/K'], 1, 'openinput');  io_i = io_i + 1;
+io(io_i) = linio([mdl, '/G'], 2, 'openoutput'); io_i = io_i + 1;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">Kiff = tf(zeros(2));
+Kdvf = tf(zeros(2));
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">Giff = linearize(mdl, io, 0);
+
+%% Input/Output definition
+Giff.InputName  = {'Fu', 'Fv'};
+Giff.OutputName = {'Fmu', 'Fmv'};
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org9af9134" class="outline-4">
+<h4 id="org9af9134"><span class="section-number-4">4.2.2</span> IFF With parallel Stiffness</h4>
+<div class="outline-text-4" id="text-4-2-2">
+<div class="org-src-container">
+<pre class="src src-matlab">kp = 2*m*wr^2;
+cp = 0.01;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">%% Name of the Simulink File
+mdl = 'rotating_frame';
+
+%% Input/Output definition
+clear io; io_i = 1;
+io(io_i) = linio([mdl, '/K'], 1, 'openinput');  io_i = io_i + 1;
+io(io_i) = linio([mdl, '/G'], 2, 'openoutput'); io_i = io_i + 1;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">Giff_kp = linearize(mdl, io, 0);
+
+%% Input/Output definition
+Giff_kp.InputName  = {'Fu', 'Fv'};
+Giff_kp.OutputName = {'Fmu', 'Fmv'};
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org32bc14b" class="outline-4">
+<h4 id="org32bc14b"><span class="section-number-4">4.2.3</span> DVF</h4>
+<div class="outline-text-4" id="text-4-2-3">
+<div class="org-src-container">
+<pre class="src src-matlab">%% Name of the Simulink File
+mdl = 'rotating_frame';
+
+%% Input/Output definition
+clear io; io_i = 1;
+io(io_i) = linio([mdl, '/K'], 1, 'openinput');  io_i = io_i + 1;
+io(io_i) = linio([mdl, '/G'], 1, 'openoutput'); io_i = io_i + 1;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">Gdvf = linearize(mdl, io, 0);
+
+%% Input/Output definition
+Gdvf.InputName  = {'Fu', 'Fv'};
+Gdvf.OutputName = {'Vu', 'Vv'};
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf0fac99" class="outline-4">
+<h4 id="orgf0fac99"><span class="section-number-4">4.2.4</span> Root Locus</h4>
+<div class="outline-text-4" id="text-4-2-4">
+<div class="org-src-container">
+<pre class="src src-matlab">wi = w0;
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7365a99" class="outline-3">
+<h3 id="org7365a99"><span class="section-number-3">4.3</span> Controllers - Optimal Gains</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+Estimate the controller gain that yields good damping in all cases.
+</p>
+
+<p>
+Pseudo integrator IFF:
+Parallel Stiffness
+DVF:
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">opt_zeta_iff, opt_zeta_kp, opt_zeta_dvf
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgbfffd45" class="outline-3">
+<h3 id="orgbfffd45"><span class="section-number-3">4.4</span> Transmissibility</h3>
+<div class="outline-text-3" id="text-4-4">
+</div>
+<div id="outline-container-orgf99657d" class="outline-4">
+<h4 id="orgf99657d"><span class="section-number-4">4.4.1</span> Open Loop</h4>
+<div class="outline-text-4" id="text-4-4-1">
+<div class="org-src-container">
+<pre class="src src-matlab">wi = w0;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">Kdvf = tf(zeros(2));
+Kiff = tf(zeros(2));
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">kp = 0;
+cp = 0;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">%% Name of the Simulink File
+mdl = 'rotating_frame';
+
+%% Input/Output definition
+clear io; io_i = 1;
+io(io_i) = linio([mdl, '/dw'], 1, 'input');  io_i = io_i + 1;
+io(io_i) = linio([mdl, '/Meas'], 1, 'output');  io_i = io_i + 1;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">Tol = linearize(mdl, io, 0);
+
+%% Input/Output definition
+Tol.InputName  = {'Dwx', 'Dwy'};
+Tol.OutputName = {'Dx', 'Dy'};
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org185df48" class="outline-4">
+<h4 id="org185df48"><span class="section-number-4">4.4.2</span> Pseudo Integrator IFF</h4>
+<div class="outline-text-4" id="text-4-4-2">
+<div class="org-src-container">
+<pre class="src src-matlab">wi = w0;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">Kdvf = tf(zeros(2));
+Kiff = opt_gain_iff/(1 + s/wi)*tf(eye(2));
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">kp = 0;
+cp = 0;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">%% Name of the Simulink File
+mdl = 'rotating_frame';
+
+%% Input/Output definition
+clear io; io_i = 1;
+io(io_i) = linio([mdl, '/dw'], 1, 'input');  io_i = io_i + 1;
+io(io_i) = linio([mdl, '/Meas'], 1, 'output');  io_i = io_i + 1;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">Tiff = linearize(mdl, io, 0);
+
+%% Input/Output definition
+Tiff.InputName  = {'Dwx', 'Dwy'};
+Tiff.OutputName = {'Dx', 'Dy'};
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org80e2386" class="outline-4">
+<h4 id="org80e2386"><span class="section-number-4">4.4.3</span> IFF With parallel Stiffness</h4>
+<div class="outline-text-4" id="text-4-4-3">
+<div class="org-src-container">
+<pre class="src src-matlab">kp = 2*m*wr^2;
+cp = 0.01;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">Kdvf = tf(zeros(2));
+Kiff = opt_gain_kp/s*tf(eye(2));
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">%% Name of the Simulink File
+mdl = 'rotating_frame';
+
+%% Input/Output definition
+clear io; io_i = 1;
+io(io_i) = linio([mdl, '/dw'], 1, 'input');  io_i = io_i + 1;
+io(io_i) = linio([mdl, '/Meas'], 1, 'output');  io_i = io_i + 1;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">Tiff_kp = linearize(mdl, io, 0);
+
+%% Input/Output definition
+Tiff_kp.InputName  = {'Dwx', 'Dwy'};
+Tiff_kp.OutputName = {'Dx', 'Dy'};
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgca56c46" class="outline-4">
+<h4 id="orgca56c46"><span class="section-number-4">4.4.4</span> DVF</h4>
+<div class="outline-text-4" id="text-4-4-4">
+<div class="org-src-container">
+<pre class="src src-matlab">kp = 0;
+cp = 0;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">Kdvf = opt_gain_kp*tf(eye(2));
+Kiff = tf(zeros(2));
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">%% Name of the Simulink File
+mdl = 'rotating_frame';
+
+%% Input/Output definition
+clear io; io_i = 1;
+io(io_i) = linio([mdl, '/dw'], 1, 'input');  io_i = io_i + 1;
+io(io_i) = linio([mdl, '/Meas'], 1, 'output');  io_i = io_i + 1;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">Tdvf = linearize(mdl, io, 0);
+
+%% Input/Output definition
+Tdvf.InputName  = {'Dwx', 'Dwy'};
+Tdvf.OutputName = {'Dx', 'Dy'};
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge2e2bcc" class="outline-4">
+<h4 id="orge2e2bcc"><span class="section-number-4">4.4.5</span> Transmissibility</h4>
+<div class="outline-text-4" id="text-4-4-5">
+<div class="org-src-container">
+<pre class="src src-matlab">freqs = logspace(-2, 1, 1000);
+
+figure;
+hold on;
+plot(freqs, abs(squeeze(freqresp(Tiff(1,1), freqs))), ...
+     'DisplayName', 'IFF Pseudo int')
+plot(freqs, abs(squeeze(freqresp(Tiff_kp(1,1), freqs))), ...
+     'DisplayName', 'IFF Paral. stiff')
+plot(freqs, abs(squeeze(freqresp(Tdvf(1,1), freqs))), ...
+     'DisplayName', 'DVF')
+plot(freqs, abs(squeeze(freqresp(Tol(1,1), freqs))), 'k-', ...
+     'DisplayName', 'IFF Pseudo int')
+hold off;
+set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+ylabel('Frequency [rad/s]'); ylabel('Amplitude [m/m]');
+legend('location', 'northwest');
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org9d63ab6" class="outline-3">
+<h3 id="org9d63ab6"><span class="section-number-3">4.5</span> Compliance</h3>
+<div class="outline-text-3" id="text-4-5">
+</div>
+<div id="outline-container-org7cb0bf5" class="outline-4">
+<h4 id="org7cb0bf5"><span class="section-number-4">4.5.1</span> Open Loop</h4>
+<div class="outline-text-4" id="text-4-5-1">
+<div class="org-src-container">
+<pre class="src src-matlab">Kdvf = tf(zeros(2));
+Kiff = tf(zeros(2));
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">kp = 0;
+cp = 0;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">%% Name of the Simulink File
+mdl = 'rotating_frame';
+
+%% Input/Output definition
+clear io; io_i = 1;
+io(io_i) = linio([mdl, '/fd'], 1, 'input');  io_i = io_i + 1;
+io(io_i) = linio([mdl, '/Meas'], 1, 'output');  io_i = io_i + 1;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">Col = linearize(mdl, io, 0);
+
+%% Input/Output definition
+Col.InputName  = {'Fdx', 'Fdy'};
+Col.OutputName = {'Dx', 'Dy'};
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7b57600" class="outline-4">
+<h4 id="org7b57600"><span class="section-number-4">4.5.2</span> Pseudo Integrator IFF</h4>
+<div class="outline-text-4" id="text-4-5-2">
+<div class="org-src-container">
+<pre class="src src-matlab">wi = w0;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">Kdvf = tf(zeros(2));
+Kiff = opt_gain_iff/(1 + s/wi)*tf(eye(2));
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">kp = 0;
+cp = 0;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">%% Name of the Simulink File
+mdl = 'rotating_frame';
+
+%% Input/Output definition
+clear io; io_i = 1;
+io(io_i) = linio([mdl, '/fd'], 1, 'input');  io_i = io_i + 1;
+io(io_i) = linio([mdl, '/Meas'], 1, 'output');  io_i = io_i + 1;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">Ciff = linearize(mdl, io, 0);
+
+%% Input/Output definition
+Ciff.InputName  = {'Fdx', 'Fdy'};
+Ciff.OutputName = {'Dx', 'Dy'};
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org095c02b" class="outline-4">
+<h4 id="org095c02b"><span class="section-number-4">4.5.3</span> IFF With parallel Stiffness</h4>
+<div class="outline-text-4" id="text-4-5-3">
+<div class="org-src-container">
+<pre class="src src-matlab">kp = 2*m*wr^2;
+cp = 0.01;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">Kdvf = tf(zeros(2));
+Kiff = opt_gain_kp/s*tf(eye(2));
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">%% Name of the Simulink File
+mdl = 'rotating_frame';
+
+%% Input/Output definition
+clear io; io_i = 1;
+io(io_i) = linio([mdl, '/fd'], 1, 'input');  io_i = io_i + 1;
+io(io_i) = linio([mdl, '/Meas'], 1, 'output');  io_i = io_i + 1;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">Ciff_kp = linearize(mdl, io, 0);
+
+%% Input/Output definition
+Ciff_kp.InputName  = {'Fdx', 'Fdy'};
+Ciff_kp.OutputName = {'Dx', 'Dy'};
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1d52ab1" class="outline-4">
+<h4 id="org1d52ab1"><span class="section-number-4">4.5.4</span> DVF</h4>
+<div class="outline-text-4" id="text-4-5-4">
+<div class="org-src-container">
+<pre class="src src-matlab">kp = 0;
+cp = 0;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">Kdvf = opt_gain_kp*tf(eye(2));
+Kiff = tf(zeros(2));
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">%% Name of the Simulink File
+mdl = 'rotating_frame';
+
+%% Input/Output definition
+clear io; io_i = 1;
+io(io_i) = linio([mdl, '/fd'], 1, 'input');  io_i = io_i + 1;
+io(io_i) = linio([mdl, '/Meas'], 1, 'output');  io_i = io_i + 1;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">Cdvf = linearize(mdl, io, 0);
+
+%% Input/Output definition
+Cdvf.InputName  = {'Fdx', 'Fdy'};
+Cdvf.OutputName = {'Dx', 'Dy'};
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8521cde" class="outline-4">
+<h4 id="org8521cde"><span class="section-number-4">4.5.5</span> Compliance</h4>
+<div class="outline-text-4" id="text-4-5-5">
+<div class="org-src-container">
+<pre class="src src-matlab">freqs = logspace(-2, 1, 1000);
+
+figure;
+hold on;
+plot(freqs, abs(squeeze(freqresp(Ciff(1,1), freqs))), ...
+     'DisplayName', 'IFF Pseudo int')
+plot(freqs, abs(squeeze(freqresp(Ciff_kp(1,1), freqs))), ...
+     'DisplayName', 'IFF Paral. stiff')
+plot(freqs, abs(squeeze(freqresp(Cdvf(1,1), freqs))), ...
+     'DisplayName', 'DVF')
+plot(freqs, abs(squeeze(freqresp(Col(1,1), freqs))), 'k-', ...
+     'DisplayName', 'IFF Pseudo int')
+hold off;
+set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+ylabel('Frequency [rad/s]'); ylabel('Compliance [m/N]');
+legend('location', 'northwest');
+% ylim([0, 1e3]);
+% xlim([freqs(1), freqs(end)]);
+</pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Thomas Dehaeze</p>
-<p class="date">Created: 2020-06-10 mer. 10:17</p>
+<p class="date">Created: 2020-06-10 mer. 17:21</p>
 </div>
 </body>
 </html>

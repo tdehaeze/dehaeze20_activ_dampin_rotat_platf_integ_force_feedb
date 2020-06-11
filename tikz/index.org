@@ -32,10 +32,11 @@ Configuration file is accessible [[file:config.org][here]].
     \def\thetau{25}
 
     % Rotational Stage
-    \draw[fill=black!40!white] (0, 0) circle (4);
+    \draw[fill=black!60!white] (0, 0) circle (4.3);
+    \draw[fill=black!40!white] (0, 0) circle (3.8);
 
     % Label
-    \node[anchor=north west, rotate=\thetau] at (-2.8, 2.8) {\small Rotating Stage};
+    \node[anchor=north west, rotate=\thetau] at (-2.5, 2.5) {\small Rotating Stage};
 
     % Rotating Scope
     \begin{scope}[rotate=\thetau]
@@ -96,6 +97,79 @@ Configuration file is accessible [[file:config.org][here]].
 #+RESULTS:
 [[file:figs/rotating_xy_platform.png]]
 
+#+begin_src latex :file rotating_xy_platform_bis.pdf
+  \begin{tikzpicture}
+    % Angle
+    \def\thetau{25}
+
+    % Rotational Stage
+    \draw[fill=black!40!white] (0, 0) circle (4.3);
+    \draw[fill=black!20!white] (0, 0) circle (3.8);
+
+    % Label
+    \node[anchor=north west, rotate=\thetau] at (-2.5, 2.5) {\small Rotating Stage};
+
+    % Rotating Scope
+    \begin{scope}[rotate=\thetau]
+      % Mass
+      \draw[fill=white] (-1, -1) rectangle (1, 1);
+      % Label
+      \node[anchor=south west, rotate=\thetau] at (-1, -1) {\small Payload};
+
+      % Attached Points
+      \node[] at (-1, 0){$\bullet$};
+      \draw[] (-1, 0) -- ++(-0.2, 0) coordinate(au);
+      \node[] at (0, -1){$\bullet$};
+      \draw[] (0, -1) -- ++(0, -0.2) coordinate(av);
+
+      \node[] at (-3.8, 0){$\bullet$};
+      \draw[] (-3.8, 0) -- ++(0.2, 0);
+      \draw[] (-3.6, -0.5) -- ++(0, 1);
+      \node[] at (0, -3.8){$\bullet$};
+      \draw[] (0, -3.8) -- ++(0, 0.2);
+      \draw[] (-0.5, -3.6) -- ++(1, 0);
+
+      % Force Sensors
+      \draw[fill=white] ($(au) + (-0.2, -0.5)$) rectangle ($(au) + (0, 0.5)$);
+      \draw[] ($(au) + (-0.2, -0.5)$)coordinate(actu) -- ($(au) + (0,  0.5)$);
+      \draw[] ($(au) + (-0.2,  0.5)$)coordinate(ku) node[above=0.1, rotate=\thetau]{$f_{u}$}   -- ($(au) + (0, -0.5)$);
+
+      \draw[fill=white] ($(av) + (-0.5, -0.2)$) rectangle ($(av) + (0.5, 0)$);
+      \draw[] ($(av) + ( 0.5, -0.2)$)coordinate(actv)   -- ($(av) + (-0.5,  0)$);
+      \draw[] ($(av) + (-0.5, -0.2)$)coordinate(kv) node[left=0.1, rotate=\thetau]{$f_{v}$} -- ($(av) + ( 0.5,  0)$);
+
+      % Spring and Actuator for U
+      \draw[actuator={0.6}{0.2}] (actu) -- node[above=0.1, rotate=\thetau]{$F_u$} (actu-|-3.6,0);
+      \draw[spring=0.2] (ku) -- node[above=0.1, rotate=\thetau]{$k_u$} (ku-|-3.6,0);
+
+      \draw[actuator={0.6}{0.2}] (actv) -- node[left, rotate=\thetau]{$F_v$} (actv|-0,-3.6);
+      \draw[spring=0.2] (kv) -- node[left, rotate=\thetau]{$k_v$} (kv|-0,-3.6);
+
+      % Displacement measurement
+      \draw[<->, dashed] (-3.6, -0.8) --node[midway, below, rotate=\thetau]{$d_u$} (-1  , -0.8);
+      \draw[<->, dashed] ( 0.8, -3.6) --node[midway, right, rotate=\thetau]{$d_v$} ( 0.8, -1);
+    \end{scope}
+
+    % Inertial Frame
+    \draw[->] (-4, -4) -- ++(2, 0) node[below]{$\vec{i}_x$};
+    \draw[->] (-4, -4) -- ++(0, 2) node[left]{$\vec{i}_y$};
+    \draw[fill, color=black] (-4, -4) circle (0.06);
+    \node[draw, circle, inner sep=0pt, minimum size=0.3cm, label=left:$\vec{i}_z$] at (-4, -4){};
+
+    \draw[->] (0, 0) -- ++(\thetau:2) node[above, rotate=\thetau]{$\vec{i}_u$};
+    \draw[->] (0, 0) -- ++(\thetau+90:2) node[left, rotate=\thetau]{$\vec{i}_v$};
+    \draw[dashed] (0, 0) -- ++(2, 0);
+    \draw[] (1.5, 0) arc (0:\thetau:1.5) node[midway, right]{$\theta$};
+    \node[] at (0,0) {$\bullet$};
+    \node[left] at (0,0) {$(x, y)$};
+
+    \draw[->] (3.5, 0) arc (0:40:3.5) node[midway, left]{$\Omega$};
+  \end{tikzpicture}
+#+end_src
+
+#+RESULTS:
+[[file:figs/rotating_xy_platform_bis.png]]
+
 * X-Y Rotating Positioning Platform with Springs in parallel
 #+begin_src latex :file rotating_xy_platform_springs.pdf
   \begin{tikzpicture}
@@ -134,17 +208,13 @@ Configuration file is accessible [[file:config.org][here]].
       \draw[] ($(av) + (-0.5, -0.2)$)coordinate(kv)   -- ($(av) + ( 0.5,  0)$);
 
       % Spring and Actuator for U
-      \draw[actuator={0.6}{0.2}] (actu) -- (actu-|-2.6,0);
-      \draw[spring=0.2] (ku) -- (ku-|-2.6,0);
-      \draw[spring=0.2] (-1, 0.8) -- (-1, 0.8-|-2.6,0);
+      \draw[actuator={0.6}{0.2}] (actu) -- node[below=0.1, rotate=\thetau]{$F_u$} (actu-|-2.6,0);
+      \draw[spring=0.2] (ku) -- node[below=0.1, rotate=\thetau]{$k_u$} (ku-|-2.6,0);
+      \draw[spring=0.2] (-1, 0.8) -- node[above=0.1, rotate=\thetau]{$k_{pu}$} (-1, 0.8-|-2.6,0);
 
-      \draw[actuator={0.6}{0.2}] (actv) -- (actv|-0,-2.6);
-      \draw[spring=0.2] (kv) -- (kv|-0,-2.6);
-      \draw[spring=0.2] (-0.8, -1) -- (-0.8, -1|-0,-2.6);
-
-      % Displacement measurement
-      \draw[<->, dashed] (-2.6, -0.8) --node[midway, below, rotate=\thetau]{$d_u$} (-1  , -0.8);
-      \draw[<->, dashed] ( 0.8, -2.6) --node[midway, right, rotate=\thetau]{$d_v$} ( 0.8, -1);
+      \draw[actuator={0.6}{0.2}] (actv) -- node[right=0.1, rotate=\thetau]{$F_v$} (actv|-0,-2.6);
+      \draw[spring=0.2] (kv) -- node[right=0.1, rotate=\thetau]{$k_v$} (kv|-0,-2.6);
+      \draw[spring=0.2] (-0.8, -1) -- node[left=0.1, rotate=\thetau]{$k_{pv}$} (-0.8, -1|-0,-2.6);
     \end{scope}
 
     % Inertial Frame
@@ -163,6 +233,9 @@ Configuration file is accessible [[file:config.org][here]].
     \draw[->] (3.5, 0) arc (0:40:3.5) node[midway, left]{$\Omega$};
   \end{tikzpicture}
 #+end_src
+
+#+RESULTS:
+[[file:figs/rotating_xy_platform_springs.png]]
 
 #+begin_src latex :file rotating_xy_platform_springs.pdf
   \begin{tikzpicture}
