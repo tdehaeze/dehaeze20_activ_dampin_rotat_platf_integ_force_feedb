@@ -65,7 +65,7 @@
 - $k$: Actuator's Stiffness [N/m]
 - $m$: Payload's mass [kg]
 - $\omega_0 = \sqrt{\frac{k}{m}}$: Resonance of the (non-rotating) mass-spring system [rad/s]
-- $\omega_r = \dot{\theta}$: rotation speed [rad/s]
+- $\Omega = \dot{\theta}$: rotation speed [rad/s]
 
 
 #+name: fig:rotating_xy_platform
@@ -141,7 +141,7 @@ Without the coupling terms, each equation is the equation of a one degree of fre
 Thus, the term $- m\dot{\theta}^2$ acts like a negative stiffness (due to *centrifugal forces*).
 
 ** Constant Rotating Speed
-To simplify, let's consider a constant rotating speed $\dot{\theta} = \omega_r$ and thus $\ddot{\theta} = 0$.
+To simplify, let's consider a constant rotating speed $\dot{\theta} = \Omega$ and thus $\ddot{\theta} = 0$.
 
 #+NAME: eq:coupledplant
 \begin{equation}
@@ -154,13 +154,15 @@ To simplify, let's consider a constant rotating speed $\dot{\theta} = \omega_r$ 
 \begin{bmatrix} F_u \\ F_v \end{bmatrix}
 \end{equation}
 
+# Explain each term
+
 #+NAME: eq:coupled_plant
 \begin{equation}
 \begin{bmatrix} d_u \\ d_v \end{bmatrix} =
-\frac{\frac{1}{k}}{\left( \frac{s^2}{{\omega_0}^2} + (1 - \frac{{\omega_r}^2}{{\omega_0}^2}) \right)^2 + \left( 2 \frac{{\omega_r} s}{{\omega_0}^2} \right)^2}
+\frac{\frac{1}{k}}{\left( \frac{s^2}{{\omega_0}^2} + (1 - \frac{{\Omega}^2}{{\omega_0}^2}) \right)^2 + \left( 2 \frac{{\Omega} s}{{\omega_0}^2} \right)^2}
 \begin{bmatrix}
-  \frac{s^2}{{\omega_0}^2} + 1 - \frac{{\omega_r}^2}{{\omega_0}^2} & 2 \frac{\omega_r s}{{\omega_0}^2} \\
-  -2 \frac{\omega_r s}{{\omega_0}^2}          & \frac{s^2}{{\omega_0}^2} + 1 - \frac{{\omega_r}^2}{{\omega_0}^2} \\
+  \frac{s^2}{{\omega_0}^2} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} & 2 \frac{\Omega s}{{\omega_0}^2} \\
+  -2 \frac{\Omega s}{{\omega_0}^2}          & \frac{s^2}{{\omega_0}^2} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \\
 \end{bmatrix}
 \begin{bmatrix} F_u \\ F_v \end{bmatrix}
 \end{equation}
