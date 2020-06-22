@@ -83,7 +83,6 @@ Configuration file is accessible [[file:config.org][here]].
     \draw[dashed] (0, 0) -- ++(2, 0);
     \draw[] (1.5, 0) arc (0:\thetau:1.5) node[midway, right]{$\theta$};
     \node[] at (0,0) {$\bullet$};
-    \node[left] at (0,0) {$(x, y)$};
 
     \draw[->] (3.5, 0) arc (0:40:3.5) node[midway, left]{$\Omega$};
   \end{tikzpicture}
@@ -151,7 +150,6 @@ Configuration file is accessible [[file:config.org][here]].
     \draw[dashed] (0, 0) -- ++(2, 0);
     \draw[] (1.5, 0) arc (0:\thetau:1.5) node[midway, right]{$\theta$};
     \node[] at (0,0) {$\bullet$};
-    \node[left] at (0,0) {$(x, y)$};
 
     \draw[->] (3.5, 0) arc (0:40:3.5) node[midway, left]{$\Omega$};
   \end{tikzpicture}
@@ -230,7 +228,6 @@ Configuration file is accessible [[file:config.org][here]].
     \draw[dashed] (0, 0) -- ++(2, 0);
     \draw[] (1.5, 0) arc (0:\thetau:1.5) node[midway, right]{$\theta$};
     \node[] at (0,0) {$\bullet$};
-    \node[left] at (0,0) {$(x, y)$};
 
     \draw[->] (3.5, 0) arc (0:40:3.5) node[midway, left]{$\Omega$};
   \end{tikzpicture}
@@ -313,7 +310,6 @@ Configuration file is accessible [[file:config.org][here]].
     \draw[dashed] (0, 0) -- ++(2, 0);
     \draw[] (1.5, 0) arc (0:\thetau:1.5) node[midway, right]{$\theta$};
     \node[] at (0,0) {$\bullet$};
-    \node[left] at (0,0) {$(x, y)$};
 
     \draw[->] (3.5, 0) arc (0:40:3.5) node[midway, left]{$\Omega$};
   \end{tikzpicture}
@@ -383,7 +379,6 @@ Configuration file is accessible [[file:config.org][here]].
     \draw[dashed] (0, 0) -- ++(2, 0);
     \draw[] (1.5, 0) arc (0:\thetau:1.5) node[midway, right]{$\theta$};
     \node[] at (0,0) {$\bullet$};
-    \node[left] at (0,0) {$(x, y)$};
 
     \draw[->] (3.5, 0) arc (0:40:3.5) node[midway, left]{$\Omega$};
   \end{tikzpicture}
