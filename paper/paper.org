@@ -1,4 +1,4 @@
-#+TITLE: Vibration control of a rotating Stewart platform
+#+TITLE: Active Damping of Rotating Positioning Platforms
 :DRAWER:
 #+LATEX_CLASS: ISMA_USD2020
 #+OPTIONS: toc:nil
@@ -53,20 +53,42 @@
 
 * Introduction
 <<sec:introduction>>
+*** Establish the importance of the research topic                 :ignore:
+# Active Damping + Rotating Systems
 
+*** Applications of active damping                                  :ignore:
+# Link to previous paper / tomography
 
-* Theory
-<<sec:theory>>
+cite:dehaeze18_sampl_stabil_for_tomog_exper
 
-** Rotating Positioning Stage
+*** Current active damping techniques                               :ignore:
+# IFF, DVF
 
-# Description of the system
+*** Describe a gap in the research                                 :ignore:
+# No literature on rotating systems => gyroscopic effects
+
+*** Describe the paper itself / the problem which is addressed     :ignore:
+
+*** Introduce Each part of the paper                               :ignore:
+
+* System Under Study
+** Rotating Positioning Platform
+# Simplest system where gyroscopic forces can be studied
+Consider the rotating X-Y stage of Figure [[fig:rotating_xy_platform]].
+
+# Present the system, parameters, assumptions
+
+# Small displacements
+
+# Constant rotating speed
+
+# Explain the frames (inertial frame x,y, rotating frame u,v)
 
 - $k$: Actuator's Stiffness [N/m]
 - $m$: Payload's mass [kg]
-- $\omega_0 = \sqrt{\frac{k}{m}}$: Resonance of the (non-rotating) mass-spring system [rad/s]
 - $\Omega = \dot{\theta}$: rotation speed [rad/s]
-
+- $F_u$, $F_v$
+- $d_u$, $d_v$
 
 #+name: fig:rotating_xy_platform
 #+caption: Figure caption
@@ -74,34 +96,96 @@
 [[file:figs/rotating_xy_platform.pdf]]
 
 
+#+name: fig:cedrat_xy25xs
+#+caption: Figure caption
+#+attr_latex: :width 0.5\linewidth
+[[file:figs/cedrat_xy25xs.jpg]]
+
 ** Equation of Motion
+The system has two degrees of freedom and is thus fully described by the generalized coordinates $u$ and $v$.
 
 Let's express the kinetic energy $T$ and the potential energy $V$ of the mass $m$ (neglecting the rotational energy):
+
+Dissipation function $R$
+Kinetic energy $T$
+Potential energy $V$
 #+name: eq:energy_inertial_frame
 \begin{subequations}
   \begin{align}
-    T & = \frac{1}{2} m \left( \dot{x}^2 + \dot{y}^2 \right) \\
-    R & = \frac{1}{2} c \left( \dot{x}^2 + \dot{y}^2 \right) \\
-    V & = \frac{1}{2} k \left( x^2 + y^2 \right)
+    T & = \frac{1}{2} m \left( \left( \dot{u} - \Omega v \right)^2 + \left( \dot{v} + \Omega u \right)^2 \right) \\
+    R & = \frac{1}{2} c \left( \dot{u}^2 + \dot{v}^2 \right) \\
+    V & = \frac{1}{2} k \left( u^2 + v^2 \right)
   \end{align}
 \end{subequations}
 
 The Lagrangian is the kinetic energy minus the potential energy:
 #+name: eq:lagrangian_inertial_frame
 \begin{equation}
-L = T-V = \frac{1}{2} m \left( \dot{x}^2 + \dot{y}^2 \right) - \frac{1}{2} k \left( x^2 + y^2 \right)
+L = T - V
 \end{equation}
 
-The external forces applied to the mass are:
+From the Lagrange's equations of the second kind eqref:eq:lagrange_second_kind, the equation of motion eqref:eq:eom_mixed is obtained ($q_1 = u$, $q_2 = v$).
+\begin{equation}
+  \frac{d}{dt} \left( \frac{\partial L}{\partial \dot{q}_i} \right) + \frac{\partial D}{\partial \dot{q}_i} - \frac{\partial L}{\partial q_i} = Q_i
+\end{equation}
+
+\begin{equation}
+  \frac{d}{dt} \left( \frac{\partial T}{\partial \dot{q}_i} \right) - \frac{\partial T}{\partial q_i} + \frac{\partial R}{\partial \dot{q}_i} - \frac{\partial V}{\partial q_i} = Q_i
+\end{equation}
+
+with $Q_i$ is the generalized force associated with the generalized variable $q_i$ ($F_u$ and $F_v$).
+
 \begin{subequations}
   \begin{align}
-    F_{\text{ext}, x} &= F_u \cos{\theta} - F_v \sin{\theta}\\
-    F_{\text{ext}, y} &= F_u \sin{\theta} + F_v \cos{\theta}
+    m \ddot{u} + c \dot{u} + ( k - m \Omega ) u &= F_u + 2 m \Omega \dot{v} \\
+    m \ddot{v} + c \dot{v} + ( k \underbrace{-\,m \Omega}_{\text{Centrif.}} ) v &= F_v \underbrace{-\,2 m \Omega \dot{u}}_{\text{Coriolis}}
+  \end{align}
+\end{subequations}
+
+# Explain Gyroscopic effects
+
+
+
+
+# Laplace Domain
+
+\begin{subequations}
+  \begin{align}
+    u &= \frac{ms^2 + cs + k - m \Omega^2}{\left( m s^2 + cs + k - m \Omega^2 \right)^2 + \left( 2 m \Omega s \right)^2} F_u +  \frac{2 m \Omega s}{\left( m s^2 + cs + k - m \Omega^2 \right)^2 + \left( 2 m \Omega s \right)^2} F_v \\
+    v &= \frac{-2 m \Omega s}{\left( m s^2 + cs + k - m \Omega^2 \right)^2 + \left( 2 m \Omega s \right)^2} F_u +  \frac{ms^2 + cs + k - m \Omega^2}{\left( m s^2 + cs + k - m \Omega^2 \right)^2 + \left( 2 m \Omega s \right)^2} F_v
+  \end{align}
+\end{subequations}
+
+# Change of variables
+\begin{equation}
+\begin{bmatrix} d_u \\ d_v \end{bmatrix} =
+\bm{G}_d
+\begin{bmatrix} F_u \\ F_v \end{bmatrix}
+\end{equation}
+Where $\bm{G}_d$ is a $2 \times 2$ transfer function matrix.
+
+\begin{equation}
+\bm{G}_d = \frac{1}{k} \frac{1}{G_{dp}}
+\begin{bmatrix}
+   G_{dz} & G_{dc} \\
+  -G_{dc} & G_{dz}
+\end{bmatrix}
+\end{equation}
+With:
+\begin{subequations}
+  \begin{align}
+    G_{dp} &= \left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2 \\
+    G_{dz} &= \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \\
+    G_{dc} &= 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0}
   \end{align}
 \end{subequations}
 
 
-From the Lagrange's equations of the second kind eqref:eq:lagrange_second_kind, the equation of motion eqref:eq:eom_mixed is obtained.
+
+- $\omega_0 = \sqrt{\frac{k}{m}}$: Natural frequency of the mass-spring system in $\si{\radian/\s}$
+- $\xi$ damping ratio
+
+
 
 #+name: eq:lagrange_second_kind
 \begin{equation}
@@ -186,18 +270,104 @@ As the rotation speed increases, one of the two resonant frequency goes to lower
 
 #+name: fig:campbell_diagram
 #+caption: Campbell Diagram
+#+attr_latex: :scale 1
 [[file:figs/campbell_diagram.pdf]]
 
 # Bode Plots for different ratio wr/w0
 
 The magnitude of the coupling terms are increasing with the rotation speed.
 
+#+name: fig:plant_compare_rotating_speed
+#+caption: Caption
+#+attr_latex: :scale 1
+[[file:figs/plant_compare_rotating_speed.pdf]]
 
-** Integral Force Feedback
+* Integral Force Feedback
+** Control Schematic
 
+** Equations
 
-** Direct Velocity Feedback
+** Plant Dynamics
 
+#+name: fig:root_locus_pure_iff
+#+caption: Figure caption
+#+attr_latex: :scale 1
+[[file:figs/root_locus_pure_iff.pdf]]
+
+** Physical Interpretation
+
+* Integral Force Feedback with Low Pass Filters
+
+#+name: fig:loop_gain_modified_iff
+#+caption: Figure caption
+#+attr_latex: :scale 1
+[[file:figs/loop_gain_modified_iff.pdf]]
+
+#+name: fig:root_locus_modified_iff
+#+caption: Figure caption
+#+attr_latex: :scale 1
+[[file:figs/root_locus_modified_iff_bis.pdf]]
+
+#+name: fig:root_locus_wi_modified_iff
+#+caption: Figure caption
+#+attr_latex: :scale 1
+[[file:figs/root_locus_wi_modified_iff.pdf]]
+
+* Integral Force Feedback with Parallel Springs
+
+#+name: fig:rotating_xy_platform_springs
+#+caption: Figure caption
+#+attr_latex: :scale 1
+[[file:figs/rotating_xy_platform_springs.pdf]]
+
+#+name: fig:plant_iff_kp
+#+caption: Figure caption
+#+attr_latex: :scale 1
+[[file:figs/plant_iff_kp.pdf]]
+
+#+name: fig:root_locus_iff_kps
+#+caption: Figure caption
+#+attr_latex: :scale 1
+[[file:figs/root_locus_iff_kps.pdf]]
+
+#+name: fig:root_locus_iff_kp_bis
+#+caption: Figure caption
+#+attr_latex: :scale 1
+[[file:figs/root_locus_iff_kp_bis.pdf]]
+
+#+name: fig:root_locus_opt_gain_iff_kp
+#+caption: Figure caption
+#+attr_latex: :scale 1
+[[file:figs/root_locus_opt_gain_iff_kp.pdf]]
+
+#+name: fig:plant_iff_compare_rotating_speed
+#+caption: Figure caption
+#+attr_latex: :scale 1
+[[file:figs/plant_iff_compare_rotating_speed.pdf]]
+
+* Direct Velocity Feedback
+
+#+name: fig:root_locus_dvf
+#+caption: Figure caption
+#+attr_latex: :scale 1
+[[file:figs/root_locus_dvf.pdf]]
+
+* Comparison of the Proposed Active Damping Techniques
+
+#+name: fig:comp_root_locus
+#+caption: Figure caption
+#+attr_latex: :scale 1
+[[file:figs/comp_root_locus.pdf]]
+
+#+name: fig:comp_compliance
+#+caption: Figure caption
+#+attr_latex: :scale 1
+[[file:figs/comp_compliance.pdf]]
+
+#+name: fig:comp_transmissibility
+#+caption: Figure caption
+#+attr_latex: :scale 1
+[[file:figs/comp_transmissibility.pdf]]
 
 * Conclusion
 <<sec:conclusion>>

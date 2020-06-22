@@ -72,6 +72,7 @@ Based on the Figure [[fig:rotating_xy_platform]], the equations of motions are:
 \bm{G}_d
 \begin{bmatrix} F_u \\ F_v \end{bmatrix}
 \end{equation}
+Where $\bm{G}_d$ is a $2 \times 2$ transfer function matrix.
 
 \begin{equation}
 \begin{bmatrix} d_u \\ d_v \end{bmatrix} =
