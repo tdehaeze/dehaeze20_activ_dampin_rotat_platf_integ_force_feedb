@@ -1,4 +1,5 @@
 auto/
+.auctex-auto/
 
 nohup.out
 
