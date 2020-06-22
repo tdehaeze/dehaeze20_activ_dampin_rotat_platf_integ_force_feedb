@@ -14,6 +14,8 @@
 #+LATEX_HEADER_EXTRA: \affil[2] {BEAMS Department\NewLineAffil Free University of Brussels, Belgium \NewAffil}
 #+LATEX_HEADER_EXTRA: \affil[3] {European Synchrotron Radiation Facility \NewLineAffil Grenoble, France e-mail: \textbf{thomas.dehaeze@esrf.fr}}
 
+#+LATEX_HEADER_EXTRA: \bibliographystyle{IEEEtran}
+
 #+LATEX_HEADER: \usepackage{amsmath,amssymb,amsfonts, cases}
 #+LATEX_HEADER: \usepackage{algorithmic, graphicx, textcomp}
 #+LATEX_HEADER: \usepackage{xcolor, import, hyperref}
@@ -21,8 +23,6 @@
 
 #+LATEX_HEADER: \setcounter{footnote}{1}
 #+LATEX_HEADER: \input{config.tex}
-
-\bibliographystyle{IEEEtran}
 :END:
 
 * LaTeX Config                                                     :noexport:
@@ -204,7 +204,9 @@ The magnitude of the coupling terms are increasing with the rotation speed.
 
 
 * Acknowledgment
-
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
 
 * Bibliography                                                       :ignore:
-\bibliography{ref}
+\bibliography{ref.bib}
