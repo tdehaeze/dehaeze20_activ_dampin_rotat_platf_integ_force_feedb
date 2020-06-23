@@ -1,4 +1,4 @@
-% Created 2020-06-22 lun. 13:27
+% Created 2020-06-22 lun. 17:38
 % Intended LaTeX compiler: pdflatex
 \documentclass{ISMA_USD2020}
 \usepackage[utf8]{inputenc}
@@ -43,14 +43,14 @@
 }
 
 \section{Introduction}
-\label{sec:orgd20252d}
+\label{sec:org67e0a4e}
 \label{sec:introduction}
 \cite{dehaeze18_sampl_stabil_for_tomog_exper}
 
 \section{System Under Study}
-\label{sec:orgacbe1ae}
+\label{sec:org85bcde2}
 \subsection{Rotating Positioning Platform}
-\label{sec:org07e4fc8}
+\label{sec:org4959a5e}
 Consider the rotating X-Y stage of Figure \ref{fig:rotating_xy_platform}.
 
 \begin{itemize}
@@ -63,7 +63,7 @@ Consider the rotating X-Y stage of Figure \ref{fig:rotating_xy_platform}.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[scale=1]{figs/rotating_xy_platform.pdf}
+\includegraphics[scale=1]{figs/system.pdf}
 \caption{\label{fig:rotating_xy_platform}Figure caption}
 \end{figure}
 
@@ -75,7 +75,7 @@ Consider the rotating X-Y stage of Figure \ref{fig:rotating_xy_platform}.
 \end{figure}
 
 \subsection{Equation of Motion}
-\label{sec:orgac1a52a}
+\label{sec:orgdb109d9}
 The system has two degrees of freedom and is thus fully described by the generalized coordinates \(u\) and \(v\).
 
 Let's express the kinetic energy \(T\) and the potential energy \(V\) of the mass \(m\) (neglecting the rotational energy):
@@ -84,7 +84,6 @@ Dissipation function \(R\)
 Kinetic energy \(T\)
 Potential energy \(V\)
 \begin{subequations}
-\label{eq:energy_inertial_frame}
   \begin{align}
     T & = \frac{1}{2} m \left( \left( \dot{u} - \Omega v \right)^2 + \left( \dot{v} + \Omega u \right)^2 \right) \\
     R & = \frac{1}{2} c \left( \dot{u}^2 + \dot{v}^2 \right) \\
@@ -94,7 +93,6 @@ Potential energy \(V\)
 
 The Lagrangian is the kinetic energy minus the potential energy:
 \begin{equation}
-\label{eq:lagrangian_inertial_frame}
 L = T - V
 \end{equation}
 
@@ -102,12 +100,8 @@ From the Lagrange's equations of the second kind \eqref{eq:lagrange_second_kind}
 \begin{equation}
   \frac{d}{dt} \left( \frac{\partial L}{\partial \dot{q}_i} \right) + \frac{\partial D}{\partial \dot{q}_i} - \frac{\partial L}{\partial q_i} = Q_i
 \end{equation}
+with \(Q_i\) is the generalized force associated with the generalized variable \(q_i\) (\(Q_1 = F_u\) and \(Q_2 = F_v\)).
 
-\begin{equation}
-  \frac{d}{dt} \left( \frac{\partial T}{\partial \dot{q}_i} \right) - \frac{\partial T}{\partial q_i} + \frac{\partial R}{\partial \dot{q}_i} - \frac{\partial V}{\partial q_i} = Q_i
-\end{equation}
-
-with \(Q_i\) is the generalized force associated with the generalized variable \(q_i\) (\(F_u\) and \(F_v\)).
 
 \begin{subequations}
   \begin{align}
@@ -115,6 +109,18 @@ with \(Q_i\) is the generalized force associated with the generalized variable \
     m \ddot{v} + c \dot{v} + ( k \underbrace{-\,m \Omega}_{\text{Centrif.}} ) v &= F_v \underbrace{-\,2 m \Omega \dot{u}}_{\text{Coriolis}}
   \end{align}
 \end{subequations}
+
+\begin{itemize}
+\item Coriolis Forces: coupling
+\item Centrifugal forces: negative stiffness
+\end{itemize}
+
+Without the coupling terms, each equation is the equation of a one degree of freedom mass-spring system with mass \(m\) and stiffness \(k- m\dot{\theta}^2\).
+Thus, the term \(- m\dot{\theta}^2\) acts like a negative stiffness (due to \textbf{centrifugal forces}).
+
+
+\subsection{Transfer Functions in the Laplace domain}
+\label{sec:orgfcd3def}
 
 \begin{subequations}
   \begin{align}
@@ -146,56 +152,14 @@ With:
   \end{align}
 \end{subequations}
 
-
-
 \begin{itemize}
 \item \(\omega_0 = \sqrt{\frac{k}{m}}\): Natural frequency of the mass-spring system in \(\si{\radian/\s}\)
 \item \(\xi\) damping ratio
 \end{itemize}
 
 
-
-\begin{equation}
-\label{eq:lagrange_second_kind}
-  \frac{d}{dt} \left( \frac{\partial L}{\partial \dot{q}_j} \right) = \frac{\partial L}{\partial q_j}
-\end{equation}
-
-\begin{subequations}
-\label{eq:eom_mixed}
-  \begin{align}
-    m\ddot{x} + kx = F_u \cos{\theta} - F_v \sin{\theta}\\
-    m\ddot{y} + ky = F_u \sin{\theta} + F_v \cos{\theta}
-  \end{align}
-\end{subequations}
-
-Performing the change coordinates from \((x, y)\) to \((d_x, d_y, \theta)\):
-\begin{subequations}
-  \begin{align}
-    x & = d_u \cos{\theta} - d_v \sin{\theta}\\
-    y & = d_u \sin{\theta} + d_v \cos{\theta}
-  \end{align}
-\end{subequations}
-
-Gives
-\begin{subequations}
-\label{eq:oem_coupled}
-  \begin{align}
-    m \ddot{d_u} + (k - m\dot{\theta}^2) d_u &= F_u + 2 m\dot{d_v}\dot{\theta} + m d_v\ddot{\theta} \label{eq:du_coupled} \\
-    m \ddot{d_v} + (k \underbrace{-\ m\dot{\theta}^2}_{\text{Centrif.}}) d_v &= F_v \underbrace{-\ 2 m\dot{d_u}\dot{\theta}}_{\text{Coriolis}} \underbrace{-\ m d_u\ddot{\theta}}_{\text{Euler}} \label{eq:dv_coupled}
-  \end{align}
-\end{subequations}
-
-We obtain two differential equations that are coupled through:
-\begin{itemize}
-\item \textbf{Euler forces}: \(m d_v \ddot{\theta}\)
-\item \textbf{Coriolis forces}: \(2 m \dot{d_v} \dot{\theta}\)
-\end{itemize}
-
-Without the coupling terms, each equation is the equation of a one degree of freedom mass-spring system with mass \(m\) and stiffness \(k- m\dot{\theta}^2\).
-Thus, the term \(- m\dot{\theta}^2\) acts like a negative stiffness (due to \textbf{centrifugal forces}).
-
 \subsection{Constant Rotating Speed}
-\label{sec:org47aaeee}
+\label{sec:org81c7074}
 To simplify, let's consider a constant rotating speed \(\dot{\theta} = \Omega\) and thus \(\ddot{\theta} = 0\).
 
 \begin{equation}
@@ -250,27 +214,74 @@ The magnitude of the coupling terms are increasing with the rotation speed.
 \end{figure}
 
 \section{Integral Force Feedback}
-\label{sec:org78c2eab}
+\label{sec:orgc6c1b99}
 \subsection{Control Schematic}
-\label{sec:org6a00238}
+\label{sec:orgb93b297}
+
+Force Sensors are added in series with the actuators as shown in Figure \ref{fig:system_iff}.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[scale=1]{figs/system_iff.pdf}
+\caption{\label{fig:system_iff}System with Force Sensors in Series with the Actuators. Decentralized Integral Force Feedback is used}
+\end{figure}
 
 \subsection{Equations}
-\label{sec:org5480f1b}
+\label{sec:org4072ea4}
+The sensed forces are equal to:
+\begin{equation}
+\begin{bmatrix} f_{u} \\ f_{v} \end{bmatrix} =
+\begin{bmatrix} F_u \\ F_v \end{bmatrix} - (c s + k)
+\begin{bmatrix} d_u \\ d_v \end{bmatrix}
+\end{equation}
+
+Which then gives:
+\begin{equation}
+\begin{bmatrix} f_{u} \\ f_{v} \end{bmatrix} =
+\bm{G}_{f}
+\begin{bmatrix} F_u \\ F_v \end{bmatrix}
+\end{equation}
+
+\begin{equation}
+\begin{bmatrix} f_{u} \\ f_{v} \end{bmatrix} =
+\frac{1}{G_{fp}}
+\begin{bmatrix}
+  G_{fz} & -G_{fc} \\
+  G_{fc} &  G_{fz}
+\end{bmatrix}
+\begin{bmatrix} F_u \\ F_v \end{bmatrix}
+\end{equation}
+
+\begin{align}
+  G_{fp} &= \left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2 \\
+  G_{fz} &= \left( \frac{s^2}{{\omega_0}^2} - \frac{\Omega^2}{{\omega_0}^2} \right) \left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right) + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2 \\
+  G_{fc} &= \left( 2 \xi \frac{s}{\omega_0} + 1 \right) \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)
+\end{align}
+
 
 \subsection{Plant Dynamics}
-\label{sec:orgbb0952e}
+\label{sec:org0250ac0}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[scale=1]{figs/root_locus_pure_iff.pdf}
-\caption{\label{fig:root_locus_pure_iff}Figure caption}
+\caption{\label{fig:root_locus_pure_iff}Root Locus}
 \end{figure}
 
 \subsection{Physical Interpretation}
-\label{sec:orgdb25e2c}
+\label{sec:orgb2d79d2}
 
-\section{Integral Force Feedback with Low Pass Filters}
-\label{sec:org2985d35}
+At low frequency, the gain is very large and thus no force is transmitted between the payload and the rotating stage.
+This means that at low frequency, the system is decoupled (the force sensor removed) and thus the system is unstable.
+
+\section{Integral Force Feedback with High Pass Filters}
+\label{sec:orgabf7a6a}
+\subsection{Modification of the Control Low}
+\label{sec:org4766bd6}
+
+
+\subsection{Close Loop Analysis}
+\label{sec:org4c639fd}
 
 \begin{figure}[htbp]
 \centering
@@ -284,14 +295,24 @@ The magnitude of the coupling terms are increasing with the rotation speed.
 \caption{\label{fig:root_locus_modified_iff}Figure caption}
 \end{figure}
 
+\subsection{Optimal Cut-Off Frequency}
+\label{sec:orge829a45}
+
 \begin{figure}[htbp]
 \centering
-\includegraphics[scale=1]{figs/root_locus_wi_modified_iff.pdf}
+\includegraphics[scale=1]{figs/root_locus_wi_modified_iff_bis.pdf}
 \caption{\label{fig:root_locus_wi_modified_iff}Figure caption}
 \end{figure}
 
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[scale=1]{figs/mod_iff_damping_wi.pdf}
+\caption{\label{fig:mod_iff_damping_wi}Figure caption}
+\end{figure}
+
 \section{Integral Force Feedback with Parallel Springs}
-\label{sec:orga4142a5}
+\label{sec:orgd96ea25}
 
 \begin{figure}[htbp]
 \centering
@@ -330,7 +351,7 @@ The magnitude of the coupling terms are increasing with the rotation speed.
 \end{figure}
 
 \section{Direct Velocity Feedback}
-\label{sec:org6a1be4f}
+\label{sec:org027d051}
 
 \begin{figure}[htbp]
 \centering
@@ -339,7 +360,7 @@ The magnitude of the coupling terms are increasing with the rotation speed.
 \end{figure}
 
 \section{Comparison of the Proposed Active Damping Techniques}
-\label{sec:orga9658c0}
+\label{sec:org1eaa959}
 
 \begin{figure}[htbp]
 \centering
@@ -360,12 +381,12 @@ The magnitude of the coupling terms are increasing with the rotation speed.
 \end{figure}
 
 \section{Conclusion}
-\label{sec:orgcdf948f}
+\label{sec:org1b2b4ae}
 \label{sec:conclusion}
 
 
 \section*{Acknowledgment}
-\label{sec:org6c21e13}
+\label{sec:org2ae16a5}
 
 \bibliography{ref.bib}
 \end{document}
