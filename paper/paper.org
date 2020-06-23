@@ -20,6 +20,9 @@
 #+LATEX_HEADER: \usepackage{algorithmic, graphicx, textcomp}
 #+LATEX_HEADER: \usepackage{xcolor, import, hyperref}
 #+LATEX_HEADER: \usepackage[USenglish]{babel}
+#+LATEX_HEADER_EXTRA: \usepackage{tikz}
+#+LATEX_HEADER_EXTRA: \usetikzlibrary{shapes.misc}
+
 
 #+LATEX_HEADER: \setcounter{footnote}{1}
 #+LATEX_HEADER: \input{config.tex}
@@ -55,6 +58,10 @@
 <<sec:introduction>>
 *** Establish the importance of the research topic                 :ignore:
 # Active Damping + Rotating System
+
+Controller Poles are shown by black crosses (
+\begin{tikzpicture} \node[cross out, draw=black, minimum size=1ex, line width=2pt, inner sep=0pt, outer sep=0pt] at (0, 0){}; \end{tikzpicture}
+).
 
 *** Applications of active damping                                  :ignore:
 # Link to previous paper / tomography
@@ -122,7 +129,7 @@ The Lagrangian is the kinetic energy minus the potential energy:
 L = T - V
 \end{equation}
 
-From the Lagrange's equations of the second kind eqref:eq:lagrange_second_kind, the equation of motion eqref:eq:eom_mixed is obtained ($q_1 = u$, $q_2 = v$).
+From the Lagrange's equations of the second kind, the equation of motion is obtained ($q_1 = u$, $q_2 = v$).
 \begin{equation}
   \frac{d}{dt} \left( \frac{\partial L}{\partial \dot{q}_i} \right) + \frac{\partial D}{\partial \dot{q}_i} - \frac{\partial L}{\partial q_i} = Q_i
 \end{equation}
@@ -319,7 +326,7 @@ This means that at low frequency, the system is decoupled (the force sensor remo
 #+name: fig:root_locus_modified_iff
 #+caption: Figure caption
 #+attr_latex: :scale 1
-[[file:figs/root_locus_modified_iff_bis.pdf]]
+[[file:figs/root_locus_modified_iff_ter.pdf]]
 
 ** Optimal Cut-Off Frequency
 
@@ -354,7 +361,7 @@ This means that at low frequency, the system is decoupled (the force sensor remo
 #+name: fig:root_locus_iff_kp_bis
 #+caption: Figure caption
 #+attr_latex: :scale 1
-[[file:figs/root_locus_iff_kp_bis.pdf]]
+[[file:figs/root_locus_iff_kp_ter.pdf]]
 
 #+name: fig:root_locus_opt_gain_iff_kp
 #+caption: Figure caption
