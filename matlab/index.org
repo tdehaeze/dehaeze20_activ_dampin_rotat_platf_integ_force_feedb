@@ -14,7 +14,6 @@
 #+HTML_HEAD: <script src="../js/readtheorg.js"></script>
 
 #+PROPERTY: header-args:matlab  :session *MATLAB*
-#+PROPERTY: header-args:matlab+ :tangle matlab/comp_filters_design.m
 #+PROPERTY: header-args:matlab+ :comments org
 #+PROPERTY: header-args:matlab+ :exports both
 #+PROPERTY: header-args:matlab+ :results none
@@ -35,6 +34,9 @@
 - Section [[sec:notations]]
 
 * System Description and Analysis
+:PROPERTIES:
+:header-args:matlab+: :tangle matlab/s1_system_description.m
+:END:
 <<sec:system_description>>
 
 ** Introduction                                                      :ignore:
@@ -47,7 +49,7 @@
   <<matlab-init>>
 #+end_src
 
-#+begin_src matlab
+#+begin_src matlab :tangle no
   addpath('./matlab/');
   addpath('./src/');
 #+end_src
@@ -75,13 +77,11 @@ Based on the Figure [[fig:rotating_xy_platform]], the equations of motions are:
 Where $\bm{G}_d$ is a $2 \times 2$ transfer function matrix.
 
 \begin{equation}
-\begin{bmatrix} d_u \\ d_v \end{bmatrix} =
-\frac{1}{k} \frac{1}{G_{dp}}
+\bm{G}_d = \frac{1}{k} \frac{1}{G_{dp}}
 \begin{bmatrix}
    G_{dz} & G_{dc} \\
   -G_{dc} & G_{dz}
 \end{bmatrix}
-\begin{bmatrix} F_u \\ F_v \end{bmatrix}
 \end{equation}
 With:
 \begin{align}
@@ -391,6 +391,9 @@ They are compared in Figure [[fig:plant_compare_rotating_speed]].
 #+end_src
 
 * Problem with pure Integral Force Feedback
+:PROPERTIES:
+:header-args:matlab+: :tangle matlab/s2_iff_pure_int.m
+:END:
 <<sec:iff_pure_int>>
 
 ** Introduction                                                      :ignore:
@@ -406,7 +409,7 @@ They are compared in Figure [[fig:plant_compare_rotating_speed]].
   <<matlab-init>>
 #+end_src
 
-#+begin_src matlab
+#+begin_src matlab :tangle no
   addpath('./matlab/');
   addpath('./src/');
 #+end_src
@@ -714,6 +717,9 @@ It is shown that for non-null rotating speed, one pole is bound to the right-hal
 #+end_src
 
 * Integral Force Feedback with an High Pass Filter
+:PROPERTIES:
+:header-args:matlab+: :tangle matlab/s3_iff_hpf.m
+:END:
 <<sec:iff_pseudo_int>>
 
 ** Introduction                                                      :ignore:
@@ -728,7 +734,7 @@ It is shown that for non-null rotating speed, one pole is bound to the right-hal
   <<matlab-init>>
 #+end_src
 
-#+begin_src matlab
+#+begin_src matlab :tangle no
   addpath('./matlab/');
   addpath('./src/');
 #+end_src
@@ -983,7 +989,7 @@ In order to visualize the effect of $\omega_i$ on the attainable damping, the Ro
   for wi_i = 1:length(wis)
       set(gca,'ColorOrderIndex',wi_i);
       wi = wis(wi_i);
-      L(wi_i) = plot(nan, nan, '.', 'DisplayName', sprintf('$\\Omega_i = %.2f \\omega_0$', wi./w0));
+      L(wi_i) = plot(nan, nan, '.', 'DisplayName', sprintf('$\\omega_i = %.2f \\omega_0$', wi./w0));
       for g = gains
           clpoles = pole(feedback(Giff, (g/(wi+s))*eye(2)));
           set(gca,'ColorOrderIndex',wi_i);
@@ -1030,8 +1036,8 @@ In order to visualize the effect of $\omega_i$ on the attainable damping, the Ro
 #+RESULTS:
 [[file:figs/root_locus_wi_modified_iff.png]]
 
-#+begin_src matlab :exports none
-  gains = logspace(-2, 4, 100);
+#+begin_src matlab :exports none :tangle no
+  gains = logspace(-2, 4, 500);
 
   poles_iff_hpf = rootLocusPolesSorted(Giff, 1/(s + wi)*eye(2), gains, 'd_max', 1e-4);
 
@@ -1043,7 +1049,7 @@ In order to visualize the effect of $\omega_i$ on the attainable damping, the Ro
       wi = wis(wi_i);
 
       set(gca,'ColorOrderIndex',wi_i);
-      L(wi_i) = plot(nan, nan, '.', 'DisplayName', sprintf('$\\Omega_i = %.2f \\omega_0$', wi./w0));
+      L(wi_i) = plot(nan, nan, '.', 'DisplayName', sprintf('$\\omega_i = %.2f \\omega_0$', wi./w0));
 
       poles = rootLocusPolesSorted(Giff, 1/(s + wi)*eye(2), gains, 'd_max', 1e-4);
       for p_i = 1:size(poles, 2)
@@ -1159,10 +1165,13 @@ To find the optimum, the gain that maximize the simultaneous damping of the mode
 [[file:figs/mod_iff_damping_wi.png]]
 
 #+begin_src matlab :tangle no :exports none :results none
-  exportFig('figs-inkscape/root_locus_wi_modified_iff.pdf', 'width', 'wide', 'height', 'normal', 'png', false, 'pdf', false, 'svg', true);
+  exportFig('figs-inkscape/mod_iff_damping_wi.pdf', 'width', 'wide', 'height', 'normal', 'png', false, 'pdf', false, 'svg', true);
 #+end_src
 
 * IFF with a stiffness in parallel with the force sensor
+:PROPERTIES:
+:header-args:matlab+: :tangle matlab/s4_iff_kp.m
+:END:
 <<sec:iff_parallel_stiffness>>
 
 ** Introduction                                                      :ignore:
@@ -1175,7 +1184,7 @@ To find the optimum, the gain that maximize the simultaneous damping of the mode
   <<matlab-init>>
 #+end_src
 
-#+begin_src matlab
+#+begin_src matlab :tangle no
   addpath('./matlab/');
   addpath('./src/');
 #+end_src
@@ -1873,6 +1882,10 @@ Let's take $k_p = 5 m \Omega^2$ and find the optimal IFF control gain $g$ such t
 #+end_src
 
 * Direct Velocity Feedback
+:PROPERTIES:
+:header-args:matlab+: :tangle matlab/s5_dvf.m
+:header-args:matlab+: :comments org :mkdirp yes
+:END:
 <<sec:dvf>>
 
 ** Introduction                                                      :ignore:
@@ -1885,7 +1898,7 @@ Let's take $k_p = 5 m \Omega^2$ and find the optimal IFF control gain $g$ such t
   <<matlab-init>>
 #+end_src
 
-#+begin_src matlab
+#+begin_src matlab :tangle no
   addpath('./matlab/');
   addpath('./src/');
 #+end_src
@@ -2097,7 +2110,7 @@ It is shown that for rotating speed $\Omega < \omega_0$, the closed loop system 
 #+RESULTS:
 [[file:figs/root_locus_dvf.png]]
 
-#+begin_src matlab :exports none
+#+begin_src matlab :exports none :tangle no
   gains = logspace(-2, 1, 1000);
 
   figure;
@@ -2137,6 +2150,9 @@ It is shown that for rotating speed $\Omega < \omega_0$, the closed loop system 
 #+end_src
 
 * Comparison
+:PROPERTIES:
+:header-args:matlab+: :tangle matlab/s6_act_damp_comparison.m
+:END:
 <<sec:comparison>>
 
 ** Introduction                                                      :ignore:
@@ -2150,7 +2166,7 @@ It is shown that for rotating speed $\Omega < \omega_0$, the closed loop system 
   <<matlab-init>>
 #+end_src
 
-#+begin_src matlab
+#+begin_src matlab :tangle no
   addpath('./matlab/');
   addpath('./src/');
 #+end_src
@@ -2658,7 +2674,7 @@ The obtained damping ratio and control are shown below.
   figure;
   hold on;
   plot(freqs, abs(squeeze(freqresp(Ciff(1,1), freqs))), ...
-       'DisplayName', 'IFF + LPF')
+       'DisplayName', 'IFF + HPF')
   plot(freqs, abs(squeeze(freqresp(Ciff_kp(1,1), freqs))), ...
        'DisplayName', 'IFF + $k_p$')
   plot(freqs, abs(squeeze(freqresp(Cdvf(1,1), freqs))), ...
