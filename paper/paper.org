@@ -79,6 +79,9 @@ Controller Poles are shown by black crosses (
 
 ** Introduce Each part of the paper                                  :ignore:
 
+This paper has been published
+The Matlab code that was use to obtain the results are available in cite:dehaeze20_activ_dampin_rotat_posit_platf.
+
 * Dynamics of Rotating Positioning Platforms
 ** Studied Rotating Positioning Platform
 # Simplest system where gyroscopic forces can be studied
@@ -86,11 +89,12 @@ Consider the rotating X-Y stage of Figure [[fig:system]].
 
 # Present the system, parameters, assumptions
 
+# Explain the frames (inertial frame x,y, rotating frame u,v)
+# iu, iv is linked to the rotating stage and supposed to be perfect
+
 # Small displacements
 
-# Constant rotating speed
-
-# Explain the frames (inertial frame x,y, rotating frame u,v)
+# Constant rotational speed
 
 - $k$: Actuator's Stiffness [N/m]
 - $m$: Payload's mass [kg]
@@ -99,7 +103,7 @@ Consider the rotating X-Y stage of Figure [[fig:system]].
 - $d_u$, $d_v$
 
 #+name: fig:system
-#+caption: Figure caption
+#+caption: Schematic of the studied System
 #+attr_latex: :scale 1
 [[file:figs/system.pdf]]
 
@@ -109,7 +113,7 @@ Consider the rotating X-Y stage of Figure [[fig:system]].
 # [[file:figs/cedrat_xy25xs.jpg]]
 
 ** Equation of Motion
-The system has two degrees of freedom and is thus fully described by the generalized coordinates $u$ and $v$.
+The system has two degrees of freedom and is thus fully described by the generalized coordinates $u$ and $v$ (describing the position of the mass in the rotating frame).
 
 Let's express the kinetic energy $T$ and the potential energy $V$ of the mass $m$ (neglecting the rotational energy):
 
@@ -189,8 +193,8 @@ With:
 - $\xi$ damping ratio
 
 
-** Constant Rotating Speed
-To simplify, let's consider a constant rotating speed $\dot{\theta} = \Omega$ and thus $\ddot{\theta} = 0$.
+** Constant Rotational Speed
+To simplify, let's consider a constant rotational speed $\dot{\theta} = \Omega$ and thus $\ddot{\theta} = 0$.
 
 #+NAME: eq:coupledplant
 \begin{equation}
@@ -234,7 +238,7 @@ When the rotation speed in not null, the resonance frequency is duplicated into 
 As the rotation speed increases, one of the two resonant frequency goes to lower frequencies as the other one goes to higher frequencies (Figure [[fig:campbell_diagram]]).
 
 #+name: fig:campbell_diagram
-#+caption: Campbell Diagram
+#+caption: Campbell Diagram : Evolution of the poles as a function of the rotational speed $\Omega$
 #+attr_latex: :environment subfigure :width 0.4\linewidth :align c
 | file:figs/campbell_diagram_real.pdf     | file:figs/campbell_diagram_imag.pdf          |
 | <<fig:campbell_diagram_real>> Real Part | <<fig:campbell_diagram_imag>> Imaginary Part |
@@ -249,16 +253,16 @@ As the rotation speed increases, one of the two resonant frequency goes to lower
 
 The magnitude of the coupling terms are increasing with the rotation speed.
 
+#+name: fig:plant_compare_rotating_speed
+#+caption: Bode Plots for $\bm{G}_d$
+#+attr_latex: :environment subfigure :width 0.45\linewidth :align c
+| file:figs/plant_compare_rotating_speed_direct.pdf                             | file:figs/plant_compare_rotating_speed_coupling.pdf                               |
+| <<fig:plant_compare_rotating_speed_direct>> Direct Terms $d_u/F_u$, $d_v/F_v$ | <<fig:plant_compare_rotating_speed_coupling>> Coupling Terms $d_v/F_u$, $d_u/F_v$ |
+
 # #+name: fig:plant_compare_rotating_speed
 # #+caption: Caption
 # #+attr_latex: :scale 1
 # [[file:figs/plant_compare_rotating_speed.pdf]]
-
-#+name: fig:plant_compare_rotating_speed
-#+caption: Dynamics
-#+attr_latex: :environment subfigure :width 0.45\linewidth :align c
-| file:figs/plant_compare_rotating_speed_direct.pdf                             | file:figs/plant_compare_rotating_speed_coupling.pdf                               |
-| <<fig:plant_compare_rotating_speed_direct>> Direct Terms $d_u/F_u$, $d_v/F_v$ | <<fig:plant_compare_rotating_speed_coupling>> Coupling Terms $d_v/F_u$, $d_u/F_v$ |
 
 * Integral Force Feedback
 ** Control Schematic
@@ -306,11 +310,13 @@ Which then gives:
 ** Plant Dynamics
 
 #+name: fig:plant_iff_compare_rotating_speed
-#+caption: Figure caption
+#+caption: Bode plot of $\bm{G}_f$ for several rotational speeds $\Omega$
 #+attr_latex: :scale 1
 [[file:figs/plant_iff_compare_rotating_speed.pdf]]
 
 # Show that the low frequency gain is no longer zero
+
+# Write the analytical value of the low frequency gain
 
 # Explain the two real zeros => change of gain but not of phase
 
@@ -325,7 +331,7 @@ Which then gives:
 # Explain the circles, crosses and black crosses (poles of the controller)
 
 #+name: fig:root_locus_pure_iff
-#+caption: Root Locus
+#+caption: Root Locus for the Decentralized Integral Force Feedback
 #+attr_latex: :scale 1
 [[file:figs/root_locus_pure_iff.pdf]]
 
@@ -354,7 +360,7 @@ This means that at low frequency, the system is decoupled (the force sensor remo
 # Explain that now the low frequency loop gain does not reach a gain more than 1 (if g not so high)
 
 #+name: fig:loop_gain_modified_iff
-#+caption: Figure caption
+#+caption: Bode Plot of the Loop Gain for IFF with and without the HPF
 #+attr_latex: :scale 1
 [[file:figs/loop_gain_modified_iff.pdf]]
 
@@ -362,7 +368,7 @@ This means that at low frequency, the system is decoupled (the force sensor remo
 # Actually, the system becomes unstable for g > ...
 
 #+name: fig:root_locus_modified_iff
-#+caption: Figure caption
+#+caption: Root Locus for IFF with and without the HPF
 #+attr_latex: :scale 1
 [[file:figs/root_locus_modified_iff.pdf]]
 
@@ -378,7 +384,7 @@ This means that at low frequency, the system is decoupled (the force sensor remo
 # Trade off
 
 #+name: fig:root_locus_wi_modified_iff
-#+caption: Figure caption
+#+caption: Root Locus for several HPF cut-off frequencies $\omega_i$
 #+attr_latex: :scale 1
 [[file:figs/root_locus_wi_modified_iff.pdf]]
 
@@ -391,7 +397,7 @@ This means that at low frequency, the system is decoupled (the force sensor remo
 # wi = 0.1 w0 is chosen
 
 #+name: fig:mod_iff_damping_wi
-#+caption: Figure caption
+#+caption: Attainable damping ratio $\xi_\text{cl}$ as a function of the HPF cut-off frequency. Corresponding control gain $g_\text{opt}$ and $g_\text{max}$ are also shown
 #+attr_latex: :scale 1
 [[file:figs/mod_iff_damping_wi.pdf]]
 
@@ -402,7 +408,7 @@ This means that at low frequency, the system is decoupled (the force sensor remo
 # We want to have stable zeros => add stiffnesses in parallel
 
 #+name: fig:system_parallel_springs
-#+caption: Figure caption
+#+caption: System with added springs $k_p$ in parallel with the actuators
 #+attr_latex: :scale 1
 [[file:figs/system_parallel_springs.pdf]]
 
@@ -420,7 +426,7 @@ This means that at low frequency, the system is decoupled (the force sensor remo
 # For kp > negative stiffness => complex conjugate zeros
 
 #+name: fig:plant_iff_kp
-#+caption: Figure caption
+#+caption: Bode Plot of $f_u/F_u$ without parallel spring, with parallel springs with stiffness $k_p < m \Omega^2$ and $k_p > m \Omega^2$
 #+attr_latex: :scale 1
 [[file:figs/plant_iff_kp.pdf]]
 
@@ -429,7 +435,7 @@ This means that at low frequency, the system is decoupled (the force sensor remo
 # Show that it is the case on the root locus
 
 #+name: fig:root_locus_iff_kp
-#+caption: Figure caption
+#+caption: Root Locus for IFF without parallel spring, with parallel springs with stiffness $k_p < m \Omega^2$ and $k_p > m \Omega^2$
 #+attr_latex: :scale 1
 [[file:figs/root_locus_iff_kp.pdf]]
 
@@ -443,7 +449,7 @@ This means that at low frequency, the system is decoupled (the force sensor remo
 # Large Stiffness decreases the attainable damping
 
 #+name: fig:root_locus_iff_kps
-#+caption: Figure caption
+#+caption: Root Locus for IFF for several parallel spring stiffnesses $k_p$
 #+attr_latex: :scale 1
 [[file:figs/root_locus_iff_kps.pdf]]
 
@@ -451,7 +457,7 @@ This means that at low frequency, the system is decoupled (the force sensor remo
 # Example with kp = 5 m Omega
 
 #+name: fig:root_locus_opt_gain_iff_kp
-#+caption: Figure caption
+#+caption: Root Locus for IFF with $k_p = 5 m \Omega^2$. The poles of the system using the gain that yields the maximum damping ratio are shown by black crosses
 #+attr_latex: :scale 1
 [[file:figs/root_locus_opt_gain_iff_kp.pdf]]
 
@@ -464,7 +470,7 @@ This means that at low frequency, the system is decoupled (the force sensor remo
 # Equation with the control law
 
 #+name: fig:system_dvf
-#+caption: Figure caption
+#+caption: System with relative velocity sensors and with decentralized controllers $K_V$
 #+attr_latex: :scale 1
 [[file:figs/system_dvf.pdf]]
 
@@ -490,7 +496,7 @@ This means that at low frequency, the system is decoupled (the force sensor remo
 # Arbitrary Damping can be added to the poles
 
 #+name: fig:root_locus_dvf
-#+caption: Figure caption
+#+caption: Root Locus for Decentralized Direct Velocity Feedback for several rotational speeds $\Omega$
 #+attr_latex: :scale 1
 [[file:figs/root_locus_dvf.pdf]]
 
@@ -502,7 +508,7 @@ This means that at low frequency, the system is decoupled (the force sensor remo
 ** Attainable Damping
 
 #+name: fig:comp_root_locus
-#+caption: Figure caption
+#+caption: Root Locus for the three proposed decentralized active damping techniques: IFF with HFP, IFF with parallel springs, and relative DVF
 #+attr_latex: :scale 1
 [[file:figs/comp_root_locus.pdf]]
 
@@ -518,8 +524,6 @@ This means that at low frequency, the system is decoupled (the force sensor remo
 
 # Relative DVF degrades the transmissibility at high frequency
 # The roll-off is -1 instead of -2
-
-#
 
 #+name: fig:comp_active_damping
 #+caption: Comparison of the three proposed Active Damping Techniques

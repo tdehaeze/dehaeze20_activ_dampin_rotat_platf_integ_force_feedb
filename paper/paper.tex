@@ -1,4 +1,4 @@
-% Created 2020-06-24 mer. 15:36
+% Created 2020-06-24 mer. 16:28
 % Intended LaTeX compiler: pdflatex
 \documentclass{ISMA_USD2020}
 \usepackage[utf8]{inputenc}
@@ -37,13 +37,6 @@
 \usetikzlibrary{shapes.misc}
 \date{}
 \title{Active Damping of Rotating Positioning Platforms}
-\hypersetup{
- pdfauthor={},
- pdftitle={Active Damping of Rotating Positioning Platforms},
- pdfkeywords={},
- pdfsubject={},
- pdfcreator={Emacs 27.0.91 (Org mode 9.4)}, 
- pdflang={English}}
 \begin{document}
 
 \maketitle
@@ -53,16 +46,18 @@
 }
 
 \section{Introduction}
-\label{sec:orgbec19fa}
+\label{sec:org3cbd2ff}
 \label{sec:introduction}
 Controller Poles are shown by black crosses (
 \begin{tikzpicture} \node[cross out, draw=black, minimum size=1ex, line width=2pt, inner sep=0pt, outer sep=0pt] at (0, 0){}; \end{tikzpicture}
 ).
+This paper has been published
+The Matlab code that was use to obtain the results are available in \cite{dehaeze20_activ_dampin_rotat_posit_platf}.
 
 \section{Dynamics of Rotating Positioning Platforms}
-\label{sec:org81be86a}
+\label{sec:org3cf58d1}
 \subsection{Studied Rotating Positioning Platform}
-\label{sec:orgf8fad9b}
+\label{sec:orgf321431}
 Consider the rotating X-Y stage of Figure \ref{fig:system}.
 
 \begin{itemize}
@@ -76,12 +71,13 @@ Consider the rotating X-Y stage of Figure \ref{fig:system}.
 \begin{figure}[htbp]
 \centering
 \includegraphics[scale=1]{figs/system.pdf}
-\caption{\label{fig:system}Figure caption}
+\caption{\label{fig:system}Schematic of the studied System}
 \end{figure}
 
+
 \subsection{Equation of Motion}
-\label{sec:org926ba54}
-The system has two degrees of freedom and is thus fully described by the generalized coordinates \(u\) and \(v\).
+\label{sec:org9612ace}
+The system has two degrees of freedom and is thus fully described by the generalized coordinates \(u\) and \(v\) (describing the position of the mass in the rotating frame).
 
 Let's express the kinetic energy \(T\) and the potential energy \(V\) of the mass \(m\) (neglecting the rotational energy):
 
@@ -125,7 +121,7 @@ Thus, the term \(- m\dot{\theta}^2\) acts like a negative stiffness (due to \tex
 
 
 \subsection{Transfer Functions in the Laplace domain}
-\label{sec:org298e237}
+\label{sec:org1590670}
 
 \begin{subequations}
   \begin{align}
@@ -163,9 +159,9 @@ With:
 \end{itemize}
 
 
-\subsection{Constant Rotating Speed}
-\label{sec:org8d2eda6}
-To simplify, let's consider a constant rotating speed \(\dot{\theta} = \Omega\) and thus \(\ddot{\theta} = 0\).
+\subsection{Constant Rotational Speed}
+\label{sec:orgd9375df}
+To simplify, let's consider a constant rotational speed \(\dot{\theta} = \Omega\) and thus \(\ddot{\theta} = 0\).
 
 \begin{equation}
 \label{eq:coupledplant}
@@ -213,7 +209,7 @@ As the rotation speed increases, one of the two resonant frequency goes to lower
 \includegraphics[width=\linewidth]{figs/campbell_diagram_imag.pdf}
 \caption{\label{fig:campbell_diagram_imag} Imaginary Part}
 \end{subfigure}
-\caption{\label{fig:campbell_diagram}Campbell Diagram}
+\caption{\label{fig:campbell_diagram}Campbell Diagram : Evolution of the poles as a function of the rotational speed \(\Omega\)}
 \centering
 \end{figure}
 
@@ -229,14 +225,15 @@ The magnitude of the coupling terms are increasing with the rotation speed.
 \includegraphics[width=\linewidth]{figs/plant_compare_rotating_speed_coupling.pdf}
 \caption{\label{fig:plant_compare_rotating_speed_coupling} Coupling Terms \(d_v/F_u\), \(d_u/F_v\)}
 \end{subfigure}
-\caption{\label{fig:plant_compare_rotating_speed}Dynamics}
+\caption{\label{fig:plant_compare_rotating_speed}Bode Plots for \(\bm{G}_d\)}
 \centering
 \end{figure}
 
+
 \section{Integral Force Feedback}
-\label{sec:org2e8c85f}
+\label{sec:org95f47e8}
 \subsection{Control Schematic}
-\label{sec:org50b6359}
+\label{sec:org8bb26ea}
 
 Force Sensors are added in series with the actuators as shown in Figure \ref{fig:system_iff}.
 
@@ -247,7 +244,7 @@ Force Sensors are added in series with the actuators as shown in Figure \ref{fig
 \end{figure}
 
 \subsection{Equations}
-\label{sec:org99c13a7}
+\label{sec:orgbd9ebe0}
 The sensed forces are equal to:
 \begin{equation}
 \begin{bmatrix} f_{u} \\ f_{v} \end{bmatrix} =
@@ -279,143 +276,153 @@ Which then gives:
 \end{align}
 
 \subsection{Plant Dynamics}
-\label{sec:org1e476e3}
+\label{sec:org392809f}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[scale=1]{figs/plant_iff_compare_rotating_speed.pdf}
-\caption{\label{fig:plant_iff_compare_rotating_speed}Figure caption}
+\caption{\label{fig:plant_iff_compare_rotating_speed}Bode plot of \(\bm{G}_f\) for several rotational speeds \(\Omega\)}
 \end{figure}
 
+
 \subsection{Integral Force Feedback}
-\label{sec:orga5d8887}
+\label{sec:org049877c}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[scale=1]{figs/root_locus_pure_iff.pdf}
-\caption{\label{fig:root_locus_pure_iff}Root Locus}
+\caption{\label{fig:root_locus_pure_iff}Root Locus for the Decentralized Integral Force Feedback}
 \end{figure}
 
 At low frequency, the gain is very large and thus no force is transmitted between the payload and the rotating stage.
 This means that at low frequency, the system is decoupled (the force sensor removed) and thus the system is unstable.
 
+
 \section{Integral Force Feedback with High Pass Filters}
-\label{sec:org569b7db}
+\label{sec:org54452db}
 \subsection{Modification of the Control Low}
-\label{sec:org4d0c1ca}
+\label{sec:org325cdd4}
 
 
 \subsection{Feedback Analysis}
-\label{sec:org1f34d25}
+\label{sec:org5efee77}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[scale=1]{figs/loop_gain_modified_iff.pdf}
-\caption{\label{fig:loop_gain_modified_iff}Figure caption}
+\caption{\label{fig:loop_gain_modified_iff}Bode Plot of the Loop Gain for IFF with and without the HPF}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[scale=1]{figs/root_locus_modified_iff.pdf}
-\caption{\label{fig:root_locus_modified_iff}Figure caption}
+\caption{\label{fig:root_locus_modified_iff}Root Locus for IFF with and without the HPF}
 \end{figure}
 
 \subsection{Optimal Cut-Off Frequency}
-\label{sec:org04a5aa4}
+\label{sec:orgd5828e4}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[scale=1]{figs/root_locus_wi_modified_iff.pdf}
-\caption{\label{fig:root_locus_wi_modified_iff}Figure caption}
+\caption{\label{fig:root_locus_wi_modified_iff}Root Locus for several HPF cut-off frequencies \(\omega_i\)}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[scale=1]{figs/mod_iff_damping_wi.pdf}
-\caption{\label{fig:mod_iff_damping_wi}Figure caption}
+\caption{\label{fig:mod_iff_damping_wi}Attainable damping ratio \(\xi_\text{cl}\) as a function of the HPF cut-off frequency. Corresponding control gain \(g_\text{opt}\) and \(g_\text{max}\) are also shown}
 \end{figure}
 
 \section{Integral Force Feedback with Parallel Springs}
-\label{sec:org03c54a4}
+\label{sec:org22884d6}
 \subsection{Stiffness in Parallel with the Force Sensor}
-\label{sec:orgc2d9221}
+\label{sec:orgb871bfd}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[scale=1]{figs/system_parallel_springs.pdf}
-\caption{\label{fig:system_parallel_springs}Figure caption}
+\caption{\label{fig:system_parallel_springs}System with added springs \(k_p\) in parallel with the actuators}
 \end{figure}
 
+
 \subsection{Effect of the Parallel Stiffness on the Plant Dynamics}
-\label{sec:org8097ba5}
+\label{sec:org4d37cce}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[scale=1]{figs/plant_iff_kp.pdf}
-\caption{\label{fig:plant_iff_kp}Figure caption}
+\caption{\label{fig:plant_iff_kp}Bode Plot of \(f_u/F_u\) without any parallel stiffness, with a parallel stiffness \(k_p < m \Omega^2\) and with \(k_p > m \Omega^2\)}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[scale=1]{figs/root_locus_iff_kp.pdf}
-\caption{\label{fig:root_locus_iff_kp}Figure caption}
+\caption{\label{fig:root_locus_iff_kp}Root Locus for IFF without any parallel stiffness, with a parallel stiffness \(k_p < m \Omega^2\) and with \(k_p > m \Omega^2\)}
 \end{figure}
 
+
 \subsection{Optimal Parallel Stiffness}
-\label{sec:org1f2e167}
+\label{sec:orgd19b212}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[scale=1]{figs/root_locus_iff_kps.pdf}
-\caption{\label{fig:root_locus_iff_kps}Figure caption}
+\caption{\label{fig:root_locus_iff_kps}Root Locus for IFF for several parallel spring stiffnesses \(k_p\)}
 \end{figure}
 
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[scale=1]{figs/root_locus_opt_gain_iff_kp.pdf}
-\caption{\label{fig:root_locus_opt_gain_iff_kp}Figure caption}
+\caption{\label{fig:root_locus_opt_gain_iff_kp}Root Locus for IFF with \(k_p = 5 m \Omega^2\). The poles of the system using the gain that yields the maximum damping ratio are shown by black crosses}
 \end{figure}
 
 \section{Direct Velocity Feedback}
-\label{sec:orgda2e325}
+\label{sec:org6904969}
 \subsection{Control Schematic}
-\label{sec:org0e84009}
+\label{sec:org103e18b}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[scale=1]{figs/system_dvf.pdf}
-\caption{\label{fig:system_dvf}Figure caption}
+\caption{\label{fig:system_dvf}System with relative velocity sensors and with decentralized controllers \(K_V\)}
 \end{figure}
 
+
 \subsection{Equations}
-\label{sec:org7cc244c}
+\label{sec:org793c22d}
+
 
 
 \subsection{Relative Direct Velocity Feedback}
-\label{sec:org668d842}
+\label{sec:orgc28d518}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[scale=1]{figs/root_locus_dvf.pdf}
-\caption{\label{fig:root_locus_dvf}Figure caption}
+\caption{\label{fig:root_locus_dvf}Root Locus for Decentralized Direct Velocity Feedback for several rotational speeds \(\Omega\)}
 \end{figure}
 
 \section{Comparison of the Proposed Active Damping Techniques for Rotating Positioning Stages}
-\label{sec:orgade0126}
-**
+\label{sec:org6af1fdb}
+\subsection{Physical Comparison}
+\label{sec:orgdff3aa2}
 
-**
+
+
+\subsection{Attainable Damping}
+\label{sec:org22c8f42}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[scale=1]{figs/comp_root_locus.pdf}
-\caption{\label{fig:comp_root_locus}Figure caption}
+\caption{\label{fig:comp_root_locus}Root Locus for the three proposed decentralized active damping techniques: IFF with HFP, IFF with parallel springs, and relative DVF}
 \end{figure}
 
 
 \subsection{Transmissibility and Compliance}
-\label{sec:org59b0db2}
+\label{sec:org3e2cf56}
 
 
 \begin{figure}[htbp]
@@ -431,13 +438,13 @@ This means that at low frequency, the system is decoupled (the force sensor remo
 \centering
 \end{figure}
 
+
 \section{Conclusion}
-\label{sec:org4b70853}
+\label{sec:orge292803}
 \label{sec:conclusion}
 
-
 \section*{Acknowledgment}
-\label{sec:org7708a14}
+\label{sec:orgaf681fb}
 
 \bibliography{ref.bib}
 \end{document}
