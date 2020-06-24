@@ -2476,16 +2476,6 @@ The obtained damping ratio and control are shown below.
 #+end_src
 
 #+begin_src matlab
-  %% Name of the Simulink File
-  mdl = 'rotating_frame';
-
-  %% Input/Output definition
-  clear io; io_i = 1;
-  io(io_i) = linio([mdl, '/dw'], 1, 'input');  io_i = io_i + 1;
-  io(io_i) = linio([mdl, '/Meas'], 1, 'output');  io_i = io_i + 1;
-#+end_src
-
-#+begin_src matlab
   Tiff = linearize(mdl, io, 0);
 
   %% Input/Output definition
@@ -2508,16 +2498,6 @@ The obtained damping ratio and control are shown below.
 #+end_src
 
 #+begin_src matlab
-  %% Name of the Simulink File
-  mdl = 'rotating_frame';
-
-  %% Input/Output definition
-  clear io; io_i = 1;
-  io(io_i) = linio([mdl, '/dw'], 1, 'input');  io_i = io_i + 1;
-  io(io_i) = linio([mdl, '/Meas'], 1, 'output');  io_i = io_i + 1;
-#+end_src
-
-#+begin_src matlab
   Tiff_kp = linearize(mdl, io, 0);
 
   %% Input/Output definition
@@ -2535,16 +2515,6 @@ The obtained damping ratio and control are shown below.
 
 #+begin_src matlab
   Kdvf = opt_gain_kp*tf(eye(2));
-#+end_src
-
-#+begin_src matlab
-  %% Name of the Simulink File
-  mdl = 'rotating_frame';
-
-  %% Input/Output definition
-  clear io; io_i = 1;
-  io(io_i) = linio([mdl, '/dw'], 1, 'input');  io_i = io_i + 1;
-  io(io_i) = linio([mdl, '/Meas'], 1, 'output');  io_i = io_i + 1;
 #+end_src
 
 #+begin_src matlab
