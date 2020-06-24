@@ -48,7 +48,7 @@
                )
 #+END_SRC
 
-* Abstract                                                           :ignore:
+* Abstract                                                            :ignore:
 #+BEGIN_EXPORT latex
 \abstract{
     Abstract text to be done
@@ -57,32 +57,32 @@
 
 * Introduction
 <<sec:introduction>>
-*** Establish the importance of the research topic                 :ignore:
+** Establish the importance of the research topic                    :ignore:
 # Active Damping + Rotating System
 
 Controller Poles are shown by black crosses (
 \begin{tikzpicture} \node[cross out, draw=black, minimum size=1ex, line width=2pt, inner sep=0pt, outer sep=0pt] at (0, 0){}; \end{tikzpicture}
 ).
 
-*** Applications of active damping                                  :ignore:
+** Applications of active damping                                    :ignore:
 # Link to previous paper / tomography
 
-cite:dehaeze18_sampl_stabil_for_tomog_exper
+# Such as the Nano-Active-Stabilization-System currently in development at the ESRF cite:dehaeze18_sampl_stabil_for_tomog_exper.
 
-*** Current active damping techniques                               :ignore:
+** Current active damping techniques                                 :ignore:
 # IFF, DVF
 
-*** Describe a gap in the research                                 :ignore:
+** Describe a gap in the research                                    :ignore:
 # No literature on rotating systems => gyroscopic effects
 
-*** Describe the paper itself / the problem which is addressed     :ignore:
+** Describe the paper itself / the problem which is addressed        :ignore:
 
-*** Introduce Each part of the paper                               :ignore:
+** Introduce Each part of the paper                                  :ignore:
 
-* System Under Study
-** Rotating Positioning Platform
+* Dynamics of Rotating Positioning Platforms
+** Studied Rotating Positioning Platform
 # Simplest system where gyroscopic forces can be studied
-Consider the rotating X-Y stage of Figure [[fig:rotating_xy_platform]].
+Consider the rotating X-Y stage of Figure [[fig:system]].
 
 # Present the system, parameters, assumptions
 
@@ -98,16 +98,15 @@ Consider the rotating X-Y stage of Figure [[fig:rotating_xy_platform]].
 - $F_u$, $F_v$
 - $d_u$, $d_v$
 
-#+name: fig:rotating_xy_platform
+#+name: fig:system
 #+caption: Figure caption
 #+attr_latex: :scale 1
 [[file:figs/system.pdf]]
 
-
-#+name: fig:cedrat_xy25xs
-#+caption: Figure caption
-#+attr_latex: :width 0.5\linewidth
-[[file:figs/cedrat_xy25xs.jpg]]
+# #+name: fig:cedrat_xy25xs
+# #+caption: Figure caption
+# #+attr_latex: :width 0.5\linewidth
+# [[file:figs/cedrat_xy25xs.jpg]]
 
 ** Equation of Motion
 The system has two degrees of freedom and is thus fully described by the generalized coordinates $u$ and $v$.
@@ -236,6 +235,14 @@ As the rotation speed increases, one of the two resonant frequency goes to lower
 
 #+name: fig:campbell_diagram
 #+caption: Campbell Diagram
+#+attr_latex: :environment subfigure :width 0.4\linewidth :align c
+| file:figs/campbell_diagram_real.pdf     | file:figs/campbell_diagram_imag.pdf          |
+| <<fig:campbell_diagram_real>> Real Part | <<fig:campbell_diagram_imag>> Imaginary Part |
+
+
+
+#+name: fig:campbell_diagram
+#+caption: Campbell Diagram
 #+attr_latex: :scale 1
 [[file:figs/campbell_diagram.pdf]]
 
@@ -243,10 +250,16 @@ As the rotation speed increases, one of the two resonant frequency goes to lower
 
 The magnitude of the coupling terms are increasing with the rotation speed.
 
+# #+name: fig:plant_compare_rotating_speed
+# #+caption: Caption
+# #+attr_latex: :scale 1
+# [[file:figs/plant_compare_rotating_speed.pdf]]
+
 #+name: fig:plant_compare_rotating_speed
-#+caption: Caption
-#+attr_latex: :scale 1
-[[file:figs/plant_compare_rotating_speed.pdf]]
+#+caption: Dynamics
+#+attr_latex: :environment subfigure :width 0.45\linewidth :align c
+| file:figs/plant_compare_rotating_speed_direct.pdf                             | file:figs/plant_compare_rotating_speed_coupling.pdf                               |
+| <<fig:plant_compare_rotating_speed_direct>> Direct Terms $d_u/F_u$, $d_v/F_v$ | <<fig:plant_compare_rotating_speed_coupling>> Coupling Terms $d_v/F_u$, $d_u/F_v$ |
 
 * Integral Force Feedback
 ** Control Schematic
@@ -291,8 +304,20 @@ Which then gives:
   G_{fc} &= \left( 2 \xi \frac{s}{\omega_0} + 1 \right) \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)
 \end{align}
 
-
 ** Plant Dynamics
+
+#+name: fig:plant_iff_compare_rotating_speed
+#+caption: Figure caption
+#+attr_latex: :scale 1
+[[file:figs/plant_iff_compare_rotating_speed.pdf]]
+
+# Show that the low frequency gain is no longer zero
+
+# Explain the two real zeros => change of gain but not of phase
+
+# Explain physically why
+
+** Integral Force Feedback
 
 # General explanation for the Root Locus Plot
 
@@ -305,37 +330,64 @@ Which then gives:
 #+attr_latex: :scale 1
 [[file:figs/root_locus_pure_iff.pdf]]
 
-** Physical Interpretation
+# Physical Interpretation
 
 At low frequency, the gain is very large and thus no force is transmitted between the payload and the rotating stage.
 This means that at low frequency, the system is decoupled (the force sensor removed) and thus the system is unstable.
+
+# Introduce next two sections where either:
+# - IFF is modified to deal with this low frequency behavior
+# - physical system is modified
 
 * Integral Force Feedback with High Pass Filters
 ** Modification of the Control Low
 
 # Reference to Preumont where its done
 
+
 # Explain why it is usually done and why it is done here: the problem is the high gain at low frequency => high pass filter
 
-** Close Loop Analysis
+
+** Feedback Analysis
+
+# Explain that now the low frequency loop gain does not reach a gain more than 1 (if g not so high)
 
 #+name: fig:loop_gain_modified_iff
 #+caption: Figure caption
 #+attr_latex: :scale 1
 [[file:figs/loop_gain_modified_iff.pdf]]
 
+# Not the system can be stable for small values of g
+# Actually, the system becomes unstable for g > ...
+
 #+name: fig:root_locus_modified_iff
 #+caption: Figure caption
 #+attr_latex: :scale 1
-[[file:figs/root_locus_modified_iff_ter.pdf]]
+[[file:figs/root_locus_modified_iff.pdf]]
 
 ** Optimal Cut-Off Frequency
+
+# Controller: two parameters: gain and wi
+
+# Try few wi
+
+# Small wi seems to allow more damping to be added
+# but the gain is limited to small values
+
+# Trade off
 
 #+name: fig:root_locus_wi_modified_iff
 #+caption: Figure caption
 #+attr_latex: :scale 1
-[[file:figs/root_locus_wi_modified_iff_bis.pdf]]
+[[file:figs/root_locus_wi_modified_iff.pdf]]
 
+# Study this trade-off
+
+# Explain how the figure is obtained
+
+# for small wi => gain limited
+# for large wi => damping limited
+# wi = 0.1 w0 is chosen
 
 #+name: fig:mod_iff_damping_wi
 #+caption: Figure caption
@@ -343,60 +395,101 @@ This means that at low frequency, the system is decoupled (the force sensor remo
 [[file:figs/mod_iff_damping_wi.pdf]]
 
 * Integral Force Feedback with Parallel Springs
+** Stiffness in Parallel with the Force Sensor
 
-#+name: fig:rotating_xy_platform_springs
+# Zeros = remove force sensor
+# We want to have stable zeros => add stiffnesses in parallel
+
+#+name: fig:system_parallel_springs
 #+caption: Figure caption
 #+attr_latex: :scale 1
-[[file:figs/rotating_xy_platform_springs.pdf]]
+[[file:figs/system_parallel_springs.pdf]]
+
+# Maybe add the fact that this is equivalent to amplified piezo for instance
+
+# Equations: sensed force
+
+# New parameters
+
+** Effect of the Parallel Stiffness on the Plant Dynamics
+
+# Negative Stiffness due to rotation => the stiffness should be larger than that
+
+# For kp < negative stiffness => real zeros
+# For kp > negative stiffness => complex conjugate zeros
 
 #+name: fig:plant_iff_kp
 #+caption: Figure caption
 #+attr_latex: :scale 1
 [[file:figs/plant_iff_kp.pdf]]
 
+# Location of the zeros as a function of kp
+
+# Show that it is the case on the root locus
+
+#+name: fig:root_locus_iff_kp
+#+caption: Figure caption
+#+attr_latex: :scale 1
+[[file:figs/root_locus_iff_kp.pdf]]
+
+# For kp > m Omega => unconditionally stable
+
+** Optimal Parallel Stiffness
+
+# Explain that we have k = ka + kp constant in order to have the same resonance
+
+
+# Large Stiffness decreases the attainable damping
+
+# kp = 2mOmega to 5mOmega is ok
+
 #+name: fig:root_locus_iff_kps
 #+caption: Figure caption
 #+attr_latex: :scale 1
 [[file:figs/root_locus_iff_kps.pdf]]
 
-#+name: fig:root_locus_iff_kp_bis
-#+caption: Figure caption
-#+attr_latex: :scale 1
-[[file:figs/root_locus_iff_kp_ter.pdf]]
-
-#+name: fig:root_locus_opt_gain_iff_kp
-#+caption: Figure caption
-#+attr_latex: :scale 1
-[[file:figs/root_locus_opt_gain_iff_kp.pdf]]
-
-#+name: fig:plant_iff_compare_rotating_speed
-#+caption: Figure caption
-#+attr_latex: :scale 1
-[[file:figs/plant_iff_compare_rotating_speed.pdf]]
-
 * Direct Velocity Feedback
+** Control Schematic
+#+name: fig:system_dvf
+#+caption: Figure caption
+#+attr_latex: :scale 1
+[[file:figs/system_dvf.pdf]]
+
+** Equations
+
+
+
+** Relative Direct Velocity Feedback
 
 #+name: fig:root_locus_dvf
 #+caption: Figure caption
 #+attr_latex: :scale 1
 [[file:figs/root_locus_dvf.pdf]]
 
-* Comparison of the Proposed Active Damping Techniques
+* Comparison of the Proposed Active Damping Techniques for Rotating Positioning Stages
+
+**
 
 #+name: fig:comp_root_locus
 #+caption: Figure caption
 #+attr_latex: :scale 1
 [[file:figs/comp_root_locus.pdf]]
 
-#+name: fig:comp_compliance
-#+caption: Figure caption
-#+attr_latex: :scale 1
-[[file:figs/comp_compliance.pdf]]
+#+name: fig:comp_active_damping
+#+caption: Comparison of the three proposed Active Damping Techniques
+#+attr_latex: :environment subfigure :width 0.45\linewidth :align c
+| file:figs/comp_compliance.pdf            | file:figs/comp_transmissibility.pdf      |
+| <<fig:comp_compliance>> Transmissibility | <<fig:comp_transmissibility>> Compliance |
 
-#+name: fig:comp_transmissibility
-#+caption: Figure caption
-#+attr_latex: :scale 1
-[[file:figs/comp_transmissibility.pdf]]
+# #+name: fig:comp_compliance
+# #+caption: Figure caption
+# #+attr_latex: :scale 1
+# [[file:figs/comp_compliance.pdf]]
+
+# #+name: fig:comp_transmissibility
+# #+caption: Figure caption
+# #+attr_latex: :scale 1
+# [[file:figs/comp_transmissibility.pdf]]
 
 * Conclusion
 <<sec:conclusion>>
@@ -407,5 +500,5 @@ This means that at low frequency, the system is decoupled (the force sensor remo
 :UNNUMBERED: t
 :END:
 
-* Bibliography                                                       :ignore:
+* Bibliography                                                        :ignore:
 \bibliography{ref.bib}
