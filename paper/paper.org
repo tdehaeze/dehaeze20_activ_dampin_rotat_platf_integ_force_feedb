@@ -240,11 +240,10 @@ As the rotation speed increases, one of the two resonant frequency goes to lower
 | <<fig:campbell_diagram_real>> Real Part | <<fig:campbell_diagram_imag>> Imaginary Part |
 
 
-
-#+name: fig:campbell_diagram
-#+caption: Campbell Diagram
-#+attr_latex: :scale 1
-[[file:figs/campbell_diagram.pdf]]
+# #+name: fig:campbell_diagram
+# #+caption: Campbell Diagram
+# #+attr_latex: :scale 1
+# [[file:figs/campbell_diagram.pdf]]
 
 # Bode Plots for different ratio wr/w0
 
@@ -341,8 +340,10 @@ This means that at low frequency, the system is decoupled (the force sensor remo
 
 * Integral Force Feedback with High Pass Filters
 ** Modification of the Control Low
-
 # Reference to Preumont where its done
+
+
+# Equation with the new control law
 
 
 # Explain why it is usually done and why it is done here: the problem is the high gain at low frequency => high pass filter
@@ -441,25 +442,50 @@ This means that at low frequency, the system is decoupled (the force sensor remo
 
 # Large Stiffness decreases the attainable damping
 
-# kp = 2mOmega to 5mOmega is ok
-
 #+name: fig:root_locus_iff_kps
 #+caption: Figure caption
 #+attr_latex: :scale 1
 [[file:figs/root_locus_iff_kps.pdf]]
 
+
+# Example with kp = 5 m Omega
+
+#+name: fig:root_locus_opt_gain_iff_kp
+#+caption: Figure caption
+#+attr_latex: :scale 1
+[[file:figs/root_locus_opt_gain_iff_kp.pdf]]
+
 * Direct Velocity Feedback
 ** Control Schematic
+
+# Basic Idea of DVF
+
+
+# Equation with the control law
+
 #+name: fig:system_dvf
 #+caption: Figure caption
 #+attr_latex: :scale 1
 [[file:figs/system_dvf.pdf]]
 
+# Equivalent System is the same as Figure 1 (as increasing "c")
+
 ** Equations
 
+# Write the equations
+
+
+# Show that the rotation have somehow less impact on the plant than for IFF
+
+
+# Eventually add a bode plot to show the effect of the rotation speed
 
 
 ** Relative Direct Velocity Feedback
+
+# Unconditionally stable
+
+# Arbitrary Damping can be added to the poles
 
 #+name: fig:root_locus_dvf
 #+caption: Figure caption
@@ -467,6 +493,7 @@ This means that at low frequency, the system is decoupled (the force sensor remo
 [[file:figs/root_locus_dvf.pdf]]
 
 * Comparison of the Proposed Active Damping Techniques for Rotating Positioning Stages
+**
 
 **
 
@@ -474,6 +501,10 @@ This means that at low frequency, the system is decoupled (the force sensor remo
 #+caption: Figure caption
 #+attr_latex: :scale 1
 [[file:figs/comp_root_locus.pdf]]
+
+
+** Transmissibility and Compliance
+
 
 #+name: fig:comp_active_damping
 #+caption: Comparison of the three proposed Active Damping Techniques
