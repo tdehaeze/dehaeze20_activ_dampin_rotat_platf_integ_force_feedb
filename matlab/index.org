@@ -2555,7 +2555,7 @@ The obtained damping ratio and control are shown below.
 [[file:figs/comp_transmissibility.png]]
 
 #+begin_src matlab :tangle no :exports none :results none
-  exportFig('figs-inkscape/comp_transmissibility.pdf', 'width', 'wide', 'height', 'tall', 'png', false, 'pdf', false, 'svg', true);
+  exportFig('figs-inkscape/comp_transmissibility.pdf', 'width', 'half', 'height', 'tall', 'png', false, 'pdf', false, 'svg', true);
 #+end_src
 
 ** Compliance
@@ -2679,7 +2679,7 @@ The obtained damping ratio and control are shown below.
 [[file:figs/comp_compliance.png]]
 
 #+begin_src matlab :tangle no :exports none :results none
-  exportFig('figs-inkscape/comp_compliance.pdf', 'width', 'wide', 'height', 'tall', 'png', false, 'pdf', false, 'svg', true);
+  exportFig('figs-inkscape/comp_compliance.pdf', 'width', 'half', 'height', 'tall', 'png', false, 'pdf', false, 'svg', true);
 #+end_src
 
 * Notations
