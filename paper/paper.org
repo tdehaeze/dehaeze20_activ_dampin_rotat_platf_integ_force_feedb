@@ -470,6 +470,8 @@ This means that at low frequency, the system is decoupled (the force sensor remo
 
 # Equivalent System is the same as Figure 1 (as increasing "c")
 
+# Thus very much equivalent as adding passive elements such as dashpot
+
 ** Equations
 
 # Write the equations
@@ -493,9 +495,11 @@ This means that at low frequency, the system is decoupled (the force sensor remo
 [[file:figs/root_locus_dvf.pdf]]
 
 * Comparison of the Proposed Active Damping Techniques for Rotating Positioning Stages
-**
+** Physical Comparison
 
-**
+
+
+** Attainable Damping
 
 #+name: fig:comp_root_locus
 #+caption: Figure caption
@@ -505,6 +509,17 @@ This means that at low frequency, the system is decoupled (the force sensor remo
 
 ** Transmissibility and Compliance
 
+
+# IFF with HPF and IFF with kp give very similar results
+
+# Both techniques provides very good amount of damping
+
+# IFF degrades the compliance at low frequency (add reference)
+
+# Relative DVF degrades the transmissibility at high frequency
+# The roll-off is -1 instead of -2
+
+#
 
 #+name: fig:comp_active_damping
 #+caption: Comparison of the three proposed Active Damping Techniques
@@ -524,7 +539,6 @@ This means that at low frequency, the system is decoupled (the force sensor remo
 
 * Conclusion
 <<sec:conclusion>>
-
 
 * Acknowledgment
 :PROPERTIES:
