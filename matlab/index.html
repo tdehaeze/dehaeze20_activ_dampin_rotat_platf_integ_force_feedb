@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-06-18 jeu. 11:51 -->
+<!-- 2020-06-24 mer. 08:44 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>Matlab Computation</title>
 <meta name="generator" content="Org mode" />
@@ -34,120 +34,99 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org7fd3887">1. System Description and Analysis</a>
+<li><a href="#orgdd86a90">1. System Description and Analysis</a>
 <ul>
-<li><a href="#org67d1283">1.1. System description</a></li>
-<li><a href="#orgd899328">1.2. Equations</a></li>
-<li><a href="#org3653395">1.3. Numerical Values</a></li>
-<li><a href="#org0e5941a">1.4. Campbell Diagram</a></li>
-<li><a href="#orgba91176">1.5. Simscape Model</a></li>
-<li><a href="#orgb6b21fc">1.6. Comparison of the Analytical Model and the Simscape Model</a></li>
-<li><a href="#orgbda2c32">1.7. Effect of the rotation speed</a></li>
+<li><a href="#org444447c">1.1. System description</a></li>
+<li><a href="#orgbf01d55">1.2. Equations</a></li>
+<li><a href="#org76660ae">1.3. Numerical Values</a></li>
+<li><a href="#org77f3b3d">1.4. Campbell Diagram</a></li>
+<li><a href="#org224b6e5">1.5. Simscape Model</a></li>
+<li><a href="#org7b260e4">1.6. Effect of the rotation speed</a></li>
 </ul>
 </li>
-<li><a href="#org502cb17">2. Problem with pure Integral Force Feedback</a>
+<li><a href="#orgd7db9e7">2. Problem with pure Integral Force Feedback</a>
 <ul>
-<li><a href="#org5213c05">2.1. Plant Parameters</a></li>
-<li><a href="#org2dd3e37">2.2. Equations</a></li>
-<li><a href="#orgdec4977">2.3. Simscape Model</a></li>
-<li><a href="#org18b58bb">2.4. Comparison of the Analytical Model and the Simscape Model</a></li>
-<li><a href="#org06b805f">2.5. Effect of the rotation speed</a></li>
-<li><a href="#orge63f126">2.6. Decentralized Integral Force Feedback</a></li>
-<li><a href="#orgcdc9bd6">2.7. Sort poles</a></li>
+<li><a href="#orgc7263f3">2.1. Schematic</a></li>
+<li><a href="#orgaf7a7e8">2.2. Plant Parameters</a></li>
+<li><a href="#org80a6562">2.3. Equations</a></li>
+<li><a href="#orga0c5f85">2.4. Simscape Model</a></li>
+<li><a href="#orgdd7f681">2.5. Comparison of the Analytical Model and the Simscape Model</a></li>
+<li><a href="#orgc773939">2.6. Effect of the rotation speed</a></li>
+<li><a href="#org5ee1e58">2.7. Decentralized Integral Force Feedback</a></li>
 </ul>
 </li>
-<li><a href="#org18df7e1">3. Modified IFF (pseudo integrator)</a>
+<li><a href="#orgde92b64">3. Integral Force Feedback with an High Pass Filter</a>
 <ul>
-<li><a href="#orgae8a5d7">3.1. Plant Parameters</a></li>
-<li><a href="#org6abeea4">3.2. Modified Integral Force Feedback Controller</a></li>
-<li><a href="#org947c64b">3.3. Root Locus</a></li>
-<li><a href="#org98a17cf">3.4. What is the optimal \(\omega_i\) and \(g\)?</a></li>
+<li><a href="#org98f0c82">3.1. Plant Parameters</a></li>
+<li><a href="#org46c0432">3.2. Modified Integral Force Feedback Controller</a></li>
+<li><a href="#orgbdaa2d1">3.3. Root Locus</a></li>
+<li><a href="#org0af01c9">3.4. What is the optimal \(\omega_i\) and \(g\)?</a></li>
 </ul>
 </li>
-<li><a href="#orga94cade">4. IFF with a stiffness in parallel with the force sensor</a>
+<li><a href="#org9f948ab">4. IFF with a stiffness in parallel with the force sensor</a>
 <ul>
-<li><a href="#org540ef74">4.1. Equations</a></li>
-<li><a href="#org108335f">4.2. Plant Parameters</a></li>
-<li><a href="#org32f7060">4.3. Schematic</a></li>
-<li><a href="#orged2bad9">4.4. Physical Explanation</a></li>
-<li><a href="#org17ff45b">4.5. Effect of the parallel stiffness on the IFF plant</a></li>
-<li><a href="#orgc2b6bef">4.6. IFF when adding a spring in parallel</a></li>
-<li><a href="#orga5a387a">4.7. Effect of \(k_p\) on the attainable damping</a></li>
-<li><a href="#org2d75241">4.8. Optimal Gain</a></li>
+<li><a href="#orgb38f408">4.1. Schematic</a></li>
+<li><a href="#org5344172">4.2. Equations</a></li>
+<li><a href="#org212aa9d">4.3. Physical Explanation</a></li>
+<li><a href="#org964955e">4.4. Plant Parameters</a></li>
+<li><a href="#org6ba1fdd">4.5. Comparison of the Analytical Model and the Simscape Model</a></li>
+<li><a href="#org160adf1">4.6. Effect of the parallel stiffness on the IFF plant</a></li>
+<li><a href="#org00a3666">4.7. IFF when adding a spring in parallel</a></li>
+<li><a href="#org938d786">4.8. Effect of \(k_p\) on the attainable damping</a></li>
+<li><a href="#org9f2b242">4.9. Optimal Gain</a></li>
 </ul>
 </li>
-<li><a href="#orgcdcde0b">5. Direct Velocity Feedback</a>
+<li><a href="#org17e3e2b">5. Direct Velocity Feedback</a>
 <ul>
-<li><a href="#org720c634">5.1. Equations</a></li>
-<li><a href="#orgf603713">5.2. Plant Parameters</a></li>
-<li><a href="#org8301d5f">5.3. Plant - Bode Plot</a></li>
-<li><a href="#org9e4d88f">5.4. Comparison of the Analytical Model and the Simscape Model</a></li>
-<li><a href="#orga076c03">5.5. Root Locus</a>
-<ul>
-<li>
-<ul>
-<li><a href="#orgaeec22e">5.5.0.1. Root Locus Plots</a></li>
+<li><a href="#orgfcb13b7">5.1. Schematic</a></li>
+<li><a href="#orgfff9982">5.2. Equations</a></li>
+<li><a href="#org69a87c1">5.3. Plant Parameters</a></li>
+<li><a href="#org04a4b56">5.4. Comparison of the Analytical Model and the Simscape Model</a></li>
+<li><a href="#orgee56528">5.5. Root Locus</a></li>
 </ul>
 </li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#org4e87780">6. Comparison</a>
+<li><a href="#orge570697">6. Comparison</a>
 <ul>
-<li><a href="#org6d1e549">6.1. Plant Parameters</a></li>
-<li><a href="#orgb2d5912">6.2. Root Locus</a></li>
-<li><a href="#org96ec842">6.3. Controllers - Optimal Gains</a></li>
-<li><a href="#org456f89e">6.4. Transmissibility</a></li>
-<li><a href="#org9ae98b1">6.5. Compliance</a></li>
+<li><a href="#orgb18989f">6.1. Plant Parameters</a></li>
+<li><a href="#org5627e24">6.2. Root Locus</a></li>
+<li><a href="#org10d8811">6.3. Controllers - Optimal Gains</a></li>
+<li><a href="#orgb140a72">6.4. Transmissibility</a></li>
+<li><a href="#org998dedd">6.5. Compliance</a></li>
 </ul>
 </li>
-<li><a href="#orgd03ac7f">7. Notations</a></li>
-<li><a href="#orgdc36b6b">8. Function</a>
-<ul>
-<li><a href="#org1b97ee6">8.1. Sort Poles for the Root Locus</a>
-<ul>
-<li><a href="#orgd432ea5">Function description</a></li>
-<li><a href="#org81644c0">Optional Parameters</a></li>
-<li><a href="#orgf223cdb">Function</a></li>
-<li><a href="#orga51595e">Remove useless poles</a></li>
-<li><a href="#org496fb30">Sort poles</a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li><a href="#org1cac780">7. Notations</a></li>
 </ul>
 </div>
 </div>
 
 <ul class="org-ul">
-<li>Section <a href="#org3251429">1</a></li>
-<li>Section <a href="#org7d73627">2</a></li>
-<li>Section <a href="#orgf47e330">3</a></li>
-<li>Section <a href="#org7314486">4</a></li>
-<li>Section <a href="#org99ddc3d">5</a></li>
-<li>Section <a href="#org2e13fe1">6</a></li>
-<li>Section <a href="#orgead2db3">7</a></li>
+<li>Section <a href="#orgcbf5018">1</a></li>
+<li>Section <a href="#org5428825">2</a></li>
+<li>Section <a href="#org3808c70">3</a></li>
+<li>Section <a href="#orgc485a00">4</a></li>
+<li>Section <a href="#org4225b3c">5</a></li>
+<li>Section <a href="#org964f93b">6</a></li>
+<li>Section <a href="#orgf5b5456">7</a></li>
 </ul>
 
-<div id="outline-container-org7fd3887" class="outline-2">
-<h2 id="org7fd3887"><span class="section-number-2">1</span> System Description and Analysis</h2>
+<div id="outline-container-orgdd86a90" class="outline-2">
+<h2 id="orgdd86a90"><span class="section-number-2">1</span> System Description and Analysis</h2>
 <div class="outline-text-2" id="text-1">
 <p>
-<a id="org3251429"></a>
+<a id="orgcbf5018"></a>
 </p>
 </div>
 
-<div id="outline-container-org67d1283" class="outline-3">
-<h3 id="org67d1283"><span class="section-number-3">1.1</span> System description</h3>
+<div id="outline-container-org444447c" class="outline-3">
+<h3 id="org444447c"><span class="section-number-3">1.1</span> System description</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
-The system consists of one 2 degree of freedom translation stage on top of a spindle (figure <a href="#org9616080">1</a>).
+The system consists of one 2 degree of freedom translation stage on top of a spindle (figure <a href="#org72e46e2">1</a>).
 </p>
 
 
-<div id="org9616080" class="figure">
-<p><img src="figs-tikz/rotating_xy_platform.png" alt="rotating_xy_platform.png" />
+<div id="org72e46e2" class="figure">
+<p><img src="figs-tikz/system.png" alt="system.png" />
 </p>
 <p><span class="figure-number">Figure 1: </span>Schematic of the studied system</p>
 </div>
@@ -163,11 +142,11 @@ The measurement is either the \(x-y\) displacement of the object located on top 
 </div>
 </div>
 
-<div id="outline-container-orgd899328" class="outline-3">
-<h3 id="orgd899328"><span class="section-number-3">1.2</span> Equations</h3>
+<div id="outline-container-orgbf01d55" class="outline-3">
+<h3 id="orgbf01d55"><span class="section-number-3">1.2</span> Equations</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
-Based on the Figure <a href="#org9616080">1</a>, the equations of motions are:
+Based on the Figure <a href="#org72e46e2">1</a>, the equations of motions are:
 </p>
 <div class="important">
 \begin{equation}
@@ -175,15 +154,16 @@ Based on the Figure <a href="#org9616080">1</a>, the equations of motions are:
 \bm{G}_d
 \begin{bmatrix} F_u \\ F_v \end{bmatrix}
 \end{equation}
+<p>
+Where \(\bm{G}_d\) is a \(2 \times 2\) transfer function matrix.
+</p>
 
 \begin{equation}
-\begin{bmatrix} d_u \\ d_v \end{bmatrix} =
-\frac{1}{k} \frac{1}{G_{dp}}
+\bm{G}_d = \frac{1}{k} \frac{1}{G_{dp}}
 \begin{bmatrix}
    G_{dz} & G_{dc} \\
   -G_{dc} & G_{dz}
 \end{bmatrix}
-\begin{bmatrix} F_u \\ F_v \end{bmatrix}
 \end{equation}
 <p>
 With:
@@ -203,8 +183,8 @@ Explain Coriolis and Centrifugal Forces (negative Stiffness)
 </div>
 </div>
 
-<div id="outline-container-org3653395" class="outline-3">
-<h3 id="org3653395"><span class="section-number-3">1.3</span> Numerical Values</h3>
+<div id="outline-container-org76660ae" class="outline-3">
+<h3 id="org76660ae"><span class="section-number-3">1.3</span> Numerical Values</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
 Let&rsquo;s define initial values for the model.
@@ -224,19 +204,19 @@ w0 = sqrt(k/m); % [rad/s]
 </div>
 </div>
 
-<div id="outline-container-org0e5941a" class="outline-3">
-<h3 id="org0e5941a"><span class="section-number-3">1.4</span> Campbell Diagram</h3>
+<div id="outline-container-org77f3b3d" class="outline-3">
+<h3 id="org77f3b3d"><span class="section-number-3">1.4</span> Campbell Diagram</h3>
 <div class="outline-text-3" id="text-1-4">
 <p>
 The Campbell Diagram displays the evolution of the real and imaginary parts of the system as a function of the rotating speed.
 </p>
 
 <p>
-It is shown in Figure <a href="#org7159e29">2</a>, and one can see that the system becomes unstable for \(\Omega > \omega_0\) (the real part of one of the poles becomes positive).
+It is shown in Figure <a href="#orge0d5320">2</a>, and one can see that the system becomes unstable for \(\Omega > \omega_0\) (the real part of one of the poles becomes positive).
 </p>
 
 
-<div id="org7159e29" class="figure">
+<div id="orge0d5320" class="figure">
 <p><img src="figs/campbell_diagram.png" alt="campbell_diagram.png" />
 </p>
 <p><span class="figure-number">Figure 2: </span>Campbell Diagram</p>
@@ -244,14 +224,19 @@ It is shown in Figure <a href="#org7159e29">2</a>, and one can see that the syst
 </div>
 </div>
 
-<div id="outline-container-orgba91176" class="outline-3">
-<h3 id="orgba91176"><span class="section-number-3">1.5</span> Simscape Model</h3>
+<div id="outline-container-org224b6e5" class="outline-3">
+<h3 id="org224b6e5"><span class="section-number-3">1.5</span> Simscape Model</h3>
 <div class="outline-text-3" id="text-1-5">
 <p>
 Define the rotating speed for the Simscape Model.
 </p>
 <div class="org-src-container">
 <pre class="src src-matlab">W = 0.1; % Rotation Speed [rad/s]
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">open('rotating_frame.slx');
 </pre>
 </div>
 
@@ -278,12 +263,7 @@ G.InputName  = {'Fu', 'Fv'};
 G.OutputName = {'du', 'dv'};
 </pre>
 </div>
-</div>
-</div>
 
-<div id="outline-container-orgb6b21fc" class="outline-3">
-<h3 id="orgb6b21fc"><span class="section-number-3">1.6</span> Comparison of the Analytical Model and the Simscape Model</h3>
-<div class="outline-text-3" id="text-1-6">
 <p>
 The same transfer function from \([F_u, F_v]\) to \([d_u, d_v]\) is written down from the analytical model.
 </p>
@@ -295,11 +275,11 @@ The same transfer function from \([F_u, F_v]\) to \([d_u, d_v]\) is written down
 </div>
 
 <p>
-Both transfer functions are compared in Figure <a href="#org489a80b">3</a> and are found to perfectly match.
+Both transfer functions are compared in Figure <a href="#org760cc42">3</a> and are found to perfectly match.
 </p>
 
 
-<div id="org489a80b" class="figure">
+<div id="org760cc42" class="figure">
 <p><img src="figs/plant_simscape_analytical.png" alt="plant_simscape_analytical.png" />
 </p>
 <p><span class="figure-number">Figure 3: </span>Bode plot of the transfer function from \([F_u, F_v]\) to \([d_u, d_v]\) as identified from the Simscape model and from an analytical model</p>
@@ -307,14 +287,14 @@ Both transfer functions are compared in Figure <a href="#org489a80b">3</a> and a
 </div>
 </div>
 
-<div id="outline-container-orgbda2c32" class="outline-3">
-<h3 id="orgbda2c32"><span class="section-number-3">1.7</span> Effect of the rotation speed</h3>
-<div class="outline-text-3" id="text-1-7">
+<div id="outline-container-org7b260e4" class="outline-3">
+<h3 id="org7b260e4"><span class="section-number-3">1.6</span> Effect of the rotation speed</h3>
+<div class="outline-text-3" id="text-1-6">
 <p>
 The transfer functions from \([F_u, F_v]\) to \([d_u, d_v]\) are identified for the following rotating speeds.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">Ws = [0, 0.1, 0.5, 0.8, 1.1]*w0; % [rad/s]
+<pre class="src src-matlab">Ws = [0, 0.2, 0.7, 1.1]*w0; % Rotating Speeds [rad/s]
 </pre>
 </div>
 
@@ -332,11 +312,11 @@ end
 </div>
 
 <p>
-They are compared in Figure <a href="#org0d285ce">4</a>.
+They are compared in Figure <a href="#org03b019e">4</a>.
 </p>
 
 
-<div id="org0d285ce" class="figure">
+<div id="org03b019e" class="figure">
 <p><img src="figs/plant_compare_rotating_speed.png" alt="plant_compare_rotating_speed.png" />
 </p>
 <p><span class="figure-number">Figure 4: </span>Comparison of the transfer functions from \([F_u, F_v]\) to \([d_u, d_v]\) for several rotating speed</p>
@@ -345,11 +325,11 @@ They are compared in Figure <a href="#org0d285ce">4</a>.
 </div>
 </div>
 
-<div id="outline-container-org502cb17" class="outline-2">
-<h2 id="org502cb17"><span class="section-number-2">2</span> Problem with pure Integral Force Feedback</h2>
+<div id="outline-container-orgd7db9e7" class="outline-2">
+<h2 id="orgd7db9e7"><span class="section-number-2">2</span> Problem with pure Integral Force Feedback</h2>
 <div class="outline-text-2" id="text-2">
 <p>
-<a id="org7d73627"></a>
+<a id="org5428825"></a>
 </p>
 <ul class="org-ul">
 <li>Diagram with the controller</li>
@@ -357,9 +337,18 @@ They are compared in Figure <a href="#org0d285ce">4</a>.
 </ul>
 </div>
 
-<div id="outline-container-org5213c05" class="outline-3">
-<h3 id="org5213c05"><span class="section-number-3">2.1</span> Plant Parameters</h3>
+<div id="outline-container-orgc7263f3" class="outline-3">
+<h3 id="orgc7263f3"><span class="section-number-3">2.1</span> Schematic</h3>
 <div class="outline-text-3" id="text-2-1">
+<p>
+<a href="figs-tikz/system_iff.pdf">figs-tikz/system_iff.pdf</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgaf7a7e8" class="outline-3">
+<h3 id="orgaf7a7e8"><span class="section-number-3">2.2</span> Plant Parameters</h3>
+<div class="outline-text-3" id="text-2-2">
 <p>
 Let&rsquo;s define initial values for the model.
 </p>
@@ -378,9 +367,9 @@ w0 = sqrt(k/m); % [rad/s]
 </div>
 </div>
 
-<div id="outline-container-org2dd3e37" class="outline-3">
-<h3 id="org2dd3e37"><span class="section-number-3">2.2</span> Equations</h3>
-<div class="outline-text-3" id="text-2-2">
+<div id="outline-container-org80a6562" class="outline-3">
+<h3 id="org80a6562"><span class="section-number-3">2.3</span> Equations</h3>
+<div class="outline-text-3" id="text-2-3">
 <p>
 The sensed forces are equal to:
 </p>
@@ -424,14 +413,19 @@ Which then gives:
 </div>
 </div>
 
-<div id="outline-container-orgdec4977" class="outline-3">
-<h3 id="orgdec4977"><span class="section-number-3">2.3</span> Simscape Model</h3>
-<div class="outline-text-3" id="text-2-3">
+<div id="outline-container-orga0c5f85" class="outline-3">
+<h3 id="orga0c5f85"><span class="section-number-3">2.4</span> Simscape Model</h3>
+<div class="outline-text-3" id="text-2-4">
 <p>
 The rotation speed is set to \(\Omega = 0.1 \omega_0\).
 </p>
 <div class="org-src-container">
 <pre class="src src-matlab">W = 0.1*w0; % [rad/s]
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">open('rotating_frame.slx');
 </pre>
 </div>
 
@@ -460,9 +454,9 @@ Giff.OutputName = {'fu', 'fv'};
 </div>
 </div>
 
-<div id="outline-container-org18b58bb" class="outline-3">
-<h3 id="org18b58bb"><span class="section-number-3">2.4</span> Comparison of the Analytical Model and the Simscape Model</h3>
-<div class="outline-text-3" id="text-2-4">
+<div id="outline-container-orgdd7f681" class="outline-3">
+<h3 id="orgdd7f681"><span class="section-number-3">2.5</span> Comparison of the Analytical Model and the Simscape Model</h3>
+<div class="outline-text-3" id="text-2-5">
 <p>
 The same transfer function from \([F_u, F_v]\) to \([f_u, f_v]\) is written down from the analytical model.
 </p>
@@ -474,11 +468,11 @@ The same transfer function from \([F_u, F_v]\) to \([f_u, f_v]\) is written down
 </div>
 
 <p>
-The two are compared in Figure <a href="#org874c82b">5</a> and found to perfectly match.
+The two are compared in Figure <a href="#org19e2897">5</a> and found to perfectly match.
 </p>
 
 
-<div id="org874c82b" class="figure">
+<div id="org19e2897" class="figure">
 <p><img src="figs/plant_iff_comp_simscape_analytical.png" alt="plant_iff_comp_simscape_analytical.png" />
 </p>
 <p><span class="figure-number">Figure 5: </span>Comparison of the transfer functions from \([F_u, F_v]\) to \([f_u, f_v]\) between the Simscape model and the analytical one</p>
@@ -486,14 +480,14 @@ The two are compared in Figure <a href="#org874c82b">5</a> and found to perfectl
 </div>
 </div>
 
-<div id="outline-container-org06b805f" class="outline-3">
-<h3 id="org06b805f"><span class="section-number-3">2.5</span> Effect of the rotation speed</h3>
-<div class="outline-text-3" id="text-2-5">
+<div id="outline-container-orgc773939" class="outline-3">
+<h3 id="orgc773939"><span class="section-number-3">2.6</span> Effect of the rotation speed</h3>
+<div class="outline-text-3" id="text-2-6">
 <p>
 The transfer functions from \([F_u, F_v]\) to \([f_u, f_v]\) are identified for the following rotating speeds.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">Ws = [0, 0.1, 0.5, 0.8, 1.1]*w0; % Rotating Speeds [rad/s]
+<pre class="src src-matlab">Ws = [0, 0.2, 0.7, 1.1]*w0; % Rotating Speeds [rad/s]
 </pre>
 </div>
 
@@ -511,10 +505,10 @@ end
 </div>
 
 <p>
-The obtained transfer functions are shown in Figure <a href="#org5b507fd">6</a>.
+The obtained transfer functions are shown in Figure <a href="#org90b78f6">6</a>.
 </p>
 
-<div id="org5b507fd" class="figure">
+<div id="org90b78f6" class="figure">
 <p><img src="figs/plant_iff_compare_rotating_speed.png" alt="plant_iff_compare_rotating_speed.png" />
 </p>
 <p><span class="figure-number">Figure 6: </span>Comparison of the transfer functions from \([F_u, F_v]\) to \([f_u, f_v]\) for several rotating speed</p>
@@ -522,24 +516,9 @@ The obtained transfer functions are shown in Figure <a href="#org5b507fd">6</a>.
 </div>
 </div>
 
-<div id="outline-container-orge63f126" class="outline-3">
-<h3 id="orge63f126"><span class="section-number-3">2.6</span> Decentralized Integral Force Feedback</h3>
-<div class="outline-text-3" id="text-2-6">
-<p>
-Let&rsquo;s take \(\Omega = \frac{\omega_0}{10}\).
-</p>
-<div class="org-src-container">
-<pre class="src src-matlab">W = w0/10;
-</pre>
-</div>
-
-<div class="org-src-container">
-<pre class="src src-matlab">Giff = 1/(((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))^2 + (2*W*s/(w0^2))^2) * ...
-       [(s^2/w0^2 - W^2/w0^2)*((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2)) + (2*W*s/(w0^2))^2, - (2*xi*s/w0 + 1)*2*W*s/(w0^2) ; ...
-        (2*xi*s/w0 + 1)*2*W*s/(w0^2), (s^2/w0^2 - W^2/w0^2)*((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))+ (2*W*s/(w0^2))^2];
-</pre>
-</div>
-
+<div id="outline-container-org5ee1e58" class="outline-3">
+<h3 id="org5ee1e58"><span class="section-number-3">2.7</span> Decentralized Integral Force Feedback</h3>
+<div class="outline-text-3" id="text-2-7">
 <p>
 The decentralized IFF controller consists of pure integrators:
 </p>
@@ -550,199 +529,34 @@ The decentralized IFF controller consists of pure integrators:
   \end{bmatrix}
 \end{equation}
 
-<div class="org-src-container">
-<pre class="src src-matlab">g = 2;
-
-Kiff = g/s*tf(eye(2));
-</pre>
-</div>
-
 <p>
-The Root Locus (evolution of the poles of the closed loop system in the complex plane as a function of \(g\)) is shown in Figure <a href="#orgb948acd">7</a>.
+The Root Locus (evolution of the poles of the closed loop system in the complex plane as a function of \(g\)) is shown in Figure <a href="#org77915f1">7</a>.
 It is shown that for non-null rotating speed, one pole is bound to the right-half plane, and thus the closed loop system is unstable.
 </p>
 
 
-<div id="orgb948acd" class="figure">
+<div id="org77915f1" class="figure">
 <p><img src="figs/root_locus_pure_iff.png" alt="root_locus_pure_iff.png" />
 </p>
 <p><span class="figure-number">Figure 7: </span>Root Locus for the Decentralized Integral Force Feedback controller. Several rotating speed are shown.</p>
 </div>
 </div>
 </div>
-
-<div id="outline-container-orgcdc9bd6" class="outline-3">
-<h3 id="orgcdc9bd6"><span class="section-number-3">2.7</span> Sort poles</h3>
-<div class="outline-text-3" id="text-2-7">
-<div class="org-src-container">
-<pre class="src src-matlab">W = 0.1;
-
-Giff = 1/(((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))^2 + (2*W*s/(w0^2))^2) * ...
-       [(s^2/w0^2 - W^2/w0^2)*((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2)) + (2*W*s/(w0^2))^2, - (2*xi*s/w0 + 1)*2*W*s/(w0^2) ; ...
-        (2*xi*s/w0 + 1)*2*W*s/(w0^2), (s^2/w0^2 - W^2/w0^2)*((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))+ (2*W*s/(w0^2))^2];
-g = 1;
-
-gains = logspace(-2, 4, 100);
-
-poles = zeros(length(pole(minreal(feedback(Giff, g/s*eye(2))))), length(gains));
-poles(:, 1) = pole(minreal(feedback(Giff, gains(1)/s*eye(2))));
-poles(:, 2) = pole(minreal(feedback(Giff, gains(2)/s*eye(2))));
-% poles(:, 2) = poles(:, 1);
-
-for g_i = 3:length(gains)
-    poles_est = poles(:, g_i-1) + (poles(:, g_i-1) - poles(:, g_i-2))*(gains(g_i) - gains(g_i-1))/(gains(g_i-1) - gains(g_i - 2));
-    poles_est = poles(:, g_i-1);
-
-    poles_gi = pole(minreal(feedback(Giff, gains(g_i)/s*eye(2))));
-
-    % Array of distances between all the poles
-    poles_dist = (poles_est-poles_gi.').*conj(poles_est-poles_gi.');
-    [~, c] = sort(min(poles_dist));
-    poles_dist = poles_dist(:, c);
-
-    for p_i = 1:size(poles_dist, 1)
-       [~, a_i] = min(poles_dist(:, p_i));
-
-       poles(c(p_i), g_i) = poles_gi(a_i);
-       poles_dist(a_i, :) = [];
-       poles_gi(a_i, :) = [];
-    end
-end
-</pre>
 </div>
 
-<p>
-Working
-</p>
-<div class="org-src-container">
-<pre class="src src-matlab">W = 0.1;
-
-Giff = 1/(((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))^2 + (2*W*s/(w0^2))^2) * ...
-       [(s^2/w0^2 - W^2/w0^2)*((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2)) + (2*W*s/(w0^2))^2, - (2*xi*s/w0 + 1)*2*W*s/(w0^2) ; ...
-        (2*xi*s/w0 + 1)*2*W*s/(w0^2), (s^2/w0^2 - W^2/w0^2)*((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))+ (2*W*s/(w0^2))^2];
-
-gains = logspace(-2, 4, 500);
-
-poles = zeros(length(pole(feedback(Giff, 1/s*eye(2)))), length(gains));
-poles(:, 1) = pole(feedback(Giff, gains(1)/s*eye(2)));
-poles(:, 2) = pole(feedback(Giff, gains(2)/s*eye(2)));
-% poles(:, 2) = poles(:, 1);
-
-for g_i = 3:length(gains)
-    % poles_est = poles(:, g_i-1) + (poles(:, g_i-1) - poles(:, g_i-2))*(gains(g_i) - gains(g_i-1))/(gains(g_i-1) - gains(g_i - 2));
-    poles_est = poles(:, g_i-1);
-    poles_gi = pole(feedback(Giff, gains(g_i)/s*eye(2)));
-
-    % Array of distances between all the poles
-    poles_dist = sqrt((poles_est-poles_gi.').*conj(poles_est-poles_gi.'));
-
-    % Columns of distances are sorted from lowest to highest
-    [~, c] = sort(min(poles_dist));
-    poles_dist = poles_dist(:, c);
-
-    % for each column of poles_dist corresponding to the i'th pole
-    % with closest previous poles
-    for p_i = 1:size(poles_dist, 2)
-       % Get the indice a_i of the previous pole that is the closest
-       % to pole c(p_i)
-       [~, a_i] = min(poles_dist(:, p_i));
-
-       poles(a_i, g_i) = poles_gi(c(p_i));
-
-       % poles_dist(a_i, :) = [];
-       % poles_gi(a_i, :) = [];
-    end
-end
-</pre>
-</div>
-
-<div class="org-src-container">
-<pre class="src src-matlab">W = 0.1;
-
-Giff = 1/(((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))^2 + (2*W*s/(w0^2))^2) * ...
-       [(s^2/w0^2 - W^2/w0^2)*((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2)) + (2*W*s/(w0^2))^2, - (2*xi*s/w0 + 1)*2*W*s/(w0^2) ; ...
-        (2*xi*s/w0 + 1)*2*W*s/(w0^2), (s^2/w0^2 - W^2/w0^2)*((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))+ (2*W*s/(w0^2))^2];
-
-gains = logspace(-2, 4, 500);
-
-poles = zeros(length(pole(feedback(Giff, 1/s*eye(2)))), length(gains));
-poles(:, 1) = pole(feedback(Giff, gains(1)/s*eye(2)));
-poles(:, 2) = pole(feedback(Giff, gains(2)/s*eye(2)));
-
-for g_i = 3:length(gains)
-    % Estimated value of the poles
-    poles_est = poles(:, g_i-1) + (poles(:, g_i-1) - poles(:, g_i-2))*(gains(g_i) - gains(g_i-1))/(gains(g_i-1) - gains(g_i - 2));
-
-    % New values for the poles
-    poles_gi = pole(feedback(Giff, gains(g_i)/s*eye(2)));
-
-    % Array of distances between all the poles
-    poles_dist = sqrt((poles_est-poles_gi.').*conj(poles_est-poles_gi.'));
-
-    % Get indices corresponding to distances from lowest to highest
-    [~, c] = sort(min(poles_dist));
-
-    as = 1:length(poles_gi);
-
-    % for each column of poles_dist corresponding to the i'th pole
-    % with closest previous poles
-    for p_i = c
-       % Get the indice a_i of the previous pole that is the closest
-       % to pole c(p_i)
-       [~, a_i] = min(poles_dist(:, p_i));
-
-       poles(as(a_i), g_i) = poles_gi(p_i);
-
-       % Remove old poles that are already matched
-       % poles_gi(as(a_i), :) = [];
-       poles_dist(a_i, :) = [];
-       as(a_i) = [];
-    end
-end
-</pre>
-</div>
-
-<p>
-How to remove poles that are not moving?
-</p>
-<div class="org-src-container">
-<pre class="src src-matlab">poles_rl = poles(max(abs(poles(:, 2:end) - poles(:, 1:end-1))') &gt; 1e-8, :);
-poles_rl = poles_rl(1:end/2, :);
-</pre>
-</div>
-
-<ul class="org-ul">
-<li>works best without minreal</li>
-<li class="off"><code>[&#xa0;]</code> create a function</li>
-</ul>
-
-<div class="org-src-container">
-<pre class="src src-matlab">Giff = 1/(((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))^2 + (2*W*s/(w0^2))^2) * ...
-       [(s^2/w0^2 - W^2/w0^2)*((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2)) + (2*W*s/(w0^2))^2, - (2*xi*s/w0 + 1)*2*W*s/(w0^2) ; ...
-        (2*xi*s/w0 + 1)*2*W*s/(w0^2), (s^2/w0^2 - W^2/w0^2)*((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))+ (2*W*s/(w0^2))^2];
-Kiff = 1/s*eye(2);
-gains = logspace(-2, 4, 500);
-
-[poles] = rootLocusPolesSorted(Giff, Kiff, gains, 'd_max', 1e-4);
-</pre>
-</div>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org18df7e1" class="outline-2">
-<h2 id="org18df7e1"><span class="section-number-2">3</span> Modified IFF (pseudo integrator)</h2>
+<div id="outline-container-orgde92b64" class="outline-2">
+<h2 id="orgde92b64"><span class="section-number-2">3</span> Integral Force Feedback with an High Pass Filter</h2>
 <div class="outline-text-2" id="text-3">
 <p>
-<a id="orgf47e330"></a>
+<a id="org3808c70"></a>
 </p>
 <ul class="org-ul">
 <li>Classical modification of the IFF</li>
 </ul>
 </div>
 
-<div id="outline-container-orgae8a5d7" class="outline-3">
-<h3 id="orgae8a5d7"><span class="section-number-3">3.1</span> Plant Parameters</h3>
+<div id="outline-container-org98f0c82" class="outline-3">
+<h3 id="org98f0c82"><span class="section-number-3">3.1</span> Plant Parameters</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 Let&rsquo;s define initial values for the model.
@@ -762,8 +576,8 @@ w0 = sqrt(k/m); % [rad/s]
 </div>
 </div>
 
-<div id="outline-container-org6abeea4" class="outline-3">
-<h3 id="org6abeea4"><span class="section-number-3">3.2</span> Modified Integral Force Feedback Controller</h3>
+<div id="outline-container-org46c0432" class="outline-3">
+<h3 id="org46c0432"><span class="section-number-3">3.2</span> Modified Integral Force Feedback Controller</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 Let&rsquo;s modify the initial Integral Force Feedback Controller ; instead of using pure integrators, pseudo integrators (i.e. low pass filters) are used:
@@ -798,10 +612,10 @@ And the following rotating speed.
 </div>
 
 <p>
-The obtained Loop Gain is shown in Figure <a href="#org6c2de5c">8</a>.
+The obtained Loop Gain is shown in Figure <a href="#org4fee51b">8</a>.
 </p>
 
-<div id="org6c2de5c" class="figure">
+<div id="org4fee51b" class="figure">
 <p><img src="figs/loop_gain_modified_iff.png" alt="loop_gain_modified_iff.png" />
 </p>
 <p><span class="figure-number">Figure 8: </span>Loop Gain for the modified IFF controller</p>
@@ -809,15 +623,15 @@ The obtained Loop Gain is shown in Figure <a href="#org6c2de5c">8</a>.
 </div>
 </div>
 
-<div id="outline-container-org947c64b" class="outline-3">
-<h3 id="org947c64b"><span class="section-number-3">3.3</span> Root Locus</h3>
+<div id="outline-container-orgbdaa2d1" class="outline-3">
+<h3 id="orgbdaa2d1"><span class="section-number-3">3.3</span> Root Locus</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
-As shown in the Root Locus plot (Figure <a href="#org20a5632">9</a>), for some value of the gain, the system remains stable.
+As shown in the Root Locus plot (Figure <a href="#orgfbb85b6">9</a>), for some value of the gain, the system remains stable.
 </p>
 
 
-<div id="org20a5632" class="figure">
+<div id="orgfbb85b6" class="figure">
 <p><img src="figs/root_locus_modified_iff.png" alt="root_locus_modified_iff.png" />
 </p>
 <p><span class="figure-number">Figure 9: </span>Root Locus for the modified IFF controller</p>
@@ -825,11 +639,11 @@ As shown in the Root Locus plot (Figure <a href="#org20a5632">9</a>), for some v
 </div>
 </div>
 
-<div id="outline-container-org98a17cf" class="outline-3">
-<h3 id="org98a17cf"><span class="section-number-3">3.4</span> What is the optimal \(\omega_i\) and \(g\)?</h3>
+<div id="outline-container-org0af01c9" class="outline-3">
+<h3 id="org0af01c9"><span class="section-number-3">3.4</span> What is the optimal \(\omega_i\) and \(g\)?</h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
-In order to visualize the effect of \(\omega_i\) on the attainable damping, the Root Locus is displayed in Figure <a href="#org2470588">10</a> for the following \(\omega_i\):
+In order to visualize the effect of \(\omega_i\) on the attainable damping, the Root Locus is displayed in Figure <a href="#org39c233e">10</a> for the following \(\omega_i\):
 </p>
 <div class="org-src-container">
 <pre class="src src-matlab">wis = [0.01, 0.1, 0.5, 1]*w0; % [rad/s]
@@ -837,7 +651,7 @@ In order to visualize the effect of \(\omega_i\) on the attainable damping, the 
 </div>
 
 
-<div id="org2470588" class="figure">
+<div id="org39c233e" class="figure">
 <p><img src="figs/root_locus_wi_modified_iff.png" alt="root_locus_wi_modified_iff.png" />
 </p>
 <p><span class="figure-number">Figure 10: </span>Root Locus for the modified IFF controller (zoomed plot on the left)</p>
@@ -860,13 +674,13 @@ The gain at which the system becomes unstable is
 \end{equation}
 
 <p>
-While it seems that small \(\omega_i\) do allow more damping to be added to the system (Figure <a href="#org2470588">10</a>), the control gains may be limited to small values due to \eqref{eq:iff_gmax} thus reducing the attainable damping.
+While it seems that small \(\omega_i\) do allow more damping to be added to the system (Figure <a href="#org39c233e">10</a>), the control gains may be limited to small values due to \eqref{eq:iff_gmax} thus reducing the attainable damping.
 </p>
 
 
 <p>
 There must be an optimum for \(\omega_i\).
-To find the optimum, the gain that maximize the simultaneous damping of the mode is identified for a wide range of \(\omega_i\) (Figure <a href="#orgf2fdc59">11</a>).
+To find the optimum, the gain that maximize the simultaneous damping of the mode is identified for a wide range of \(\omega_i\) (Figure <a href="#org6d80d6d">11</a>).
 </p>
 <div class="org-src-container">
 <pre class="src src-matlab">wis = logspace(-2, 1, 31)*w0; % [rad/s]
@@ -893,7 +707,7 @@ end
 </div>
 
 
-<div id="orgf2fdc59" class="figure">
+<div id="org6d80d6d" class="figure">
 <p><img src="figs/mod_iff_damping_wi.png" alt="mod_iff_damping_wi.png" />
 </p>
 <p><span class="figure-number">Figure 11: </span>Simultaneous attainable damping of the closed loop poles as a function of \(\omega_i\)</p>
@@ -902,18 +716,29 @@ end
 </div>
 </div>
 
-
-<div id="outline-container-orga94cade" class="outline-2">
-<h2 id="orga94cade"><span class="section-number-2">4</span> IFF with a stiffness in parallel with the force sensor</h2>
+<div id="outline-container-org9f948ab" class="outline-2">
+<h2 id="org9f948ab"><span class="section-number-2">4</span> IFF with a stiffness in parallel with the force sensor</h2>
 <div class="outline-text-2" id="text-4">
 <p>
-<a id="org7314486"></a>
+<a id="orgc485a00"></a>
 </p>
 </div>
 
-<div id="outline-container-org540ef74" class="outline-3">
-<h3 id="org540ef74"><span class="section-number-3">4.1</span> Equations</h3>
+<div id="outline-container-orgb38f408" class="outline-3">
+<h3 id="orgb38f408"><span class="section-number-3">4.1</span> Schematic</h3>
 <div class="outline-text-3" id="text-4-1">
+
+<div id="org7621a81" class="figure">
+<p><img src="figs-tikz/system_parallel_springs.png" alt="system_parallel_springs.png" />
+</p>
+<p><span class="figure-number">Figure 12: </span>Figure caption</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5344172" class="outline-3">
+<h3 id="org5344172"><span class="section-number-3">4.2</span> Equations</h3>
+<div class="outline-text-3" id="text-4-2">
 <div class="important">
 \begin{equation}
 \begin{bmatrix} f_u \\ f_v \end{bmatrix} =
@@ -934,8 +759,8 @@ end
 With:
 </p>
 \begin{align}
-  G_{kp} &= \left( \frac{s^2}{{\omega_0^\prime}^2} + 2\xi^\prime \frac{s}{{\omega_0^\prime}^2} + 1 - \frac{\Omega}{\omega_0^\prime} \right)^2 + \left( 2 \frac{\Omega}{\omega_0^\prime}\frac{s}{\omega_0^\prime} \right)^2 \\
-  G_{kz} &= \left( \frac{s^2}{{\omega_0^\prime}^2} + \frac{k_p}{k + k_p} - \frac{\Omega^2}{{\omega_0^\prime}^2} \right) \left( \frac{s^2}{{\omega_0^\prime}^2} + 2\xi^\prime \frac{s}{{\omega_0^\prime}^2} + 1 - \frac{\Omega}{\omega_0^\prime} \right) + \left( 2 \frac{\Omega}{\omega_0^\prime}\frac{s}{\omega_0^\prime} \right)^2 \\
+  G_{kp} &= \left( \frac{s^2}{{\omega_0^\prime}^2} + 2\xi^\prime \frac{s}{{\omega_0^\prime}^2} + 1 - \frac{\Omega^2}{{\omega_0^\prime}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0^\prime}\frac{s}{\omega_0^\prime} \right)^2 \\
+  G_{kz} &= \left( \frac{s^2}{{\omega_0^\prime}^2} + \frac{k_p}{k + k_p} - \frac{\Omega^2}{{\omega_0^\prime}^2} \right) \left( \frac{s^2}{{\omega_0^\prime}^2} + 2\xi^\prime \frac{s}{{\omega_0^\prime}^2} + 1 - \frac{\Omega^2}{{\omega_0^\prime}^2} \right) + \left( 2 \frac{\Omega}{\omega_0^\prime}\frac{s}{\omega_0^\prime} \right)^2 \\
   G_{kc} &= \left( 2 \xi^\prime \frac{s}{\omega_0^\prime} + \frac{k}{k + k_p} \right) \left( 2 \frac{\Omega}{\omega_0^\prime}\frac{s}{\omega_0^\prime} \right)
 \end{align}
 <p>
@@ -948,68 +773,25 @@ where:
 
 </div>
 
-<div class="org-src-container">
-<pre class="src src-matlab">Giff_th = 1/( (m*s^2 + c*s + k + kp - m*W^2)^2 + (2*m*s*W)^2 )*[...
-                   (m*s^2 + c*s + k + kp - m*W^2)^2 + (2*m*s*W)^2 - (c*s + k)*(m*s^2 + c*s + k + kp - m*W^2), -(c*s + k)*(2*m*s*W);
-                   (c*s + k)*(2*m*s*W), (m*s^2 + c*s + k + kp - m*W^2)^2 + (2*m*s*W)^2 - (c*s + k)*(m*s^2 + c*s + k + kp - m*W^2)
-                   ];
-</pre>
-</div>
-
-<div class="org-src-container">
-<pre class="src src-matlab">w0p = sqrt((k + kp)/m);
-xip = c/(2*sqrt((k+kp)*m));
-
-Giff_th = 1/( (s^2/w0p^2 + 2*xip*s/w0p + 1 - W^2/w0p^2)^2 + (2*(s/w0p)*(W/w0p))^2 )*[...
-                   (s^2/w0p^2 + kp/(k + kp) - W^2/w0p^2)*(s^2/w0p^2 + 2*xip*s/w0p + 1 - W^2/w0p^2) + (2*(s/w0p)*(W/w0p))^2, -(2*xip*s/w0p + k/(k + kp))*(2*(s/w0p)*(W/w0p));
-                   (2*xip*s/w0p + k/(k + kp))*(2*(s/w0p)*(W/w0p)), (s^2/w0p^2 + kp/(k + kp) - W^2/w0p^2)*(s^2/w0p^2 + 2*xip*s/w0p + 1 - W^2/w0p^2) + (2*(s/w0p)*(W/w0p))^2
-                   ];
-
-Giff_th_b = 1/( (m*s^2 + c*s + k + kp - m*W^2)^2 + (2*m*s*W)^2 )*[...
-                   (m*s^2 + c*s + k + kp - m*W^2)^2 + (2*m*s*W)^2 - (c*s + k)*(m*s^2 + c*s + k + kp - m*W^2), -(c*s + k)*(2*m*s*W);
-                   (c*s + k)*(2*m*s*W), (m*s^2 + c*s + k + kp - m*W^2)^2 + (2*m*s*W)^2 - (c*s + k)*(m*s^2 + c*s + k + kp - m*W^2)
-                   ];
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org108335f" class="outline-3">
-<h3 id="org108335f"><span class="section-number-3">4.2</span> Plant Parameters</h3>
-<div class="outline-text-3" id="text-4-2">
 <p>
-Let&rsquo;s define initial values for the model.
+If we compare \(G_{kz}\) and \(G_{fz}\), we see that the spring in parallel adds a term \(\frac{k_p}{k + k_p}\).
+In order to have two complex conjugate zeros (instead of real zeros):
 </p>
-<div class="org-src-container">
-<pre class="src src-matlab">k = 1;    % Actuator Stiffness [N/m]
-c = 0.05; % Actuator Damping [N/(m/s)]
-m = 1;    % Payload mass [kg]
-</pre>
-</div>
-
-<div class="org-src-container">
-<pre class="src src-matlab">xi = c/(2*sqrt(k*m));
-w0 = sqrt(k/m); % [rad/s]
-</pre>
-</div>
+\begin{equation}
+  \frac{k_p}{k + k_p} - \frac{\Omega^2}{{\omega_0^\prime}^2} > 0
+\end{equation}
+<p>
+Which is equivalent to
+</p>
+\begin{equation}
+  k_p > m \Omega^2
+\end{equation}
 </div>
 </div>
 
-<div id="outline-container-org32f7060" class="outline-3">
-<h3 id="org32f7060"><span class="section-number-3">4.3</span> Schematic</h3>
+<div id="outline-container-org212aa9d" class="outline-3">
+<h3 id="org212aa9d"><span class="section-number-3">4.3</span> Physical Explanation</h3>
 <div class="outline-text-3" id="text-4-3">
-
-<div id="org6fe63c5" class="figure">
-<p><img src="figs-tikz/rotating_xy_platform_springs.png" alt="rotating_xy_platform_springs.png" />
-</p>
-<p><span class="figure-number">Figure 12: </span>Figure caption</p>
-</div>
-</div>
-</div>
-
-<div id="outline-container-orged2bad9" class="outline-3">
-<h3 id="orged2bad9"><span class="section-number-3">4.4</span> Physical Explanation</h3>
-<div class="outline-text-3" id="text-4-4">
 <ul class="org-ul">
 <li>Negative stiffness induced by gyroscopic effects</li>
 <li>Zeros of the open-loop &lt;=&gt; Poles of the subsystem with the force sensors removes</li>
@@ -1034,9 +816,87 @@ And thus, the stiffness in parallel should be such that:
 </div>
 </div>
 
-<div id="outline-container-org17ff45b" class="outline-3">
-<h3 id="org17ff45b"><span class="section-number-3">4.5</span> Effect of the parallel stiffness on the IFF plant</h3>
+<div id="outline-container-org964955e" class="outline-3">
+<h3 id="org964955e"><span class="section-number-3">4.4</span> Plant Parameters</h3>
+<div class="outline-text-3" id="text-4-4">
+<p>
+Let&rsquo;s define initial values for the model.
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">k = 1;    % Actuator Stiffness [N/m]
+c = 0.05; % Actuator Damping [N/(m/s)]
+m = 1;    % Payload mass [kg]
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">xi = c/(2*sqrt(k*m));
+w0 = sqrt(k/m); % [rad/s]
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6ba1fdd" class="outline-3">
+<h3 id="org6ba1fdd"><span class="section-number-3">4.5</span> Comparison of the Analytical Model and the Simscape Model</h3>
 <div class="outline-text-3" id="text-4-5">
+<p>
+The same transfer function from \([F_u, F_v]\) to \([f_u, f_v]\) is written down from the analytical model.
+</p>
+<div class="org-src-container">
+<pre class="src src-matlab">W = 0.1*w0; % [rad/s]
+
+kp = 1.5*m*W^2;
+cp = 0;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">open('rotating_frame.slx');
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">%% Name of the Simulink File
+mdl = 'rotating_frame';
+
+%% Input/Output definition
+clear io; io_i = 1;
+io(io_i) = linio([mdl, '/K'], 1, 'openinput');  io_i = io_i + 1;
+io(io_i) = linio([mdl, '/G'], 2, 'openoutput'); io_i = io_i + 1;
+
+Giff = linearize(mdl, io, 0);
+
+%% Input/Output definition
+Giff.InputName  = {'Fu', 'Fv'};
+Giff.OutputName = {'fu', 'fv'};
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">w0p = sqrt((k + kp)/m);
+xip = c/(2*sqrt((k+kp)*m));
+
+Giff_th = 1/( (s^2/w0p^2 + 2*xip*s/w0p + 1 - W^2/w0p^2)^2 + (2*(s/w0p)*(W/w0p))^2 ) * [ ...
+                   (s^2/w0p^2 + kp/(k + kp) - W^2/w0p^2)*(s^2/w0p^2 + 2*xip*s/w0p + 1 - W^2/w0p^2) + (2*(s/w0p)*(W/w0p))^2, -(2*xip*s/w0p + k/(k + kp))*(2*(s/w0p)*(W/w0p));
+                   (2*xip*s/w0p + k/(k + kp))*(2*(s/w0p)*(W/w0p)), (s^2/w0p^2 + kp/(k + kp) - W^2/w0p^2)*(s^2/w0p^2 + 2*xip*s/w0p + 1 - W^2/w0p^2) + (2*(s/w0p)*(W/w0p))^2 ];
+Giff_th.InputName  = {'Fu', 'Fv'};
+Giff_th.OutputName = {'fu', 'fv'};
+</pre>
+</div>
+
+
+<div id="org2497e2d" class="figure">
+<p><img src="figs/plant_iff_kp_comp_simscape_analytical.png" alt="plant_iff_kp_comp_simscape_analytical.png" />
+</p>
+<p><span class="figure-number">Figure 13: </span>Comparison of the transfer functions from \([F_u, F_v]\) to \([f_u, f_v]\) between the Simscape model and the analytical one</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org160adf1" class="outline-3">
+<h3 id="org160adf1"><span class="section-number-3">4.6</span> Effect of the parallel stiffness on the IFF plant</h3>
+<div class="outline-text-3" id="text-4-6">
 <p>
 The rotation speed is set to \(\Omega = 0.1 \omega_0\).
 </p>
@@ -1055,7 +915,7 @@ And the IFF plant (transfer function from \([F_u, F_v]\) to \([f_u, f_v]\)) is i
 </ul>
 
 <p>
-The results are shown in Figure <a href="#org287914f">13</a>.
+The results are shown in Figure <a href="#orgeae1497">14</a>.
 </p>
 
 <p>
@@ -1066,11 +926,12 @@ One can see that for \(k_p > m \Omega^2\), the systems shows alternating complex
 <pre class="src src-matlab">kp = 0;
 cp = 0;
 
-Giff = linearize(mdl, io, 0);
+w0p = sqrt((k + kp)/m);
+xip = c/(2*sqrt((k+kp)*m));
 
-%% Input/Output definition
-Giff.InputName  = {'Fu', 'Fv'};
-Giff.OutputName = {'fu', 'fv'};
+Giff = 1/( (s^2/w0p^2 + 2*xip*s/w0p + 1 - W^2/w0p^2)^2 + (2*(s/w0p)*(W/w0p))^2 ) * [ ...
+    (s^2/w0p^2 + kp/(k + kp) - W^2/w0p^2)*(s^2/w0p^2 + 2*xip*s/w0p + 1 - W^2/w0p^2) + (2*(s/w0p)*(W/w0p))^2, -(2*xip*s/w0p + k/(k + kp))*(2*(s/w0p)*(W/w0p));
+    (2*xip*s/w0p + k/(k + kp))*(2*(s/w0p)*(W/w0p)), (s^2/w0p^2 + kp/(k + kp) - W^2/w0p^2)*(s^2/w0p^2 + 2*xip*s/w0p + 1 - W^2/w0p^2) + (2*(s/w0p)*(W/w0p))^2];
 </pre>
 </div>
 
@@ -1078,11 +939,12 @@ Giff.OutputName = {'fu', 'fv'};
 <pre class="src src-matlab">kp = 0.5*m*W^2;
 cp = 0;
 
-Giff_s = linearize(mdl, io, 0);
+w0p = sqrt((k + kp)/m);
+xip = c/(2*sqrt((k+kp)*m));
 
-%% Input/Output definition
-Giff_s.InputName  = {'Fu', 'Fv'};
-Giff_s.OutputName = {'fu', 'fv'};
+Giff_s = 1/( (s^2/w0p^2 + 2*xip*s/w0p + 1 - W^2/w0p^2)^2 + (2*(s/w0p)*(W/w0p))^2 ) * [ ...
+    (s^2/w0p^2 + kp/(k + kp) - W^2/w0p^2)*(s^2/w0p^2 + 2*xip*s/w0p + 1 - W^2/w0p^2) + (2*(s/w0p)*(W/w0p))^2, -(2*xip*s/w0p + k/(k + kp))*(2*(s/w0p)*(W/w0p));
+    (2*xip*s/w0p + k/(k + kp))*(2*(s/w0p)*(W/w0p)), (s^2/w0p^2 + kp/(k + kp) - W^2/w0p^2)*(s^2/w0p^2 + 2*xip*s/w0p + 1 - W^2/w0p^2) + (2*(s/w0p)*(W/w0p))^2];
 </pre>
 </div>
 
@@ -1090,28 +952,29 @@ Giff_s.OutputName = {'fu', 'fv'};
 <pre class="src src-matlab">kp = 1.5*m*W^2;
 cp = 0;
 
-Giff_l = linearize(mdl, io, 0);
+w0p = sqrt((k + kp)/m);
+xip = c/(2*sqrt((k+kp)*m));
 
-%% Input/Output definition
-Giff_l.InputName  = {'Fu', 'Fv'};
-Giff_l.OutputName = {'fu', 'fv'};
+Giff_l = 1/( (s^2/w0p^2 + 2*xip*s/w0p + 1 - W^2/w0p^2)^2 + (2*(s/w0p)*(W/w0p))^2 ) * [ ...
+    (s^2/w0p^2 + kp/(k + kp) - W^2/w0p^2)*(s^2/w0p^2 + 2*xip*s/w0p + 1 - W^2/w0p^2) + (2*(s/w0p)*(W/w0p))^2, -(2*xip*s/w0p + k/(k + kp))*(2*(s/w0p)*(W/w0p));
+    (2*xip*s/w0p + k/(k + kp))*(2*(s/w0p)*(W/w0p)), (s^2/w0p^2 + kp/(k + kp) - W^2/w0p^2)*(s^2/w0p^2 + 2*xip*s/w0p + 1 - W^2/w0p^2) + (2*(s/w0p)*(W/w0p))^2];
 </pre>
 </div>
 
 
-<div id="org287914f" class="figure">
+<div id="orgeae1497" class="figure">
 <p><img src="figs/plant_iff_kp.png" alt="plant_iff_kp.png" />
 </p>
-<p><span class="figure-number">Figure 13: </span>Transfer function from \([F_u, F_v]\) to \([f_u, f_v]\) for \(k_p = 0\), \(k_p < m \Omega^2\) and \(k_p > m \Omega^2\)</p>
+<p><span class="figure-number">Figure 14: </span>Transfer function from \([F_u, F_v]\) to \([f_u, f_v]\) for \(k_p = 0\), \(k_p < m \Omega^2\) and \(k_p > m \Omega^2\)</p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgc2b6bef" class="outline-3">
-<h3 id="orgc2b6bef"><span class="section-number-3">4.6</span> IFF when adding a spring in parallel</h3>
-<div class="outline-text-3" id="text-4-6">
+<div id="outline-container-org00a3666" class="outline-3">
+<h3 id="org00a3666"><span class="section-number-3">4.7</span> IFF when adding a spring in parallel</h3>
+<div class="outline-text-3" id="text-4-7">
 <p>
-In Figure <a href="#orgeee6dae">14</a> is displayed the Root Locus in the three considered cases with
+In Figure <a href="#org2f5b5c5">15</a> is displayed the Root Locus in the three considered cases with
 </p>
 \begin{equation}
   K_{\text{IFF}} = \frac{g}{s} \begin{bmatrix}
@@ -1132,17 +995,17 @@ Thus, decentralized IFF controller with pure integrators can be used if:
 \end{equation}
 
 
-<div id="orgeee6dae" class="figure">
+<div id="org2f5b5c5" class="figure">
 <p><img src="figs/root_locus_iff_kp.png" alt="root_locus_iff_kp.png" />
 </p>
-<p><span class="figure-number">Figure 14: </span>Root Locus</p>
+<p><span class="figure-number">Figure 15: </span>Root Locus</p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orga5a387a" class="outline-3">
-<h3 id="orga5a387a"><span class="section-number-3">4.7</span> Effect of \(k_p\) on the attainable damping</h3>
-<div class="outline-text-3" id="text-4-7">
+<div id="outline-container-org938d786" class="outline-3">
+<h3 id="org938d786"><span class="section-number-3">4.8</span> Effect of \(k_p\) on the attainable damping</h3>
+<div class="outline-text-3" id="text-4-8">
 <p>
 However, having large values of \(k_p\) may:
 </p>
@@ -1152,11 +1015,10 @@ However, having large values of \(k_p\) may:
 </ul>
 
 <p>
-To study the second point, Root Locus plots for the following values of \(k_p\) are shown in Figure <a href="#org72a5da1">15</a>.
+To study the second point, Root Locus plots for the following values of \(k_p\) are shown in Figure <a href="#orge668d9f">16</a>.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">kps = [1, 5, 10, 50]*m*W^2;
-cp = 0.01;
+<pre class="src src-matlab">kps = [2, 20, 40]*m*W^2;
 </pre>
 </div>
 
@@ -1165,17 +1027,17 @@ It is shown that large values of \(k_p\) decreases the attainable damping.
 </p>
 
 
-<div id="org72a5da1" class="figure">
+<div id="orge668d9f" class="figure">
 <p><img src="figs/root_locus_iff_kps.png" alt="root_locus_iff_kps.png" />
 </p>
-<p><span class="figure-number">Figure 15: </span>Root Locus plot</p>
+<p><span class="figure-number">Figure 16: </span>Root Locus plot</p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org2d75241" class="outline-3">
-<h3 id="org2d75241"><span class="section-number-3">4.8</span> Optimal Gain</h3>
-<div class="outline-text-3" id="text-4-8">
+<div id="outline-container-org9f2b242" class="outline-3">
+<h3 id="org9f2b242"><span class="section-number-3">4.9</span> Optimal Gain</h3>
+<div class="outline-text-3" id="text-4-9">
 <p>
 Let&rsquo;s take \(k_p = 5 m \Omega^2\) and find the optimal IFF control gain \(g\) such that maximum damping are added to the poles of the closed loop system.
 </p>
@@ -1184,7 +1046,12 @@ Let&rsquo;s take \(k_p = 5 m \Omega^2\) and find the optimal IFF control gain \(
 <pre class="src src-matlab">kp = 5*m*W^2;
 cp = 0.01;
 
-Giff = linearize(mdl, io, 0);
+w0p = sqrt((k + kp)/m);
+xip = c/(2*sqrt((k+kp)*m));
+
+Giff = 1/( (s^2/w0p^2 + 2*xip*s/w0p + 1 - W^2/w0p^2)^2 + (2*(s/w0p)*(W/w0p))^2 ) * [ ...
+    (s^2/w0p^2 + kp/(k + kp) - W^2/w0p^2)*(s^2/w0p^2 + 2*xip*s/w0p + 1 - W^2/w0p^2) + (2*(s/w0p)*(W/w0p))^2, -(2*xip*s/w0p + k/(k + kp))*(2*(s/w0p)*(W/w0p));
+    (2*xip*s/w0p + k/(k + kp))*(2*(s/w0p)*(W/w0p)), (s^2/w0p^2 + kp/(k + kp) - W^2/w0p^2)*(s^2/w0p^2 + 2*xip*s/w0p + 1 - W^2/w0p^2) + (2*(s/w0p)*(W/w0p))^2 ];
 </pre>
 </div>
 
@@ -1192,7 +1059,7 @@ Giff = linearize(mdl, io, 0);
 <pre class="src src-matlab">opt_zeta = 0;
 opt_gain = 0;
 
-gains = logspace(-2, 4, 100);
+gains = logspace(-2, 4, 1000);
 
 for g = gains
     Kiff = (g/s)*eye(2);
@@ -1208,26 +1075,38 @@ end
 </div>
 
 
-<div id="org6c786cf" class="figure">
+<div id="org574d4a8" class="figure">
 <p><img src="figs/root_locus_opt_gain_iff_kp.png" alt="root_locus_opt_gain_iff_kp.png" />
 </p>
-<p><span class="figure-number">Figure 16: </span>Root Locus for \(k_p = 5 m \Omega^2\) and the poles corresponding to the identified optimal gain</p>
+<p><span class="figure-number">Figure 17: </span>Root Locus for \(k_p = 5 m \Omega^2\) and the poles corresponding to the identified optimal gain</p>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgcdcde0b" class="outline-2">
-<h2 id="orgcdcde0b"><span class="section-number-2">5</span> Direct Velocity Feedback</h2>
+<div id="outline-container-org17e3e2b" class="outline-2">
+<h2 id="org17e3e2b"><span class="section-number-2">5</span> Direct Velocity Feedback</h2>
 <div class="outline-text-2" id="text-5">
 <p>
-<a id="org99ddc3d"></a>
+<a id="org4225b3c"></a>
 </p>
 </div>
 
-<div id="outline-container-org720c634" class="outline-3">
-<h3 id="org720c634"><span class="section-number-3">5.1</span> Equations</h3>
+<div id="outline-container-orgfcb13b7" class="outline-3">
+<h3 id="orgfcb13b7"><span class="section-number-3">5.1</span> Schematic</h3>
 <div class="outline-text-3" id="text-5-1">
+
+<div id="orgb8834d3" class="figure">
+<p><img src="figs-tikz/system_dvf.png" alt="system_dvf.png" />
+</p>
+<p><span class="figure-number">Figure 18: </span>Figure caption</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgfff9982" class="outline-3">
+<h3 id="orgfff9982"><span class="section-number-3">5.2</span> Equations</h3>
+<div class="outline-text-3" id="text-5-2">
 <p>
 The sensed relative velocity are equal to:
 </p>
@@ -1260,9 +1139,9 @@ With:
 </div>
 </div>
 
-<div id="outline-container-orgf603713" class="outline-3">
-<h3 id="orgf603713"><span class="section-number-3">5.2</span> Plant Parameters</h3>
-<div class="outline-text-3" id="text-5-2">
+<div id="outline-container-org69a87c1" class="outline-3">
+<h3 id="org69a87c1"><span class="section-number-3">5.3</span> Plant Parameters</h3>
+<div class="outline-text-3" id="text-5-3">
 <p>
 Let&rsquo;s define initial values for the model.
 </p>
@@ -1281,14 +1160,19 @@ w0 = sqrt(k/m); % [rad/s]
 </div>
 </div>
 
-<div id="outline-container-org8301d5f" class="outline-3">
-<h3 id="org8301d5f"><span class="section-number-3">5.3</span> Plant - Bode Plot</h3>
-<div class="outline-text-3" id="text-5-3">
+<div id="outline-container-org04a4b56" class="outline-3">
+<h3 id="org04a4b56"><span class="section-number-3">5.4</span> Comparison of the Analytical Model and the Simscape Model</h3>
+<div class="outline-text-3" id="text-5-4">
 <p>
 The rotating speed is set to \(\Omega = 0.1 \omega_0\).
 </p>
 <div class="org-src-container">
 <pre class="src src-matlab">W = 0.1*w0;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">open('rotating_frame.slx');
 </pre>
 </div>
 
@@ -1314,12 +1198,7 @@ Gdvf.InputName  = {'Fu', 'Fv'};
 Gdvf.OutputName = {'Vu', 'Vv'};
 </pre>
 </div>
-</div>
-</div>
 
-<div id="outline-container-org9e4d88f" class="outline-3">
-<h3 id="org9e4d88f"><span class="section-number-3">5.4</span> Comparison of the Analytical Model and the Simscape Model</h3>
-<div class="outline-text-3" id="text-5-4">
 <p>
 The same transfer function from \([F_u, F_v]\) to \([v_u, v_v]\) is written down from the analytical model.
 </p>
@@ -1334,20 +1213,20 @@ Gdvf_th.OutputName = {'vu', 'vv'};
 </div>
 
 <p>
-The two are compared in Figure <a href="#org874c82b">5</a> and found to perfectly match.
+The two are compared in Figure <a href="#org19e2897">5</a> and found to perfectly match.
 </p>
 
 
-<div id="orgdc81796" class="figure">
+<div id="org982b3a7" class="figure">
 <p><img src="figs/plant_dvf_comp_simscape_analytical.png" alt="plant_dvf_comp_simscape_analytical.png" />
 </p>
-<p><span class="figure-number">Figure 17: </span>Comparison of the transfer functions from \([F_u, F_v]\) to \([v_u, v_v]\) between the Simscape model and the analytical one</p>
+<p><span class="figure-number">Figure 19: </span>Comparison of the transfer functions from \([F_u, F_v]\) to \([v_u, v_v]\) between the Simscape model and the analytical one</p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orga076c03" class="outline-3">
-<h3 id="orga076c03"><span class="section-number-3">5.5</span> Root Locus</h3>
+<div id="outline-container-orgee56528" class="outline-3">
+<h3 id="orgee56528"><span class="section-number-3">5.5</span> Root Locus</h3>
 <div class="outline-text-3" id="text-5-5">
 <p>
 The Decentralized Direct Velocity Feedback controller consist of a pure gain on the diagonal:
@@ -1360,46 +1239,36 @@ The Decentralized Direct Velocity Feedback controller consist of a pure gain on 
 \end{equation}
 
 <p>
-The corresponding Root Locus plots for the following rotating speeds are shown in Figure <a href="#org716f855">18</a>.
+The corresponding Root Locus plots for the following rotating speeds are shown in Figure <a href="#org5a35c3d">20</a>.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">Ws = [0, 0.1, 0.5, 0.8, 1.1]*w0; % Rotating Speeds [rad/s]
+<pre class="src src-matlab">Ws = [0, 0.2, 0.7, 1.1]*w0; % Rotating Speeds [rad/s]
 </pre>
 </div>
 
 <p>
 It is shown that for rotating speed \(\Omega < \omega_0\), the closed loop system is unconditionally stable and arbitrary damping can be added to the poles.
 </p>
-<div class="org-src-container">
-<pre class="src src-matlab">gains = logspace(-2, 2, 100);
-</pre>
-</div>
-</div>
 
-<div id="outline-container-orgaeec22e" class="outline-5">
-<h5 id="orgaeec22e"><span class="section-number-5">5.5.0.1</span> Root Locus Plots</h5>
-<div class="outline-text-5" id="text-5-5-0-1">
-
-<div id="org716f855" class="figure">
+<div id="org5a35c3d" class="figure">
 <p><img src="figs/root_locus_dvf.png" alt="root_locus_dvf.png" />
 </p>
-<p><span class="figure-number">Figure 18: </span>Root Locus for the Decentralized Direct Velocity Feedback controller. Several rotating speed are shown.</p>
-</div>
+<p><span class="figure-number">Figure 20: </span>Root Locus for the Decentralized Direct Velocity Feedback controller. Several rotating speed are shown.</p>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org4e87780" class="outline-2">
-<h2 id="org4e87780"><span class="section-number-2">6</span> Comparison</h2>
+<div id="outline-container-orge570697" class="outline-2">
+<h2 id="orge570697"><span class="section-number-2">6</span> Comparison</h2>
 <div class="outline-text-2" id="text-6">
 <p>
-<a id="org2e13fe1"></a>
+<a id="org964f93b"></a>
 </p>
 </div>
 
-<div id="outline-container-org6d1e549" class="outline-3">
-<h3 id="org6d1e549"><span class="section-number-3">6.1</span> Plant Parameters</h3>
+<div id="outline-container-orgb18989f" class="outline-3">
+<h3 id="orgb18989f"><span class="section-number-3">6.1</span> Plant Parameters</h3>
 <div class="outline-text-3" id="text-6-1">
 <p>
 Let&rsquo;s define initial values for the model.
@@ -1427,88 +1296,60 @@ The rotating speed is set to \(\Omega = 0.1 \omega_0\).
 </div>
 </div>
 
-<div id="outline-container-orgb2d5912" class="outline-3">
-<h3 id="orgb2d5912"><span class="section-number-3">6.2</span> Root Locus</h3>
+<div id="outline-container-org5627e24" class="outline-3">
+<h3 id="org5627e24"><span class="section-number-3">6.2</span> Root Locus</h3>
 <div class="outline-text-3" id="text-6-2">
+<p>
+IFF with High Pass Filter
+</p>
 <div class="org-src-container">
-<pre class="src src-matlab">wi = 0.1*w0;
+<pre class="src src-matlab">wi = 0.1*w0; % [rad/s]
+
+Giff = 1/(((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))^2 + (2*W*s/(w0^2))^2) * ...
+        [(s^2/w0^2 - W^2/w0^2)*((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2)) + (2*W*s/(w0^2))^2, - (2*xi*s/w0 + 1)*2*W*s/(w0^2) ; ...
+         (2*xi*s/w0 + 1)*2*W*s/(w0^2), (s^2/w0^2 - W^2/w0^2)*((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))+ (2*W*s/(w0^2))^2];
 </pre>
 </div>
 
-<div class="org-src-container">
-<pre class="src src-matlab">%% Name of the Simulink File
-mdl = 'rotating_frame';
-
-%% Input/Output definition
-clear io; io_i = 1;
-io(io_i) = linio([mdl, '/K'], 1, 'openinput');  io_i = io_i + 1;
-io(io_i) = linio([mdl, '/G'], 2, 'openoutput'); io_i = io_i + 1;
-</pre>
-</div>
-
-<div class="org-src-container">
-<pre class="src src-matlab">Giff = linearize(mdl, io, 0);
-
-%% Input/Output definition
-Giff.InputName  = {'Fu', 'Fv'};
-Giff.OutputName = {'Fmu', 'Fmv'};
-</pre>
-</div>
+<p>
+IFF With parallel Stiffness
+</p>
 <div class="org-src-container">
 <pre class="src src-matlab">kp = 5*m*W^2;
-cp = 0.01;
+k = k - kp;
+
+w0p = sqrt((k + kp)/m);
+xip = c/(2*sqrt((k+kp)*m));
+
+Giff_kp = 1/( (s^2/w0p^2 + 2*xip*s/w0p + 1 - W^2/w0p^2)^2 + (2*(s/w0p)*(W/w0p))^2 ) * [ ...
+                   (s^2/w0p^2 + kp/(k + kp) - W^2/w0p^2)*(s^2/w0p^2 + 2*xip*s/w0p + 1 - W^2/w0p^2) + (2*(s/w0p)*(W/w0p))^2, -(2*xip*s/w0p + k/(k + kp))*(2*(s/w0p)*(W/w0p));
+                   (2*xip*s/w0p + k/(k + kp))*(2*(s/w0p)*(W/w0p)), (s^2/w0p^2 + kp/(k + kp) - W^2/w0p^2)*(s^2/w0p^2 + 2*xip*s/w0p + 1 - W^2/w0p^2) + (2*(s/w0p)*(W/w0p))^2 ];
+
+k = k + kp;
 </pre>
 </div>
 
+<p>
+DVF
+</p>
 <div class="org-src-container">
-<pre class="src src-matlab">%% Name of the Simulink File
-mdl = 'rotating_frame';
-
-%% Input/Output definition
-clear io; io_i = 1;
-io(io_i) = linio([mdl, '/K'], 1, 'openinput');  io_i = io_i + 1;
-io(io_i) = linio([mdl, '/G'], 2, 'openoutput'); io_i = io_i + 1;
+<pre class="src src-matlab">Gdvf = (s/k)/(((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))^2 + (2*W*s/(w0^2))^2) * ...
+       [(s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2), 2*W*s/(w0^2) ; ...
+        -2*W*s/(w0^2), (s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2)];
 </pre>
 </div>
 
-<div class="org-src-container">
-<pre class="src src-matlab">Giff_kp = linearize(mdl, io, 0);
 
-%% Input/Output definition
-Giff_kp.InputName  = {'Fu', 'Fv'};
-Giff_kp.OutputName = {'Fmu', 'Fmv'};
-</pre>
-</div>
-<div class="org-src-container">
-<pre class="src src-matlab">%% Name of the Simulink File
-mdl = 'rotating_frame';
-
-%% Input/Output definition
-clear io; io_i = 1;
-io(io_i) = linio([mdl, '/K'], 1, 'openinput');  io_i = io_i + 1;
-io(io_i) = linio([mdl, '/G'], 1, 'openoutput'); io_i = io_i + 1;
-</pre>
-</div>
-
-<div class="org-src-container">
-<pre class="src src-matlab">Gdvf = linearize(mdl, io, 0);
-
-%% Input/Output definition
-Gdvf.InputName  = {'Fu', 'Fv'};
-Gdvf.OutputName = {'Vu', 'Vv'};
-</pre>
-</div>
-
-<div id="org4c2835b" class="figure">
+<div id="orgad62c70" class="figure">
 <p><img src="figs/comp_root_locus.png" alt="comp_root_locus.png" />
 </p>
-<p><span class="figure-number">Figure 19: </span>Root Locus plot - Comparison of IFF with additional high pass filter, IFF with additional parallel stiffness and DVF</p>
+<p><span class="figure-number">Figure 21: </span>Root Locus plot - Comparison of IFF with additional high pass filter, IFF with additional parallel stiffness and DVF</p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org96ec842" class="outline-3">
-<h3 id="org96ec842"><span class="section-number-3">6.3</span> Controllers - Optimal Gains</h3>
+<div id="outline-container-org10d8811" class="outline-3">
+<h3 id="org10d8811"><span class="section-number-3">6.3</span> Controllers - Optimal Gains</h3>
 <div class="outline-text-3" id="text-6-3">
 <p>
 In order to compare to three considered Active Damping techniques, gains that yield maximum damping of all the modes are computed for each case.
@@ -1544,7 +1385,7 @@ The obtained damping ratio and control are shown below.
 
 <tr>
 <td class="org-left">IFF with \(k_p\)</td>
-<td class="org-right">0.84</td>
+<td class="org-right">0.83</td>
 <td class="org-right">2.01</td>
 </tr>
 
@@ -1558,12 +1399,17 @@ The obtained damping ratio and control are shown below.
 </div>
 </div>
 
-<div id="outline-container-org456f89e" class="outline-3">
-<h3 id="org456f89e"><span class="section-number-3">6.4</span> Transmissibility</h3>
+<div id="outline-container-orgb140a72" class="outline-3">
+<h3 id="orgb140a72"><span class="section-number-3">6.4</span> Transmissibility</h3>
 <div class="outline-text-3" id="text-6-4">
 <p>
-<a id="orgfd3ae27"></a>
+<a id="org71a7e9d"></a>
 </p>
+
+<div class="org-src-container">
+<pre class="src src-matlab">open('rotating_frame.slx');
+</pre>
+</div>
 <div class="org-src-container">
 <pre class="src src-matlab">%% Name of the Simulink File
 mdl = 'rotating_frame';
@@ -1662,19 +1508,19 @@ Tdvf.OutputName = {'Dx', 'Dy'};
 </pre>
 </div>
 
-<div id="orgcb12ee5" class="figure">
+<div id="orgba0065b" class="figure">
 <p><img src="figs/comp_transmissibility.png" alt="comp_transmissibility.png" />
 </p>
-<p><span class="figure-number">Figure 20: </span>Comparison of the transmissibility</p>
+<p><span class="figure-number">Figure 22: </span>Comparison of the transmissibility</p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org9ae98b1" class="outline-3">
-<h3 id="org9ae98b1"><span class="section-number-3">6.5</span> Compliance</h3>
+<div id="outline-container-org998dedd" class="outline-3">
+<h3 id="org998dedd"><span class="section-number-3">6.5</span> Compliance</h3>
 <div class="outline-text-3" id="text-6-5">
 <p>
-<a id="orgf4bc970"></a>
+<a id="org783dbb9"></a>
 </p>
 <div class="org-src-container">
 <pre class="src src-matlab">%% Name of the Simulink File
@@ -1741,20 +1587,20 @@ Cdvf.OutputName = {'Dx', 'Dy'};
 </pre>
 </div>
 
-<div id="org3b04d90" class="figure">
+<div id="orgf44a424" class="figure">
 <p><img src="figs/comp_compliance.png" alt="comp_compliance.png" />
 </p>
-<p><span class="figure-number">Figure 21: </span>Comparison of the obtained Compliance</p>
+<p><span class="figure-number">Figure 23: </span>Comparison of the obtained Compliance</p>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgd03ac7f" class="outline-2">
-<h2 id="orgd03ac7f"><span class="section-number-2">7</span> Notations</h2>
+<div id="outline-container-org1cac780" class="outline-2">
+<h2 id="org1cac780"><span class="section-number-2">7</span> Notations</h2>
 <div class="outline-text-2" id="text-7">
 <p>
-<a id="orgead2db3"></a>
+<a id="orgf5b5456"></a>
 </p>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
@@ -1953,166 +1799,10 @@ Cdvf.OutputName = {'Dx', 'Dy'};
 </table>
 </div>
 </div>
-
-<div id="outline-container-orgdc36b6b" class="outline-2">
-<h2 id="orgdc36b6b"><span class="section-number-2">8</span> Function</h2>
-<div class="outline-text-2" id="text-8">
-</div>
-<div id="outline-container-org1b97ee6" class="outline-3">
-<h3 id="org1b97ee6"><span class="section-number-3">8.1</span> Sort Poles for the Root Locus</h3>
-<div class="outline-text-3" id="text-8-1">
-<p>
-<a id="orgade3073"></a>
-</p>
-
-<p>
-This Matlab function is accessible <a href="src/rootLocusPolesSorted.m">here</a>.
-</p>
-</div>
-
-<div id="outline-container-orgd432ea5" class="outline-4">
-<h4 id="orgd432ea5">Function description</h4>
-<div class="outline-text-4" id="text-orgd432ea5">
-<div class="org-src-container">
-<pre class="src src-matlab">function [poles] = rootLocusPolesSorted(G, K, gains, args)
-% rootLocusPolesSorted -
-%
-% Syntax: [poles] = rootLocusPolesSorted(G, K, gains, args)
-%
-% Inputs:
-%    - G, K, gains, args -
-%
-% Outputs:
-%    - poles -
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org81644c0" class="outline-4">
-<h4 id="org81644c0">Optional Parameters</h4>
-<div class="outline-text-4" id="text-org81644c0">
-<div class="org-src-container">
-<pre class="src src-matlab">arguments
-    G
-    K
-    gains
-    args.minreal double {mustBeNumericOrLogical} = false
-    args.p_half  double {mustBeNumericOrLogical} = false
-    args.d_max   double {mustBeNumeric} = -1
-end
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-orgf223cdb" class="outline-4">
-<h4 id="orgf223cdb">Function</h4>
-<div class="outline-text-4" id="text-orgf223cdb">
-<div class="org-src-container">
-<pre class="src src-matlab">if args.minreal
-    p1 = pole(minreal(feedback(G, gains(1)*K)));
-    [~, i_uniq] = uniquetol([real(p1), imag(p1)], 1e-10, 'ByRows', true);
-    p1 = p1(i_uniq);
-
-    poles = zeros(length(p1), length(gains));
-    poles(:, 1) = p1;
-else
-    p1 = pole(feedback(G, gains(1)*K));
-    [~, i_uniq] = uniquetol([real(p1), imag(p1)], 1e-10, 'ByRows', true);
-    p1 = p1(i_uniq);
-
-    poles = zeros(length(p1), length(gains));
-    poles(:, 1) = p1;
-end
-</pre>
-</div>
-
-<div class="org-src-container">
-<pre class="src src-matlab">if args.minreal
-    p2 = pole(minreal(feedback(G, gains(2)*K)));
-    [~, i_uniq] = uniquetol([real(p2), imag(p2)], 1e-10, 'ByRows', true);
-    p2 = p2(i_uniq);
-    poles(:, 2) = p2;
-else
-    p2 = pole(feedback(G, gains(2)*K));
-    [~, i_uniq] = uniquetol([real(p2), imag(p2)], 1e-10, 'ByRows', true);
-    p2 = p2(i_uniq);
-    poles(:, 2) = p2;
-end
-</pre>
-</div>
-
-<div class="org-src-container">
-<pre class="src src-matlab">for g_i = 3:length(gains)
-    % Estimated value of the poles
-    poles_est = poles(:, g_i-1) + (poles(:, g_i-1) - poles(:, g_i-2))*(gains(g_i) - gains(g_i-1))/(gains(g_i-1) - gains(g_i - 2));
-
-    % New values for the poles
-    poles_gi = pole(feedback(G, gains(g_i)*K));
-    [~, i_uniq] = uniquetol([real(poles_gi), imag(poles_gi)], 1e-10, 'ByRows', true);
-    poles_gi = poles_gi(i_uniq);
-
-    % Array of distances between all the poles
-    poles_dist = sqrt((poles_est-poles_gi.').*conj(poles_est-poles_gi.'));
-
-    % Get indices corresponding to distances from lowest to highest
-    [~, c] = sort(min(poles_dist));
-
-    as = 1:length(poles_gi);
-
-    % for each column of poles_dist corresponding to the i'th pole
-    % with closest previous poles
-    for p_i = c
-        % Get the indice a_i of the previous pole that is the closest
-        % to pole c(p_i)
-        [~, a_i] = min(poles_dist(:, p_i));
-
-        poles(as(a_i), g_i) = poles_gi(p_i);
-
-        % Remove old poles that are already matched
-        % poles_gi(as(a_i), :) = [];
-        poles_dist(a_i, :) = [];
-        as(a_i) = [];
-    end
-end
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-orga51595e" class="outline-4">
-<h4 id="orga51595e">Remove useless poles</h4>
-<div class="outline-text-4" id="text-orga51595e">
-<div class="org-src-container">
-<pre class="src src-matlab">if args.d_max &gt; 0
-    poles = poles(max(abs(poles(:, 2:end) - poles(:, 1:end-1))') &gt; args.d_max, :);
-end
-
-if args.p_half
-    poles = poles(1:round(end/2), :);
-end
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org496fb30" class="outline-4">
-<h4 id="org496fb30">Sort poles</h4>
-<div class="outline-text-4" id="text-org496fb30">
-<div class="org-src-container">
-<pre class="src src-matlab">[~, s_p] = sort(imag(poles(:,1)), 'descend');
-poles = poles(s_p, :);
-</pre>
-</div>
-</div>
-</div>
-</div>
-</div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Thomas Dehaeze</p>
-<p class="date">Created: 2020-06-18 jeu. 11:51</p>
+<p class="date">Created: 2020-06-24 mer. 08:44</p>
 </div>
 </body>
 </html>

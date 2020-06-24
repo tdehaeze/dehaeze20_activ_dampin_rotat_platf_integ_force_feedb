@@ -55,11 +55,11 @@
 #+end_src
 
 ** System description
-The system consists of one 2 degree of freedom translation stage on top of a spindle (figure [[fig:rotating_xy_platform]]).
+The system consists of one 2 degree of freedom translation stage on top of a spindle (figure [[fig:system]]).
 
-#+name: fig:rotating_xy_platform
+#+name: fig:system
 #+caption: Schematic of the studied system
-[[file:figs-tikz/rotating_xy_platform.png]]
+[[file:figs-tikz/system.png]]
 
 The control inputs are the forces applied by the actuators of the translation stage ($F_u$ and $F_v$).
 As the translation stage is rotating around the Z axis due to the spindle, the forces are applied along $\vec{i}_u$ and $\vec{i}_v$.
@@ -67,7 +67,7 @@ As the translation stage is rotating around the Z axis due to the spindle, the f
 The measurement is either the $x-y$ displacement of the object located on top of the translation stage or the $u-v$ displacement of the sample with respect to a fixed reference frame.
 
 ** Equations
-Based on the Figure [[fig:rotating_xy_platform]], the equations of motions are:
+Based on the Figure [[fig:system]], the equations of motions are:
 #+begin_important
 \begin{equation}
 \begin{bmatrix} d_u \\ d_v \end{bmatrix} =
@@ -413,6 +413,12 @@ They are compared in Figure [[fig:plant_compare_rotating_speed]].
   addpath('./matlab/');
   addpath('./src/');
 #+end_src
+
+** Schematic
+
+#+name: fig:system_iff
+#+caption: Figure caption
+[[file:figs-tikz/system_iff.pdf]]
 
 ** Plant Parameters
 Let's define initial values for the model.
@@ -1191,9 +1197,9 @@ To find the optimum, the gain that maximize the simultaneous damping of the mode
 
 ** Schematic
 
-#+name: fig:rotating_xy_platform_springs
+#+name: fig:system_parallel_springs
 #+caption: Figure caption
-[[file:figs-tikz/rotating_xy_platform_springs.png]]
+[[file:figs-tikz/system_parallel_springs.png]]
 
 ** Equations
 #+begin_important
@@ -1902,6 +1908,12 @@ Let's take $k_p = 5 m \Omega^2$ and find the optimal IFF control gain $g$ such t
   addpath('./matlab/');
   addpath('./src/');
 #+end_src
+
+** Schematic
+
+#+name: fig:system_dvf
+#+caption: Figure caption
+[[file:figs-tikz/system_dvf.png]]
 
 ** Equations
 The sensed relative velocity are equal to:
@@ -2730,7 +2742,7 @@ The obtained damping ratio and control are shown below.
 | IFF Controller | $\bm{K}_\text{IFF}(s)$                         | =Kiff= |         |
 | DVF Controller | $\bm{K}_\text{DVF}(s)$                         | =Kdvf= |         |
 
-* Function
+* Functions                                                         :noexport:
 ** Sort Poles for the Root Locus
 :PROPERTIES:
 :header-args:matlab+: :tangle src/rootLocusPolesSorted.m
