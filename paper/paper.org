@@ -19,21 +19,22 @@
 #+LATEX_HEADER: \usepackage{amsmath,amssymb,amsfonts, cases}
 #+LATEX_HEADER: \usepackage{algorithmic, graphicx, textcomp}
 #+LATEX_HEADER: \usepackage{xcolor, import, hyperref}
+#+LATEX_HEADER: \usepackage{subcaption}
 #+LATEX_HEADER: \usepackage[USenglish]{babel}
+
 #+LATEX_HEADER_EXTRA: \usepackage{tikz}
 #+LATEX_HEADER_EXTRA: \usetikzlibrary{shapes.misc}
-
 
 #+LATEX_HEADER: \setcounter{footnote}{1}
 #+LATEX_HEADER: \input{config.tex}
 :END:
 
-* LaTeX Config                                                     :noexport:
+* LaTeX Config                                                      :noexport:
 #+begin_src latex :tangle config.tex
 
 #+end_src
 
-* Build                                                            :noexport:
+* Build                                                             :noexport:
 #+NAME: startblock
 #+BEGIN_SRC emacs-lisp :results none
   (add-to-list 'org-latex-classes
