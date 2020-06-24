@@ -22,8 +22,8 @@ The PDF version of the paper is accessible [[file:paper/paper.pdf][here]].
 :END:
 The Matlab scripts that permits to obtain all the results presented in the paper are accessible [[file:matlab/index.org][here]].
 
-* Tikz Figures
+* Figures
 :PROPERTIES:
 :UNNUMBERED: t
 :END:
-All the figures in the paper are generated using [[https://sourceforge.net/projects/pgf/][TikZ]]. The code snippets that was used to generate the figures are accessible [[file:tikz/index.org][here]].
+All the figures in the paper are generated using either [[https://sourceforge.net/projects/pgf/][TikZ]] or [[https://inkscape.org/][Inkscape]]. The code snippets that was used to generate the figures are accessible [[file:tikz/index.org][here]].
