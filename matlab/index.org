@@ -1395,7 +1395,6 @@ One can see that for $k_p > m \Omega^2$, the systems shows alternating complex c
 
 #+begin_src matlab
   kp = 0;
-  cp = 0;
 
   w0p = sqrt((k + kp)/m);
   xip = c/(2*sqrt((k+kp)*m));
@@ -1407,7 +1406,7 @@ One can see that for $k_p > m \Omega^2$, the systems shows alternating complex c
 
 #+begin_src matlab
   kp = 0.5*m*W^2;
-  cp = 0;
+  k = 1 - kp;
 
   w0p = sqrt((k + kp)/m);
   xip = c/(2*sqrt((k+kp)*m));
@@ -1419,7 +1418,7 @@ One can see that for $k_p > m \Omega^2$, the systems shows alternating complex c
 
 #+begin_src matlab
   kp = 1.5*m*W^2;
-  cp = 0;
+  k = 1 - kp;
 
   w0p = sqrt((k + kp)/m);
   xip = c/(2*sqrt((k+kp)*m));
@@ -1442,6 +1441,7 @@ One can see that for $k_p > m \Omega^2$, the systems shows alternating complex c
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
   set(gca, 'XTickLabel',[]); ylabel('Magnitude [N/N]');
+  ylim([1e-5, 2e1]);
 
   ax2 = subplot(2, 1, 2);
   hold on;
@@ -1704,6 +1704,7 @@ It is shown that large values of $k_p$ decreases the attainable damping.
   hold on;
   for kp_i = 1:length(kps)
       kp = kps(kp_i);
+      k = 1 - kp;
 
       w0p = sqrt((k + kp)/m);
       xip = c/(2*sqrt((k+kp)*m));
@@ -1791,7 +1792,7 @@ Let's take $k_p = 5 m \Omega^2$ and find the optimal IFF control gain $g$ such t
 
 #+begin_src matlab
   kp = 5*m*W^2;
-  cp = 0.01;
+  k = 1 - kp;
 
   w0p = sqrt((k + kp)/m);
   xip = c/(2*sqrt((k+kp)*m));

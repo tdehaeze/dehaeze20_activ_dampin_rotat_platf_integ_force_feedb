@@ -192,13 +192,11 @@ Configuration file is accessible [[file:config.org][here]].
       % Force Sensors
       \draw[fill=white] ($(au) + (-0.2, -0.5)$) rectangle ($(au) + (0, 0.5)$);
       \draw[] ($(au) + (-0.2, -0.5)$)coordinate(actu) -- ($(au) + (0,  0.5)$);
-      \draw[] ($(au) + (-0.2,  0.5)$)coordinate(ku) node[above=0.1, rotate=\thetau]{$f_{u}$}   -- ($(au) + (0, -0.5)$);
-      \node[above, rotate=\thetau] at ($(av) + (-0.1, 0.5)$) {$f_{u}$};
+      \draw[] ($(au) + (-0.2,  0.5)$)coordinate(ku)   -- ($(au) + (0, -0.5)$);
 
       \draw[fill=white] ($(av) + (-0.5, -0.2)$) rectangle ($(av) + (0.5, 0)$);
-      \draw[] ($(av) + ( 0.5, -0.2)$)coordinate(actv)   -- ($(av) + (-0.5,  0)$);
-      \draw[] ($(av) + (-0.5, -0.2)$)coordinate(kv) -- ($(av) + ( 0.5,  0)$);
-      \node[left, rotate=\thetau] at ($(av) + (-0.5, -0.1)$) {$f_{v}$};
+      \draw[] ($(av) + ( 0.5, -0.2)$)coordinate(actv) -- ($(av) + (-0.5,  0)$);
+      \draw[] ($(av) + (-0.5, -0.2)$)coordinate(kv)   -- ($(av) + ( 0.5,  0)$);
 
       % Spring and Actuator for U
       \draw[actuator={0.6}{0.2}] (actu) -- coordinate[midway](actumid) (actu-|-2.6,0);
@@ -209,11 +207,11 @@ Configuration file is accessible [[file:config.org][here]].
       \draw[spring=0.2] (kv) -- node[left, rotate=\thetau]{$k$} (kv|-0,-2.6);
 
       \node[block={0.8cm}{0.6cm}, rotate=\thetau] (Ku) at ($(actumid) + (0, -1.2)$) {$K_{F}$};
-      \draw[->] ($(au) + (-0.1, -0.5)$) |- (Ku.east);
+      \draw[->] ($(au) + (-0.1, -0.5)$) |- (Ku.east) node[below right, rotate=\thetau]{$f_{u}$};
       \draw[->] (Ku.north) -- ($(actumid) + (0, -0.1)$) node[below left, rotate=\thetau]{$F_u$};
 
       \node[block={0.8cm}{0.6cm}, rotate=\thetau] (Kv) at ($(actvmid) + (1.2, 0)$) {$K_{F}$};
-      \draw[->] ($(av) + (0.5, -0.1)$) -| (Kv.north);
+      \draw[->] ($(av) + (0.5, -0.1)$) -| (Kv.north) node[above right, rotate=\thetau]{$f_{v}$};
       \draw[->] (Kv.west) -- ($(actvmid) + (0.1, 0)$) node[below right, rotate=\thetau]{$F_v$};
     \end{scope}
 
