@@ -358,12 +358,12 @@ Configuration file is accessible [[file:config.org][here]].
 
       % Spring and Actuator for U
       \draw[actuator={0.6}{0.2}] (actu) -- node[below=0.1, rotate=\thetau]{$F_u$} (actu-|-2.6,0);
-      \draw[spring=0.2] (ku) -- node[below=0.1, rotate=\thetau]{$k$} (ku-|-2.6,0);
-      \draw[spring=0.2] (-1, 0.8) -- node[above=0.1, rotate=\thetau]{$k_{p}$} (-1, 0.8-|-2.6,0);
+      \draw[spring=0.2] (ku) -- node[below=0.1, rotate=\thetau]{$k_a$} (ku-|-2.6,0);
+      \draw[spring=0.2] (-1, 0.8) -- node[above=0.1, rotate=\thetau]{$k_p$} (-1, 0.8-|-2.6,0);
 
       \draw[actuator={0.6}{0.2}] (actv) -- node[right=0.1, rotate=\thetau]{$F_v$} (actv|-0,-2.6);
-      \draw[spring=0.2] (kv) -- node[right=0.1, rotate=\thetau]{$k$} (kv|-0,-2.6);
-      \draw[spring=0.2] (-0.8, -1) -- node[left=0.1, rotate=\thetau]{$k_{p}$} (-0.8, -1|-0,-2.6);
+      \draw[spring=0.2] (kv) -- node[right=0.1, rotate=\thetau]{$k_a$} (kv|-0,-2.6);
+      \draw[spring=0.2] (-0.8, -1) -- node[left=0.1, rotate=\thetau]{$k_p$} (-0.8, -1|-0,-2.6);
     \end{scope}
 
     % Inertial Frame

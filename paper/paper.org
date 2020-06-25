@@ -249,7 +249,7 @@ Stiff positioning platforms should be used if high rotational speeds or heavy pa
 | <<fig:campbell_diagram_real>> Real Part | <<fig:campbell_diagram_imag>> Imaginary Part |
 
 * Decentralized Integral Force Feedback
-** Control Schematic
+** System Schematic and Control Architecture
 
 Force Sensors are added in series with the actuators as shown in Figure [[fig:system_iff]].
 
@@ -332,7 +332,7 @@ It increase with the rotational speed $\Omega$.
 ** Decentralized Integral Force Feedback
 
 \begin{equation}
-  \bm{K}_F(s) = g \cdot \frac{1}{s}
+  K_F(s) = g \cdot \frac{1}{s}
 \end{equation}
 
 # Problem of zero with a positive real part
@@ -341,10 +341,9 @@ This is due to the fact that the zeros of the plant are the poles of the closed 
 Thus, for some finite IFF gain, one pole will have a positive real part and the system will be unstable.
 
 # General explanation for the Root Locus Plot
-
 # MIMO root locus: gain is simultaneously increased for both decentralized controllers
-
 # Explain the circles, crosses and black crosses (poles of the controller)
+# transmission zeros
 
 #+name: fig:root_locus_pure_iff
 #+caption: Root Locus for the Decentralized Integral Force Feedback
@@ -370,7 +369,7 @@ This means that at low frequency, the system is decoupled (the force sensor remo
 
 # Equation with the new control law
 \begin{equation}
-  \bm{K}_{F}(s) = g \cdot \frac{1}{s} \cdot \underbrace{\frac{s/\omega_i}{1 + s/\omega_i}}_{\text{HPF}} = g \cdot \frac{1}{s + \omega_i}
+  K_{F}(s) = g \cdot \frac{1}{s} \cdot \underbrace{\frac{s/\omega_i}{1 + s/\omega_i}}_{\text{HPF}} = g \cdot \frac{1}{s + \omega_i}
 \end{equation}
 
 
@@ -429,18 +428,31 @@ This means that at low frequency, the system is decoupled (the force sensor remo
 
 * Integral Force Feedback with Parallel Springs
 ** Stiffness in Parallel with the Force Sensor
-
 # Zeros = remove force sensor
 # We want to have stable zeros => add stiffnesses in parallel
 
 #+name: fig:system_parallel_springs
-#+caption: System with added springs $k_p$ in parallel with the actuators
+#+caption: System with added springs in parallel with the actuators
 #+attr_latex: :scale 1
 [[file:figs/system_parallel_springs.pdf]]
 
 # Maybe add the fact that this is equivalent to amplified piezo for instance
+# Add reference to cite:souleille18_concep_activ_mount_space_applic
 
 ** Plant Dynamics
+
+We define an adimensional parameter $\alpha$, $0 \le \alpha < 1$, that describes the proportion of the stiffness in parallel with the actuator and force sensor:
+\begin{subequations}
+  \begin{align}
+    k_p &= \alpha k \\
+    k_a &= (1 - \alpha) k
+  \end{align}
+\end{subequations}
+
+The overall stiffness $k$ stays constant:
+\begin{equation}
+  k = k_a + k_p
+\end{equation}
 
 # Equations: sensed force
 \begin{equation}
@@ -459,30 +471,27 @@ This means that at low frequency, the system is decoupled (the force sensor remo
 \begin{bmatrix} F_u \\ F_v \end{bmatrix}
 \end{equation}
 With:
-\begin{align}
-  G_{kp} &= \left( \frac{s^2}{{\omega_0^\prime}^2} + 2\xi^\prime \frac{s}{{\omega_0^\prime}^2} + 1 - \frac{\Omega^2}{{\omega_0^\prime}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0^\prime}\frac{s}{\omega_0^\prime} \right)^2 \\
-  G_{kz} &= \left( \frac{s^2}{{\omega_0^\prime}^2} + \frac{k_p}{k + k_p} - \frac{\Omega^2}{{\omega_0^\prime}^2} \right) \left( \frac{s^2}{{\omega_0^\prime}^2} + 2\xi^\prime \frac{s}{{\omega_0^\prime}^2} + 1 - \frac{\Omega^2}{{\omega_0^\prime}^2} \right) + \left( 2 \frac{\Omega}{\omega_0^\prime}\frac{s}{\omega_0^\prime} \right)^2 \\
-  G_{kc} &= \left( 2 \xi^\prime \frac{s}{\omega_0^\prime} + \frac{k}{k + k_p} \right) \left( 2 \frac{\Omega}{\omega_0^\prime}\frac{s}{\omega_0^\prime} \right)
-\end{align}
+\begin{subequations}
+  \begin{align}
+    G_{kp} &= \left( \frac{s^2}{{\omega_0}^2} + 2\xi \frac{s}{\omega_0} + 1 - \frac{\Omega^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0}\frac{s}{\omega_0} \right)^2 \\
+    G_{kz} &= \left( \frac{s^2}{{\omega_0}^2} - \frac{\Omega^2}{{\omega_0}^2} + \alpha \right) \left( \frac{s^2}{{\omega_0}^2} + 2\xi \frac{s}{\omega_0} + 1 - \frac{\Omega^2}{{\omega_0}^2} \right) + \left( 2 \frac{\Omega}{\omega_0}\frac{s}{\omega_0} \right)^2 \\
+    G_{kc} &= \left( 2 \xi \frac{s}{\omega_0} + 1 - \alpha \right) \left( 2 \frac{\Omega}{\omega_0}\frac{s}{\omega_0} \right)
+  \end{align}
+\end{subequations}
 
-# New parameters
-where:
-- $\omega_0^\prime = \frac{k + k_p}{m}$
-- $\xi^\prime = \frac{c}{2 \sqrt{(k + k_p) m}}$
+# News terms with \alpha are added
+# w0 and xi are the same as before => only the zeros are changing and not the poles.
 
 ** Effect of the Parallel Stiffness on the Plant Dynamics
-
 # Negative Stiffness due to rotation => the stiffness should be larger than that
 
-# TODO: Verify that
-# For kp < negative stiffness => real zeros
-# For kp > negative stiffness => complex conjugate zeros
+# For kp < negative stiffness => real zeros => non-minimum phase
+# For kp > negative stiffness => complex conjugate zeros => minimum phase
 \begin{equation}
-  \frac{k_p}{k + k_p} - \frac{\Omega^2}{{\omega_0^\prime}^2} > 0
-\end{equation}
-Which is equivalent to
-\begin{equation}
-  k_p > m \Omega^2
+  \begin{align}
+    \alpha > \frac{\Omega^2}{{\omega_0}^2} \\
+    \Leftrightarrow k_p > m \Omega^2
+  \end{align}
 \end{equation}
 
 #+name: fig:plant_iff_kp
@@ -490,7 +499,8 @@ Which is equivalent to
 #+attr_latex: :scale 1
 [[file:figs/plant_iff_kp.pdf]]
 
-# Location of the zeros as a function of kp
+# Location of the zeros as a function of kp => maybe to complex
+# Do we talk about siso zeros of mimo (transmission zeros)?
 
 # Try to show that we don't have anymore real zeros that was making the system non-minimum phase
 
@@ -504,36 +514,31 @@ Which is equivalent to
 # For kp > m Omega => unconditionally stable
 
 ** Optimal Parallel Stiffness
-
-# Explain that we have k = ka + kp constant in order to have the same resonance
-
 # Attainable damping generally proportional to the distance between the poles and zeros (add reference, probably preumont)
-# The zero is the poles of the system without the force sensors => w =
+# The zero is the poles of the system without the force sensors => w0 = sqrt(kp/m) +/- Omega ?? => seems not true
 # Thus, small kp is wanted: kp close to m Omega^2 should give the optimal damping but is not acceptable for robustness reasons
 
 
 # Large Stiffness decreases the attainable damping
 
-#+name: fig:root_locus_iff_kps
-#+caption: Root Locus for IFF for several parallel spring stiffnesses $k_p$
-#+attr_latex: :scale 1
-[[file:figs/root_locus_iff_kps.pdf]]
-
-
 # Example with kp = 5 m Omega
 
-#+name: fig:root_locus_opt_gain_iff_kp
-#+caption: Root Locus for IFF with $k_p = 5 m \Omega^2$. The poles of the system using the gain that yields the maximum damping ratio are shown by black crosses
-#+attr_latex: :scale 1
-[[file:figs/root_locus_opt_gain_iff_kp.pdf]]
+#+name: fig:root_locus_iff_kps_opt
+#+caption: Root Locus for IFF when parallel stiffness is used
+#+attr_latex: :environment subfigure :width 0.49\linewidth :align c
+| file:figs/root_locus_iff_kps.pdf                 | file:figs/root_locus_opt_gain_iff_kp.pdf                                          |
+| <<fig:root_locus_iff_kps>> Three values of $k_p$ | <<fig:root_locus_opt_gain_iff_kp>> $k_p = 5 m \Omega^2$, optimal damping is shown |
+
 
 * Direct Velocity Feedback
-** Control Schematic
-
+** System Schematic and Control Architecture
 # Basic Idea of DVF
 
 
-# Equation with the control law
+# Equation with the control law: pure gain
+\begin{equation}
+  K_V(s) = g
+\end{equation}
 
 #+name: fig:system_dvf
 #+caption: System with relative velocity sensors and with decentralized controllers $K_V$
@@ -556,7 +561,7 @@ Which is equivalent to
 
 \begin{equation}
 \begin{bmatrix} v_u \\ v_v \end{bmatrix} =
-\frac{s}{k} \frac{1}{G_{vp}}
+\frac{1}{k} \frac{1}{G_{vp}}
 \begin{bmatrix}
    G_{vz} & G_{vc} \\
   -G_{vc} & G_{vz}
@@ -564,11 +569,13 @@ Which is equivalent to
 \begin{bmatrix} F_u \\ F_v \end{bmatrix}
 \end{equation}
 With:
-\begin{align}
-  G_{vp} &= \left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2 \\
-  G_{vz} &= \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \\
-  G_{vc} &= 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0}
-\end{align}
+\begin{subequations}
+  \begin{align}
+    G_{vp} &= \left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2 \\
+    G_{vz} &= s \left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right) \\
+    G_{vc} &= 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0}
+  \end{align}
+\end{subequations}
 
 # Show that the rotation have somehow less impact on the plant than for IFF
 
