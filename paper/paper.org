@@ -1,4 +1,4 @@
-#+TITLE: Decentralized Active Damping of Rotating Positioning Platforms
+#+TITLE: Active Damping of Rotating Positioning Platforms using Force Feedback
 :DRAWER:
 #+LATEX_CLASS: ISMA_USD2020
 #+OPTIONS: toc:nil
@@ -86,58 +86,54 @@ This paper has been published
 The Matlab code that was use to obtain the results are available in cite:dehaeze20_activ_dampin_rotat_posit_platf.
 
 * Dynamics of Rotating Positioning Platforms
-** Studied Rotating Positioning Platform
-# Introduce the fact that we need a simple system representing the rotating aspect.
-
+** Model of a Rotating Positioning Platform
+# Introduce the fact that we need a simple system representing the rotating aspect
+To study how the rotation of positioning platforms does affect the use of force feedback, a simple model is developed.
 
 # Simplest system where gyroscopic forces can be studied
-Consider the rotating X-Y stage of Figure [[fig:system]].
-
-# Present the system, parameters, assumptions
+It represents an X-Y positioning stage on top of a Rotating Stage and is schematically represented in Figure [[fig:system]].
 
 # Explain the frames (inertial frame x,y, rotating frame u,v)
-# iu, iv is linked to the rotating stage and supposed to be perfect
+Two frames of reference are used:
+- $(\vec{i}_x, \vec{i}_y, \vec{i}_z)$ is an inertial frame
+- $(\vec{i}_u, \vec{i}_v, \vec{i}_w)$ is a frame fixed on the Rotating Stage with its origin align with the rotation axis
 
-# Small displacements
+# Present the system, parameters, assumptions (small displacements, perfect spindle)
+The rotating stage is supposed to be ideal, meaning it is infinitely rigid and induces a rotation $\theta(t) = \Omega t$ where $\Omega$ is the rotational speed in $\si{\radian\per\second}$.
 
-# Constant rotational speed
+# X-Y Stage
+The parallel X-Y positioning stage consists of two orthogonal actuators represented by the three following elements in parallel:
+- A spring with a stiffness $k$ in $\si{\newton\per\meter}$
+- A dashpot with a damping coefficient $c$ in $\si{\newton\per\meter\second}$
+- An ideal force source $F_u, F_v$ in $\si{\newton}$
 
-- $k$: Actuator's Stiffness [N/m]
-- $m$: Payload's mass [kg]
-- $\Omega = \dot{\theta}$: rotation speed [rad/s]
-- $F_u$, $F_v$
-- $d_u$, $d_v$
+# Payload
+The X-Y stage is supporting a payload with a payload with a mass $m$ in $\si{\kilo\gram}$.
+The position of the payload is represented by $(d_u, d_v)$ expressed in the rotating frame $(\vec{i}_u, \vec{i}_v)$.
 
 #+name: fig:system
 #+caption: Schematic of the studied System
 #+attr_latex: :scale 1
 [[file:figs/system.pdf]]
 
-# #+name: fig:cedrat_xy25xs
-# #+caption: Figure caption
-# #+attr_latex: :width 0.5\linewidth
-# [[file:figs/cedrat_xy25xs.jpg]]
-
 ** Equations of Motion
-The system has two degrees of freedom and is thus fully described by the generalized coordinates $[q_1\ q_2] = [d_u\ d_v]$ (describing the position of the mass in the rotating frame).
-
-Let's express the kinetic energy $T$, the potential energy $V$ of the mass $m$ (neglecting the rotational energy) as well as the deceptive function $R$:
+To obtain of equation of motion for the system represented in Figure [[fig:system]], the Lagrangian equations are used:
+#+name: eq:lagrangian_equations
+\begin{equation}
+  \frac{d}{dt} \left( \frac{\partial L}{\partial \dot{q}_i} \right) + \frac{\partial D}{\partial \dot{q}_i} - \frac{\partial L}{\partial q_i} = Q_i
+\end{equation}
+with $L = T - V$ is the Lagrangian, $D$ is the dissipation function, and $Q_i$ is the generalized force associated with the generalized variable $[q_1\ q_2] = [d_u\ d_v]$:
 #+name: eq:energy_functions_lagrange
 \begin{subequations}
   \begin{align}
     T & = \frac{1}{2} m \left( \left( \dot{d}_u - \Omega d_v \right)^2 + \left( \dot{d}_v + \Omega d_u \right)^2 \right) \\
     V & = \frac{1}{2} k \left( {d_u}^2 + {d_v}^2 \right) \\
-    R & = \frac{1}{2} c \left( \dot{d}_u{}^2 + \dot{d}_v{}^2 \right)
+    D & = \frac{1}{2} c \left( \dot{d}_u{}^2 + \dot{d}_v{}^2 \right) \\
+    Q_1 &= F_u, \quad Q_2 = F_v
   \end{align}
 \end{subequations}
 
-The equations of motion are derived from the Lagrangian equation:
-#+name: eq:lagrangian_equations
-\begin{equation}
-  \frac{d}{dt} \left( \frac{\partial L}{\partial \dot{q}_i} \right) + \frac{\partial D}{\partial \dot{q}_i} - \frac{\partial L}{\partial q_i} = Q_i
-\end{equation}
-with $L = T - V$ is the Lagrangian and $Q_i$ is the generalized force associated with the generalized variable $q_i$ ($Q_1 = F_u$ and $Q_2 = F_v$).
-
+Substituting equations eqref:eq:energy_functions_lagrange into eqref:eq:lagrangian_equations gives the two coupled differential equations:
 #+name: eq:eom_coupled
 \begin{subequations}
   \begin{align}
@@ -147,14 +143,12 @@ with $L = T - V$ is the Lagrangian and $Q_i$ is the generalized force associated
 \end{subequations}
 
 # Explain Gyroscopic effects
-The Gyroscopic effects can be seen from the two following terms:
-- Coriolis Forces: coupling
-- Centrifugal forces: negative stiffness
+The rotation of the XY positioning platform induces two Gyroscopic effects:
+- Coriolis Forces: that adds coupling between the two orthogonal controlled directions
+- Centrifugal forces: that can been seen as negative stiffness
 
 ** Transfer Functions in the Laplace domain
-
-# Laplace Domain
-Using the Laplace transformation on the equations of motion eqref:eq:eom_coupled, the transfer functions from $[F_u,\ F_v]$ to $[d_u,\ d_v]$ are obtained:
+To study the dynamics of the system, the differential equations of motions eqref:eq:eom_coupled are transformed in the Laplace domain and the transfer functions from $[F_u,\ F_v]$ to $[d_u,\ d_v]$ are obtained:
 #+name: eq:oem_laplace_domain
 \begin{subequations}
   \begin{align}
@@ -163,8 +157,7 @@ Using the Laplace transformation on the equations of motion eqref:eq:eom_coupled
   \end{align}
 \end{subequations}
 
-
-Without rotation $\Omega = 0$ and the system corresponds to two uncoupled one degree of freedom mass-spring-damper systems:
+One can verify that without rotation ($\Omega = 0$) the system becomes equivalent as to two uncoupled one degree of freedom mass-spring-damper systems:
 #+name: eq:oem_no_rotation
 \begin{subequations}
   \begin{align}
@@ -176,33 +169,24 @@ Without rotation $\Omega = 0$ and the system corresponds to two uncoupled one de
 ** Change of Variables / Parameters for the study
 
 # Change of variables
-In order this study is more independent on the system parameters, the following change of variable is performed:
+In order to make this study less dependent on the system parameters, the following change of variable is performed:
 - $\omega_0 = \sqrt{\frac{k}{m}}$: Natural frequency of the mass-spring system in $\si{\radian/\s}$
 - $\xi = \frac{c}{2 \sqrt{k m}}$: Damping ratio
-
+ 
 #+name: eq:tf_d
 \begin{equation}
   \begin{bmatrix} d_u \\ d_v \end{bmatrix} = \bm{G}_d \begin{bmatrix} F_u \\ F_v \end{bmatrix}
 \end{equation}
-Where $\bm{G}_d$ is a $2 \times 2$ transfer function matrix.
 
+#+name: eq:tf_d
 \begin{equation}
-\bm{G}_d = \frac{1}{k} \frac{1}{G_{dp}}
-\begin{bmatrix}
-   G_{dz} & G_{dc} \\
-  -G_{dc} & G_{dz}
-\end{bmatrix}
+\bm{G}_{d} =
+  \frac{1}{k}
+  \begin{bmatrix}
+    \frac{\frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2}}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2} & \frac{2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0}}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2} \\
+    \frac{- 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0}}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2} & \frac{\frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2}}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2}
+  \end{bmatrix}
 \end{equation}
-With:
-\begin{subequations}
-  \begin{align}
-    G_{dp} &= \left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2 \\
-    G_{dz} &= \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \\
-    G_{dc} &= 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0}
-  \end{align}
-\end{subequations}
-
-$G_{dp}$ describes to poles of the system, $G_{dz}$ the zeros of the diagonal terms and $G_{dc}$ the coupling.
 
 # Parameters
 - $k = \SI{1}{N/m}$, $m = \SI{1}{kg}$, $c = \SI{0.05}{\newton\per\meter\second}$
@@ -277,19 +261,11 @@ Re-injecting eqref:eq:tf_d into eqref:eq:measured_force yields:
 Where $\bm{G}_f$ is a $2 \times 2$ transfer function matrix.
 
 \begin{equation}
-\bm{G}_f =
-\frac{1}{G_{fp}}
-\begin{bmatrix}
-  G_{fz} & -G_{fc} \\
-  G_{fc} &  G_{fz}
+  \bm{G}_{f} = \begin{bmatrix}
+  \frac{\left( \frac{s^2}{{\omega_0}^2} - \frac{\Omega^2}{{\omega_0}^2} \right) \left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right) + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2} & \frac{- \left( 2 \xi \frac{s}{\omega_0} + 1 \right) \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2} \\
+  \frac{\left( 2 \xi \frac{s}{\omega_0} + 1 \right) \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2} & \frac{\left( \frac{s^2}{{\omega_0}^2} - \frac{\Omega^2}{{\omega_0}^2} \right) \left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right) + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2}
 \end{bmatrix}
 \end{equation}
-with:
-\begin{align}
-  G_{fp} &= \left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2 \\
-  G_{fz} &= \left( \frac{s^2}{{\omega_0}^2} - \frac{\Omega^2}{{\omega_0}^2} \right) \left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right) + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2 \\
-  G_{fc} &= \left( 2 \xi \frac{s}{\omega_0} + 1 \right) \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)
-\end{align}
 
 # Explain the two real zeros => change of gain but not of phase
 # The alternating poles and zeros properties of collocated IFF holds
@@ -462,22 +438,12 @@ The overall stiffness $k$ stays constant:
 \end{equation}
 
 \begin{equation}
-\begin{bmatrix} f_u \\ f_v \end{bmatrix} =
-\frac{1}{G_{kp}}
+\bm{G}_k =
 \begin{bmatrix}
-   G_{kz} & -G_{kc} \\
-   G_{kc} &  G_{kz}
+  \frac{\left( \frac{s^2}{{\omega_0}^2} - \frac{\Omega^2}{{\omega_0}^2} + \alpha \right) \left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right) + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2} & \frac{- \left( 2 \xi \frac{s}{\omega_0} + 1 - \alpha \right) \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2} \\
+  \frac{\left( 2 \xi \frac{s}{\omega_0} + 1 - \alpha \right) \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2} & \frac{\left( \frac{s^2}{{\omega_0}^2} - \frac{\Omega^2}{{\omega_0}^2} + \alpha \right) \left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right) + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2}
 \end{bmatrix}
-\begin{bmatrix} F_u \\ F_v \end{bmatrix}
 \end{equation}
-With:
-\begin{subequations}
-  \begin{align}
-    G_{kp} &= \left( \frac{s^2}{{\omega_0}^2} + 2\xi \frac{s}{\omega_0} + 1 - \frac{\Omega^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0}\frac{s}{\omega_0} \right)^2 \\
-    G_{kz} &= \left( \frac{s^2}{{\omega_0}^2} - \frac{\Omega^2}{{\omega_0}^2} + \alpha \right) \left( \frac{s^2}{{\omega_0}^2} + 2\xi \frac{s}{\omega_0} + 1 - \frac{\Omega^2}{{\omega_0}^2} \right) + \left( 2 \frac{\Omega}{\omega_0}\frac{s}{\omega_0} \right)^2 \\
-    G_{kc} &= \left( 2 \xi \frac{s}{\omega_0} + 1 - \alpha \right) \left( 2 \frac{\Omega}{\omega_0}\frac{s}{\omega_0} \right)
-  \end{align}
-\end{subequations}
 
 # News terms with \alpha are added
 # w0 and xi are the same as before => only the zeros are changing and not the poles.
@@ -530,7 +496,7 @@ With:
 | <<fig:root_locus_iff_kps>> Three values of $k_p$ | <<fig:root_locus_opt_gain_iff_kp>> $k_p = 5 m \Omega^2$, optimal damping is shown |
 
 
-* Direct Velocity Feedback
+* Direct Velocity Feedback                                          :noexport:
 ** System Schematic and Control Architecture
 # Basic Idea of DVF
 
