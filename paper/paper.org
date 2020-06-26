@@ -91,7 +91,7 @@ The Matlab code that was use to obtain the results are available in cite:dehaeze
 To study how the rotation of positioning platforms does affect the use of force feedback, a simple model is developed.
 
 # Simplest system where gyroscopic forces can be studied
-It represents an X-Y positioning stage on top of a Rotating Stage and is schematically represented in Figure [[fig:system]].
+It represents an X-Y positioning stage on top of a Rotating Stage and is schematically represented in Figure ref:fig:system.
 
 # Explain the frames (inertial frame x,y, rotating frame u,v)
 Two frames of reference are used:
@@ -117,7 +117,7 @@ The position of the payload is represented by $(d_u, d_v)$ expressed in the rota
 [[file:figs/system.pdf]]
 
 ** Equations of Motion
-To obtain of equation of motion for the system represented in Figure [[fig:system]], the Lagrangian equations are used:
+To obtain of equation of motion for the system represented in Figure ref:fig:system, the Lagrangian equations are used:
 #+name: eq:lagrangian_equations
 \begin{equation}
   \frac{d}{dt} \left( \frac{\partial L}{\partial \dot{q}_i} \right) + \frac{\partial D}{\partial \dot{q}_i} - \frac{\partial L}{\partial q_i} = Q_i
@@ -149,13 +149,20 @@ The rotation of the XY positioning platform induces two Gyroscopic effects:
 
 ** Transfer Functions in the Laplace domain
 To study the dynamics of the system, the differential equations of motions eqref:eq:eom_coupled are transformed in the Laplace domain and the transfer functions from $[F_u,\ F_v]$ to $[d_u,\ d_v]$ are obtained:
-#+name: eq:oem_laplace_domain
-\begin{subequations}
-  \begin{align}
-    d_u &= \frac{ms^2 + cs + k - m \Omega^2}{\left( m s^2 + cs + k - m \Omega^2 \right)^2 + \left( 2 m \Omega s \right)^2} F_u +  \frac{2 m \Omega s}{\left( m s^2 + cs + k - m \Omega^2 \right)^2 + \left( 2 m \Omega s \right)^2} F_v \\
-    d_v &= \frac{-2 m \Omega s}{\left( m s^2 + cs + k - m \Omega^2 \right)^2 + \left( 2 m \Omega s \right)^2} F_u +  \frac{ms^2 + cs + k - m \Omega^2}{\left( m s^2 + cs + k - m \Omega^2 \right)^2 + \left( 2 m \Omega s \right)^2} F_v
-  \end{align}
-\end{subequations}
+#+name: eq:Gd_mimo_tf
+\begin{equation}
+  \begin{bmatrix} d_u \\ d_v \end{bmatrix} = \bm{G}_d \begin{bmatrix} F_u \\ F_v \end{bmatrix}
+\end{equation}
+
+with $\bm{G}_d$ a $2 \times 2$ transfer function matrix
+#+name: eq:Gd_m_k_c
+\begin{equation}
+  \bm{G}_{d} =
+  \begin{bmatrix}
+    \frac{ms^2 + cs + k - m \Omega^2}{\left( m s^2 + cs + k - m \Omega^2 \right)^2 + \left( 2 m \Omega s \right)^2} & \frac{2 m \Omega s}{\left( m s^2 + cs + k - m \Omega^2 \right)^2 + \left( 2 m \Omega s \right)^2} \\
+    \frac{-2 m \Omega s}{\left( m s^2 + cs + k - m \Omega^2 \right)^2 + \left( 2 m \Omega s \right)^2} & \frac{ms^2 + cs + k - m \Omega^2}{\left( m s^2 + cs + k - m \Omega^2 \right)^2 + \left( 2 m \Omega s \right)^2}
+  \end{bmatrix}
+\end{equation}
 
 One can verify that without rotation ($\Omega = 0$) the system becomes equivalent as to two uncoupled one degree of freedom mass-spring-damper systems:
 #+name: eq:oem_no_rotation
@@ -172,13 +179,9 @@ One can verify that without rotation ($\Omega = 0$) the system becomes equivalen
 In order to make this study less dependent on the system parameters, the following change of variable is performed:
 - $\omega_0 = \sqrt{\frac{k}{m}}$: Natural frequency of the mass-spring system in $\si{\radian/\s}$
 - $\xi = \frac{c}{2 \sqrt{k m}}$: Damping ratio
- 
-#+name: eq:tf_d
-\begin{equation}
-  \begin{bmatrix} d_u \\ d_v \end{bmatrix} = \bm{G}_d \begin{bmatrix} F_u \\ F_v \end{bmatrix}
-\end{equation}
 
-#+name: eq:tf_d
+The transfer function matrix eqref:eq:Gd_m_k_c becomes equal to
+#+name: eq:Gd_w0_xi_k
 \begin{equation}
 \bm{G}_{d} =
   \frac{1}{k}
@@ -189,55 +192,75 @@ In order to make this study less dependent on the system parameters, the followi
 \end{equation}
 
 # Parameters
+During the rest of this study, the following parameters are used for numerical analysis
+- $\omega_0 = \SI{1}{\radian\per\second}$, $\xi = 0.025 = \SI{2.5}{\percent}$
 - $k = \SI{1}{N/m}$, $m = \SI{1}{kg}$, $c = \SI{0.05}{\newton\per\meter\second}$
-- $\omega_0 = \SI{1}{\radian\per\second}$, $\xi = 0.025$
+
+# Say that these parameters are not realist but will be used to draw conclusions "relatively"
 
 ** System Dynamics and Campbell Diagram
-# Bode Plots for different ratio wr/w0
-
-The bode plot of $\bm{G}_d$ is shown in Figure [[fig:plant_compare_rotating_speed]].
-
-# Describe the dynamics
-
-#+name: fig:plant_compare_rotating_speed
-#+caption: Bode Plots for $\bm{G}_d$
-#+attr_latex: :environment subfigure :width 0.45\linewidth :align c
-| file:figs/plant_compare_rotating_speed_direct.pdf                             | file:figs/plant_compare_rotating_speed_coupling.pdf                               |
-| <<fig:plant_compare_rotating_speed_direct>> Direct Terms $d_u/F_u$, $d_v/F_v$ | <<fig:plant_compare_rotating_speed_coupling>> Coupling Terms $d_v/F_u$, $d_u/F_v$ |
-
-
 # Campbell Diagram
-The poles are the roots of $G_{dp}$.
-Two pairs of complex conjugate poles (supposing small damping $\xi \approx 0$):
+The poles of $\bm{G}_d$ are the complex solutions $p$ of
+\begin{equation}
+  \left( \frac{p^2}{{\omega_0}^2} + 2 \xi \frac{p}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{p}{\omega_0} \right)^2 = 0
+\end{equation}
+
+Supposing small damping ($\xi \ll 1$), two pairs of complex conjugate poles are obtained:
+#+name: eq:pole_values
 \begin{subequations}
   \begin{align}
-    p_1 &= \pm j (\omega_0 - \Omega) \\
-    p_2 &= \pm j (\omega_0 + \Omega)
+    p_{+} &= - \xi \omega_0 \left( 1 + \frac{\Omega}{\omega_0} \right) \pm j \left( \omega_0 + \Omega \right) \\
+    p_{-} &= - \xi \omega_0 \left( 1 - \frac{\Omega}{\omega_0} \right) \pm j \left( \omega_0 - \Omega \right)
   \end{align}
 \end{subequations}
 
 When the rotation speed in non-null, the resonance frequency is split into two pairs of complex conjugate poles.
-As the rotation speed increases, one of the two resonant frequency goes to lower frequencies as the other one goes to higher frequencies.
+As the rotation speed increases, $p_{+}$ goes to higher frequencies and $p_{-}$ to lower frequencies.
 
 # The system goes unstable at some frequency w0
-When the rotational speed $\Omega$ reaches $\omega_0$, the real part of one pair of complex conjugate becomes position meaning is system is unstable.
-
-The stiffness of the X-Y stage is too small to hold to rotating payload hence the instability.
-
+When the rotational speed $\Omega$ reaches $\omega_0$, the real part $p_{-}$ is positive meaning the system becomes unstable.
+The stiffness of the X-Y stage is too low to hold to rotating payload hence the instability.
 Stiff positioning platforms should be used if high rotational speeds or heavy payloads are used.
 
+This is graphically represented with the Campbell Diagram in Figure ref:fig:campbell_diagram.
+
 #+name: fig:campbell_diagram
-#+caption: Campbell Diagram : Evolution of the poles as a function of the rotational speed $\Omega$
+#+caption: Campbell Diagram : Evolution of the complex and real parts of the system's poles as a function of the rotational speed $\Omega$
 #+attr_latex: :environment subfigure :width 0.4\linewidth :align c
 | file:figs/campbell_diagram_real.pdf     | file:figs/campbell_diagram_imag.pdf          |
 | <<fig:campbell_diagram_real>> Real Part | <<fig:campbell_diagram_imag>> Imaginary Part |
 
+# Bode Plots for different ratio W/w0
+Looking at the transfer function matrix $\bm{G}_d$ eqref:eq:Gd_w0_xi_k, one can see it has two distinct terms that can be studied separately:
+- the direct (diagonal) terms
+- the coupling (off-diagonal) terms
+
+The bode plot of the direct and coupling terms are shown in Figure ref:fig:plant_compare_rotating_speed for several rotational speed $\Omega$.
+
+# Describe the dynamics: without rotation
+Without rotation, the dynamics of the direct terms is equivalent to the dynamics of a one degree of freedom mass spring damper system and the coupling terms are null.
+As the rotational speed increases, the pair of complex conjugate poles is separated into two pairs of complex conjugate poles, one going to lower frequencies and the other to higher frequencies.
+When the
+
+#+name: fig:plant_compare_rotating_speed
+#+caption: Bode Plots for $\bm{G}_d$ for several rotational speed $\Omega$
+#+attr_latex: :environment subfigure :width 0.45\linewidth :align c
+| file:figs/plant_compare_rotating_speed_direct.pdf                             | file:figs/plant_compare_rotating_speed_coupling.pdf                               |
+| <<fig:plant_compare_rotating_speed_direct>> Direct Terms $d_u/F_u$, $d_v/F_v$ | <<fig:plant_compare_rotating_speed_coupling>> Coupling Terms $d_v/F_u$, $d_u/F_v$ |
+
+In the rest of this study, $\Omega < \omega_0$
+
 * Decentralized Integral Force Feedback
 ** System Schematic and Control Architecture
-
 Force Sensors are added in series with the actuators as shown in Figure [[fig:system_iff]].
 
 # Reference to IFF control
+
+# Explain what "decentralized" means
+
+# => we consider the system has two SISO systems for the control
+
+# Say that we will use the same controllers for the two directions
 
 #+name: fig:system_iff
 #+caption: System with Force Sensors in Series with the Actuators. Decentralized Integral Force Feedback is used
@@ -253,13 +276,13 @@ The forces measured by the force sensors are equal to:
   \begin{bmatrix} d_u \\ d_v \end{bmatrix}
 \end{equation}
 
-Re-injecting eqref:eq:tf_d into eqref:eq:measured_force yields:
-#+name: eq:tf_f
+Re-injecting eqref:eq:Gd_w0_xi_k into eqref:eq:measured_force yields:
+#+name: eq:Gf_mimo_tf
 \begin{equation}
-\begin{bmatrix} f_{u} \\ f_{v} \end{bmatrix} = \bm{G}_{f} \begin{bmatrix} F_u \\ F_v \end{bmatrix}
+  \begin{bmatrix} f_{u} \\ f_{v} \end{bmatrix} = \bm{G}_{f} \begin{bmatrix} F_u \\ F_v \end{bmatrix}
 \end{equation}
-Where $\bm{G}_f$ is a $2 \times 2$ transfer function matrix.
-
+with $\bm{G}_f$ a $2 \times 2$ transfer function matrix
+#+name: eq:Gf
 \begin{equation}
   \bm{G}_{f} = \begin{bmatrix}
   \frac{\left( \frac{s^2}{{\omega_0}^2} - \frac{\Omega^2}{{\omega_0}^2} \right) \left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right) + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2} & \frac{- \left( 2 \xi \frac{s}{\omega_0} + 1 \right) \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2} \\
@@ -271,18 +294,18 @@ Where $\bm{G}_f$ is a $2 \times 2$ transfer function matrix.
 # The alternating poles and zeros properties of collocated IFF holds
 # but additional real zeros are added
 
-The zeros of the diagonal terms are the roots of $G_{fz}$ (supposing small damping):
+The zeros of the diagonal terms of $\bm{G}_f$ are equal to (neglecting the damping)
 \begin{subequations}
   \begin{align}
-    z_1 &= \pm j \omega_0 \sqrt{\frac{1}{2} \sqrt{8 \frac{\Omega^2}{{\omega_0}^2} + 1} + \frac{\Omega^2}{{\omega_0}^2} + \frac{1}{2} } \\
-    z_2 &= \pm   \omega_0 \sqrt{\frac{1}{2} \sqrt{8 \frac{\Omega^2}{{\omega_0}^2} + 1} - \frac{\Omega^2}{{\omega_0}^2} - \frac{1}{2} }
+    z_c &= \pm j \omega_0 \sqrt{\frac{1}{2} \sqrt{8 \frac{\Omega^2}{{\omega_0}^2} + 1} + \frac{\Omega^2}{{\omega_0}^2} + \frac{1}{2} } \label{eq:iff_zero_cc} \\
+    z_r &= \pm   \omega_0 \sqrt{\frac{1}{2} \sqrt{8 \frac{\Omega^2}{{\omega_0}^2} + 1} - \frac{\Omega^2}{{\omega_0}^2} - \frac{1}{2} } \label{eq:iff_zero_real}
   \end{align}
 \end{subequations}
 
-The frequency of the two complex conjugate zeros $z_1$ is between the frequency of the two pairs of complex conjugate poles $p_1$ and $p_2$.
+The frequency of the two complex conjugate zeros $z_c$ eqref:eq:iff_zero_cc is between the frequency of the two pairs of complex conjugate poles $p_{-}$ and $p_{+}$ eqref:eq:pole_values.
 This is the expected behavior of a collocated pair of actuator and sensor.
 
-However, the two real zeros $z_2$ induces an increase of +2 of the slope without change of phase (Figure [[fig:plant_iff_compare_rotating_speed]]).
+However, the two real zeros $z_c$ induces an increase of +2 of the slope without change of phase (Figure [[fig:plant_iff_compare_rotating_speed]]).
 This represents non-minimum phase behavior.
 
 # Explain physically why the real zeros
@@ -298,7 +321,7 @@ The low frequency gain, for $\Omega < \omega_0$, is no longer zero:
 \end{bmatrix}
 \end{equation}
 
-It increase with the rotational speed $\Omega$.
+It increases with the rotational speed $\Omega$.
 
 #+name: fig:plant_iff_compare_rotating_speed
 #+caption: Bode plot of $\bm{G}_f$ for several rotational speeds $\Omega$
@@ -431,12 +454,14 @@ The overall stiffness $k$ stays constant:
 \end{equation}
 
 # Equations: sensed force
+#+name: eq:Gk_mimo_tf
 \begin{equation}
 \begin{bmatrix} f_u \\ f_v \end{bmatrix} =
 \bm{G}_k
 \begin{bmatrix} F_u \\ F_v \end{bmatrix}
 \end{equation}
 
+#+name: eq:Gk
 \begin{equation}
 \bm{G}_k =
 \begin{bmatrix}
@@ -454,10 +479,10 @@ The overall stiffness $k$ stays constant:
 # For kp < negative stiffness => real zeros => non-minimum phase
 # For kp > negative stiffness => complex conjugate zeros => minimum phase
 \begin{equation}
-  \begin{align}
+  \begin{aligned}
     \alpha > \frac{\Omega^2}{{\omega_0}^2} \\
     \Leftrightarrow k_p > m \Omega^2
-  \end{align}
+  \end{aligned}
 \end{equation}
 
 #+name: fig:plant_iff_kp

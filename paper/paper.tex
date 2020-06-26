@@ -1,4 +1,4 @@
-% Created 2020-06-25 jeu. 17:24
+% Created 2020-06-26 ven. 17:28
 % Intended LaTeX compiler: pdflatex
 \documentclass{ISMA_USD2020}
 \usepackage[utf8]{inputenc}
@@ -36,10 +36,10 @@
 \usepackage{tikz}
 \usetikzlibrary{shapes.misc}
 \date{}
-\title{Decentralized Active Damping of Rotating Positioning Platforms}
+\title{Active Damping of Rotating Positioning Platforms using Force Feedback}
 \hypersetup{
  pdfauthor={},
- pdftitle={Decentralized Active Damping of Rotating Positioning Platforms},
+ pdftitle={Active Damping of Rotating Positioning Platforms using Force Feedback},
  pdfkeywords={},
  pdfsubject={},
  pdfcreator={Emacs 27.0.91 (Org mode 9.4)}, 
@@ -53,7 +53,7 @@
 }
 
 \section{Introduction}
-\label{sec:org7ff5c70}
+\label{sec:org4effc95}
 \label{sec:introduction}
 Controller Poles are shown by black crosses (
 \begin{tikzpicture} \node[cross out, draw=black, minimum size=1ex, line width=2pt, inner sep=0pt, outer sep=0pt] at (0, 0){}; \end{tikzpicture}
@@ -64,18 +64,30 @@ This paper has been published
 The Matlab code that was use to obtain the results are available in \cite{dehaeze20_activ_dampin_rotat_posit_platf}.
 
 \section{Dynamics of Rotating Positioning Platforms}
-\label{sec:org029ca48}
-\subsection{Studied Rotating Positioning Platform}
-\label{sec:org7eec6c5}
-Consider the rotating X-Y stage of Figure \ref{fig:system}.
+\label{sec:org5eef93b}
+\subsection{Model of a Rotating Positioning Platform}
+\label{sec:org905e0e5}
+To study how the rotation of positioning platforms does affect the use of force feedback, a simple model is developed.
 
+It represents an X-Y positioning stage on top of a Rotating Stage and is schematically represented in Figure \ref{fig:system}.
+
+Two frames of reference are used:
 \begin{itemize}
-\item \(k\): Actuator's Stiffness [N/m]
-\item \(m\): Payload's mass [kg]
-\item \(\Omega = \dot{\theta}\): rotation speed [rad/s]
-\item \(F_u\), \(F_v\)
-\item \(d_u\), \(d_v\)
+\item \((\vec{i}_x, \vec{i}_y, \vec{i}_z)\) is an inertial frame
+\item \((\vec{i}_u, \vec{i}_v, \vec{i}_w)\) is a frame fixed on the Rotating Stage with its origin align with the rotation axis
 \end{itemize}
+
+The rotating stage is supposed to be ideal, meaning it is infinitely rigid and induces a rotation \(\theta(t) = \Omega t\) where \(\Omega\) is the rotational speed in \(\si{\radian\per\second}\).
+
+The parallel X-Y positioning stage consists of two orthogonal actuators represented by the three following elements in parallel:
+\begin{itemize}
+\item A spring with a stiffness \(k\) in \(\si{\newton\per\meter}\)
+\item A dashpot with a damping coefficient \(c\) in \(\si{\newton\per\meter\second}\)
+\item An ideal force source \(F_u, F_v\) in \(\si{\newton}\)
+\end{itemize}
+
+The X-Y stage is supporting a payload with a payload with a mass \(m\) in \(\si{\kilo\gram}\).
+The position of the payload is represented by \((d_u, d_v)\) expressed in the rotating frame \((\vec{i}_u, \vec{i}_v)\).
 
 \begin{figure}[htbp]
 \centering
@@ -84,26 +96,24 @@ Consider the rotating X-Y stage of Figure \ref{fig:system}.
 \end{figure}
 
 \subsection{Equations of Motion}
-\label{sec:orgca181a2}
-The system has two degrees of freedom and is thus fully described by the generalized coordinates \([q_1\ q_2] = [d_u\ d_v]\) (describing the position of the mass in the rotating frame).
-
-Let's express the kinetic energy \(T\), the potential energy \(V\) of the mass \(m\) (neglecting the rotational energy) as well as the deceptive function \(R\):
+\label{sec:org08efe1c}
+To obtain of equation of motion for the system represented in Figure \ref{fig:system}, the Lagrangian equations are used:
+\begin{equation}
+\label{eq:lagrangian_equations}
+  \frac{d}{dt} \left( \frac{\partial L}{\partial \dot{q}_i} \right) + \frac{\partial D}{\partial \dot{q}_i} - \frac{\partial L}{\partial q_i} = Q_i
+\end{equation}
+with \(L = T - V\) is the Lagrangian, \(D\) is the dissipation function, and \(Q_i\) is the generalized force associated with the generalized variable \([q_1\ q_2] = [d_u\ d_v]\):
 \begin{subequations}
 \label{eq:energy_functions_lagrange}
   \begin{align}
     T & = \frac{1}{2} m \left( \left( \dot{d}_u - \Omega d_v \right)^2 + \left( \dot{d}_v + \Omega d_u \right)^2 \right) \\
     V & = \frac{1}{2} k \left( {d_u}^2 + {d_v}^2 \right) \\
-    R & = \frac{1}{2} c \left( \dot{d}_u{}^2 + \dot{d}_v{}^2 \right)
+    D & = \frac{1}{2} c \left( \dot{d}_u{}^2 + \dot{d}_v{}^2 \right) \\
+    Q_1 &= F_u, \quad Q_2 = F_v
   \end{align}
 \end{subequations}
 
-The equations of motion are derived from the Lagrangian equation:
-\begin{equation}
-\label{eq:lagrangian_equations}
-  \frac{d}{dt} \left( \frac{\partial L}{\partial \dot{q}_i} \right) + \frac{\partial D}{\partial \dot{q}_i} - \frac{\partial L}{\partial q_i} = Q_i
-\end{equation}
-with \(L = T - V\) is the Lagrangian and \(Q_i\) is the generalized force associated with the generalized variable \(q_i\) (\(Q_1 = F_u\) and \(Q_2 = F_v\)).
-
+Substituting equations \eqref{eq:energy_functions_lagrange} into \eqref{eq:lagrangian_equations} gives the two coupled differential equations:
 \begin{subequations}
 \label{eq:eom_coupled}
   \begin{align}
@@ -112,26 +122,31 @@ with \(L = T - V\) is the Lagrangian and \(Q_i\) is the generalized force associ
   \end{align}
 \end{subequations}
 
-The Gyroscopic effects can be seen from the two following terms:
+The rotation of the XY positioning platform induces two Gyroscopic effects:
 \begin{itemize}
-\item Coriolis Forces: coupling
-\item Centrifugal forces: negative stiffness
+\item Coriolis Forces: that adds coupling between the two orthogonal controlled directions
+\item Centrifugal forces: that can been seen as negative stiffness
 \end{itemize}
 
 \subsection{Transfer Functions in the Laplace domain}
-\label{sec:orge7e184a}
+\label{sec:org6daa125}
+To study the dynamics of the system, the differential equations of motions \eqref{eq:eom_coupled} are transformed in the Laplace domain and the transfer functions from \([F_u,\ F_v]\) to \([d_u,\ d_v]\) are obtained:
+\begin{equation}
+\label{eq:Gd_mimo_tf}
+  \begin{bmatrix} d_u \\ d_v \end{bmatrix} = \bm{G}_d \begin{bmatrix} F_u \\ F_v \end{bmatrix}
+\end{equation}
 
-Using the Laplace transformation on the equations of motion \eqref{eq:eom_coupled}, the transfer functions from \([F_u,\ F_v]\) to \([d_u,\ d_v]\) are obtained:
-\begin{subequations}
-\label{eq:oem_laplace_domain}
-  \begin{align}
-    d_u &= \frac{ms^2 + cs + k - m \Omega^2}{\left( m s^2 + cs + k - m \Omega^2 \right)^2 + \left( 2 m \Omega s \right)^2} F_u +  \frac{2 m \Omega s}{\left( m s^2 + cs + k - m \Omega^2 \right)^2 + \left( 2 m \Omega s \right)^2} F_v \\
-    d_v &= \frac{-2 m \Omega s}{\left( m s^2 + cs + k - m \Omega^2 \right)^2 + \left( 2 m \Omega s \right)^2} F_u +  \frac{ms^2 + cs + k - m \Omega^2}{\left( m s^2 + cs + k - m \Omega^2 \right)^2 + \left( 2 m \Omega s \right)^2} F_v
-  \end{align}
-\end{subequations}
+with \(\bm{G}_d\) a \(2 \times 2\) transfer function matrix
+\begin{equation}
+\label{eq:Gd_m_k_c}
+  \bm{G}_{d} =
+  \begin{bmatrix}
+    \frac{ms^2 + cs + k - m \Omega^2}{\left( m s^2 + cs + k - m \Omega^2 \right)^2 + \left( 2 m \Omega s \right)^2} & \frac{2 m \Omega s}{\left( m s^2 + cs + k - m \Omega^2 \right)^2 + \left( 2 m \Omega s \right)^2} \\
+    \frac{-2 m \Omega s}{\left( m s^2 + cs + k - m \Omega^2 \right)^2 + \left( 2 m \Omega s \right)^2} & \frac{ms^2 + cs + k - m \Omega^2}{\left( m s^2 + cs + k - m \Omega^2 \right)^2 + \left( 2 m \Omega s \right)^2}
+  \end{bmatrix}
+\end{equation}
 
-
-Without rotation \(\Omega = 0\) and the system corresponds to two uncoupled one degree of freedom mass-spring-damper systems:
+One can verify that without rotation (\(\Omega = 0\)) the system becomes equivalent as to two uncoupled one degree of freedom mass-spring-damper systems:
 \begin{subequations}
 \label{eq:oem_no_rotation}
   \begin{align}
@@ -141,78 +156,55 @@ Without rotation \(\Omega = 0\) and the system corresponds to two uncoupled one 
 \end{subequations}
 
 \subsection{Change of Variables / Parameters for the study}
-\label{sec:org3cdb1ab}
+\label{sec:orgda057f2}
 
-In order this study is more independent on the system parameters, the following change of variable is performed:
+In order to make this study less dependent on the system parameters, the following change of variable is performed:
 \begin{itemize}
 \item \(\omega_0 = \sqrt{\frac{k}{m}}\): Natural frequency of the mass-spring system in \(\si{\radian/\s}\)
 \item \(\xi = \frac{c}{2 \sqrt{k m}}\): Damping ratio
 \end{itemize}
 
+The transfer function matrix \eqref{eq:Gd_m_k_c} becomes equal to
 \begin{equation}
-\label{eq:tf_d}
-  \begin{bmatrix} d_u \\ d_v \end{bmatrix} = \bm{G}_d \begin{bmatrix} F_u \\ F_v \end{bmatrix}
+\label{eq:Gd_w0_xi_k}
+\bm{G}_{d} =
+  \frac{1}{k}
+  \begin{bmatrix}
+    \frac{\frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2}}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2} & \frac{2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0}}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2} \\
+    \frac{- 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0}}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2} & \frac{\frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2}}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2}
+  \end{bmatrix}
 \end{equation}
-Where \(\bm{G}_d\) is a \(2 \times 2\) transfer function matrix.
 
-\begin{equation}
-\bm{G}_d = \frac{1}{k} \frac{1}{G_{dp}}
-\begin{bmatrix}
-   G_{dz} & G_{dc} \\
-  -G_{dc} & G_{dz}
-\end{bmatrix}
-\end{equation}
-With:
-\begin{subequations}
-  \begin{align}
-    G_{dp} &= \left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2 \\
-    G_{dz} &= \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \\
-    G_{dc} &= 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0}
-  \end{align}
-\end{subequations}
-
-\(G_{dp}\) describes to poles of the system, \(G_{dz}\) the zeros of the diagonal terms and \(G_{dc}\) the coupling.
-
+During the rest of this study, the following parameters are used for numerical analysis
 \begin{itemize}
+\item \(\omega_0 = \SI{1}{\radian\per\second}\), \(\xi = 0.025 = \SI{2.5}{\percent}\)
 \item \(k = \SI{1}{N/m}\), \(m = \SI{1}{kg}\), \(c = \SI{0.05}{\newton\per\meter\second}\)
-\item \(\omega_0 = \SI{1}{\radian\per\second}\), \(\xi = 0.025\)
 \end{itemize}
 
 \subsection{System Dynamics and Campbell Diagram}
-\label{sec:org42dee20}
-The bode plot of \(\bm{G}_d\) is shown in Figure \ref{fig:plant_compare_rotating_speed}.
+\label{sec:org9c94a4d}
+The poles of \(\bm{G}_d\) are the complex solutions \(p\) of
+\begin{equation}
+  \left( \frac{p^2}{{\omega_0}^2} + 2 \xi \frac{p}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{p}{\omega_0} \right)^2 = 0
+\end{equation}
 
-\begin{figure}[htbp]
-\begin{subfigure}[c]{0.45\linewidth}
-\includegraphics[width=\linewidth]{figs/plant_compare_rotating_speed_direct.pdf}
-\caption{\label{fig:plant_compare_rotating_speed_direct} Direct Terms \(d_u/F_u\), \(d_v/F_v\)}
-\end{subfigure}
-\begin{subfigure}[c]{0.45\linewidth}
-\includegraphics[width=\linewidth]{figs/plant_compare_rotating_speed_coupling.pdf}
-\caption{\label{fig:plant_compare_rotating_speed_coupling} Coupling Terms \(d_v/F_u\), \(d_u/F_v\)}
-\end{subfigure}
-\caption{\label{fig:plant_compare_rotating_speed}Bode Plots for \(\bm{G}_d\)}
-\centering
-\end{figure}
-
-
-The poles are the roots of \(G_{dp}\).
-Two pairs of complex conjugate poles (supposing small damping \(\xi \approx 0\)):
+Supposing small damping (\(\xi \ll 1\)), two pairs of complex conjugate poles are obtained:
 \begin{subequations}
+\label{eq:pole_values}
   \begin{align}
-    p_1 &= \pm j (\omega_0 - \Omega) \\
-    p_2 &= \pm j (\omega_0 + \Omega)
+    p_{+} &= - \xi \omega_0 \left( 1 + \frac{\Omega}{\omega_0} \right) \pm j \left( \omega_0 + \Omega \right) \\
+    p_{-} &= - \xi \omega_0 \left( 1 - \frac{\Omega}{\omega_0} \right) \pm j \left( \omega_0 - \Omega \right)
   \end{align}
 \end{subequations}
 
 When the rotation speed in non-null, the resonance frequency is split into two pairs of complex conjugate poles.
-As the rotation speed increases, one of the two resonant frequency goes to lower frequencies as the other one goes to higher frequencies.
+As the rotation speed increases, \(p_{+}\) goes to higher frequencies and \(p_{-}\) to lower frequencies.
 
-When the rotational speed \(\Omega\) reaches \(\omega_0\), the real part of one pair of complex conjugate becomes position meaning is system is unstable.
-
-The stiffness of the X-Y stage is too small to hold to rotating payload hence the instability.
-
+When the rotational speed \(\Omega\) reaches \(\omega_0\), the real part \(p_{-}\) is positive meaning the system becomes unstable.
+The stiffness of the X-Y stage is too low to hold to rotating payload hence the instability.
 Stiff positioning platforms should be used if high rotational speeds or heavy payloads are used.
+
+This is graphically represented with the Campbell Diagram in Figure \ref{fig:campbell_diagram}.
 
 \begin{figure}[htbp]
 \begin{subfigure}[c]{0.4\linewidth}
@@ -223,15 +215,41 @@ Stiff positioning platforms should be used if high rotational speeds or heavy pa
 \includegraphics[width=\linewidth]{figs/campbell_diagram_imag.pdf}
 \caption{\label{fig:campbell_diagram_imag} Imaginary Part}
 \end{subfigure}
-\caption{\label{fig:campbell_diagram}Campbell Diagram : Evolution of the poles as a function of the rotational speed \(\Omega\)}
+\caption{\label{fig:campbell_diagram}Campbell Diagram : Evolution of the complex and real parts of the system's poles as a function of the rotational speed \(\Omega\)}
 \centering
 \end{figure}
 
-\section{Decentralized Integral Force Feedback}
-\label{sec:orgda38ad7}
-\subsection{System Schematic and Control Architecture}
-\label{sec:orgf08eb9d}
+Looking at the transfer function matrix \(\bm{G}_d\) \eqref{eq:Gd_w0_xi_k}, one can see it has two distinct terms that can be studied separately:
+\begin{itemize}
+\item the direct (diagonal) terms
+\item the coupling (off-diagonal) terms
+\end{itemize}
 
+The bode plot of the direct and coupling terms are shown in Figure \ref{fig:plant_compare_rotating_speed} for several rotational speed \(\Omega\).
+
+Without rotation, the dynamics of the direct terms is equivalent to the dynamics of a one degree of freedom mass spring damper system and the coupling terms are null.
+As the rotational speed increases, the pair of complex conjugate poles is separated into two pairs of complex conjugate poles, one going to lower frequencies and the other to higher frequencies.
+When the
+
+\begin{figure}[htbp]
+\begin{subfigure}[c]{0.45\linewidth}
+\includegraphics[width=\linewidth]{figs/plant_compare_rotating_speed_direct.pdf}
+\caption{\label{fig:plant_compare_rotating_speed_direct} Direct Terms \(d_u/F_u\), \(d_v/F_v\)}
+\end{subfigure}
+\begin{subfigure}[c]{0.45\linewidth}
+\includegraphics[width=\linewidth]{figs/plant_compare_rotating_speed_coupling.pdf}
+\caption{\label{fig:plant_compare_rotating_speed_coupling} Coupling Terms \(d_v/F_u\), \(d_u/F_v\)}
+\end{subfigure}
+\caption{\label{fig:plant_compare_rotating_speed}Bode Plots for \(\bm{G}_d\) for several rotational speed \(\Omega\)}
+\centering
+\end{figure}
+
+In the rest of this study, \(\Omega < \omega_0\)
+
+\section{Decentralized Integral Force Feedback}
+\label{sec:org729cd5f}
+\subsection{System Schematic and Control Architecture}
+\label{sec:org87ee3ad}
 Force Sensors are added in series with the actuators as shown in Figure \ref{fig:system_iff}.
 
 \begin{figure}[htbp]
@@ -241,7 +259,7 @@ Force Sensors are added in series with the actuators as shown in Figure \ref{fig
 \end{figure}
 
 \subsection{Plant Dynamics}
-\label{sec:orgf2f22c2}
+\label{sec:orge10a341}
 The forces measured by the force sensors are equal to:
 \begin{equation}
 \label{eq:measured_force}
@@ -250,40 +268,32 @@ The forces measured by the force sensors are equal to:
   \begin{bmatrix} d_u \\ d_v \end{bmatrix}
 \end{equation}
 
-Re-injecting \eqref{eq:tf_d} into \eqref{eq:measured_force} yields:
+Re-injecting \eqref{eq:Gd_w0_xi_k} into \eqref{eq:measured_force} yields:
 \begin{equation}
-\label{eq:tf_f}
-\begin{bmatrix} f_{u} \\ f_{v} \end{bmatrix} = \bm{G}_{f} \begin{bmatrix} F_u \\ F_v \end{bmatrix}
+\label{eq:Gf_mimo_tf}
+  \begin{bmatrix} f_{u} \\ f_{v} \end{bmatrix} = \bm{G}_{f} \begin{bmatrix} F_u \\ F_v \end{bmatrix}
 \end{equation}
-Where \(\bm{G}_f\) is a \(2 \times 2\) transfer function matrix.
-
+with \(\bm{G}_f\) a \(2 \times 2\) transfer function matrix
 \begin{equation}
-\bm{G}_f =
-\frac{1}{G_{fp}}
-\begin{bmatrix}
-  G_{fz} & -G_{fc} \\
-  G_{fc} &  G_{fz}
+\label{eq:Gf}
+  \bm{G}_{f} = \begin{bmatrix}
+  \frac{\left( \frac{s^2}{{\omega_0}^2} - \frac{\Omega^2}{{\omega_0}^2} \right) \left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right) + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2} & \frac{- \left( 2 \xi \frac{s}{\omega_0} + 1 \right) \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2} \\
+  \frac{\left( 2 \xi \frac{s}{\omega_0} + 1 \right) \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2} & \frac{\left( \frac{s^2}{{\omega_0}^2} - \frac{\Omega^2}{{\omega_0}^2} \right) \left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right) + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2}
 \end{bmatrix}
 \end{equation}
-with:
-\begin{align}
-  G_{fp} &= \left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2 \\
-  G_{fz} &= \left( \frac{s^2}{{\omega_0}^2} - \frac{\Omega^2}{{\omega_0}^2} \right) \left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right) + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2 \\
-  G_{fc} &= \left( 2 \xi \frac{s}{\omega_0} + 1 \right) \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)
-\end{align}
 
-The zeros of the diagonal terms are the roots of \(G_{fz}\) (supposing small damping):
+The zeros of the diagonal terms of \(\bm{G}_f\) are equal to (neglecting the damping)
 \begin{subequations}
   \begin{align}
-    z_1 &= \pm j \omega_0 \sqrt{\frac{1}{2} \sqrt{8 \frac{\Omega^2}{{\omega_0}^2} + 1} + \frac{\Omega^2}{{\omega_0}^2} + \frac{1}{2} } \\
-    z_2 &= \pm   \omega_0 \sqrt{\frac{1}{2} \sqrt{8 \frac{\Omega^2}{{\omega_0}^2} + 1} - \frac{\Omega^2}{{\omega_0}^2} - \frac{1}{2} }
+    z_c &= \pm j \omega_0 \sqrt{\frac{1}{2} \sqrt{8 \frac{\Omega^2}{{\omega_0}^2} + 1} + \frac{\Omega^2}{{\omega_0}^2} + \frac{1}{2} } \label{eq:iff_zero_cc} \\
+    z_r &= \pm   \omega_0 \sqrt{\frac{1}{2} \sqrt{8 \frac{\Omega^2}{{\omega_0}^2} + 1} - \frac{\Omega^2}{{\omega_0}^2} - \frac{1}{2} } \label{eq:iff_zero_real}
   \end{align}
 \end{subequations}
 
-The frequency of the two complex conjugate zeros \(z_1\) is between the frequency of the two pairs of complex conjugate poles \(p_1\) and \(p_2\).
+The frequency of the two complex conjugate zeros \(z_c\) \eqref{eq:iff_zero_cc} is between the frequency of the two pairs of complex conjugate poles \(p_{-}\) and \(p_{+}\) \eqref{eq:pole_values}.
 This is the expected behavior of a collocated pair of actuator and sensor.
 
-However, the two real zeros \(z_2\) induces an increase of +2 of the slope without change of phase (Figure \ref{fig:plant_iff_compare_rotating_speed}).
+However, the two real zeros \(z_c\) induces an increase of +2 of the slope without change of phase (Figure \ref{fig:plant_iff_compare_rotating_speed}).
 This represents non-minimum phase behavior.
 
 
@@ -296,7 +306,7 @@ The low frequency gain, for \(\Omega < \omega_0\), is no longer zero:
 \end{bmatrix}
 \end{equation}
 
-It increase with the rotational speed \(\Omega\).
+It increases with the rotational speed \(\Omega\).
 
 \begin{figure}[htbp]
 \centering
@@ -305,10 +315,10 @@ It increase with the rotational speed \(\Omega\).
 \end{figure}
 
 \subsection{Decentralized Integral Force Feedback}
-\label{sec:orge1a14b4}
+\label{sec:org1d15108}
 
 \begin{equation}
-  \bm{K}_F(s) = g \cdot \frac{1}{s}
+  K_F(s) = g \cdot \frac{1}{s}
 \end{equation}
 
 Also, as one zero has a positive real part, the \textbf{IFF control is no more unconditionally stable}.
@@ -325,16 +335,16 @@ At low frequency, the gain is very large and thus no force is transmitted betwee
 This means that at low frequency, the system is decoupled (the force sensor removed) and thus the system is unstable.
 
 \section{Integral Force Feedback with High Pass Filters}
-\label{sec:org7f551f8}
+\label{sec:org95ed1b6}
 \subsection{Modification of the Control Low}
-\label{sec:org4c39c6d}
+\label{sec:orgfadc2c2}
 \begin{equation}
-  \bm{K}_{F}(s) = g \cdot \frac{1}{s} \cdot \underbrace{\frac{s/\omega_i}{1 + s/\omega_i}}_{\text{HPF}} = g \cdot \frac{1}{s + \omega_i}
+  K_{F}(s) = g \cdot \frac{1}{s} \cdot \underbrace{\frac{s/\omega_i}{1 + s/\omega_i}}_{\text{HPF}} = g \cdot \frac{1}{s + \omega_i}
 \end{equation}
 
 
 \subsection{Feedback Analysis}
-\label{sec:org2673698}
+\label{sec:org6ef2134}
 \begin{figure}[htbp]
 \centering
 \includegraphics[scale=1]{figs/loop_gain_modified_iff.pdf}
@@ -352,7 +362,7 @@ This means that at low frequency, the system is decoupled (the force sensor remo
 \end{figure}
 
 \subsection{Optimal Cut-Off Frequency}
-\label{sec:org7d8a789}
+\label{sec:org23e0758}
 
 \begin{figure}[htbp]
 \centering
@@ -367,9 +377,9 @@ This means that at low frequency, the system is decoupled (the force sensor remo
 \end{figure}
 
 \section{Integral Force Feedback with Parallel Springs}
-\label{sec:org9bc19d0}
+\label{sec:org6947a77}
 \subsection{Stiffness in Parallel with the Force Sensor}
-\label{sec:orgdfd59fa}
+\label{sec:org9a80ee7}
 \begin{figure}[htbp]
 \centering
 \includegraphics[scale=1]{figs/system_parallel_springs.pdf}
@@ -377,7 +387,7 @@ This means that at low frequency, the system is decoupled (the force sensor remo
 \end{figure}
 
 \subsection{Plant Dynamics}
-\label{sec:org70fc8fa}
+\label{sec:org14f5b78}
 
 We define an adimensional parameter \(\alpha\), \(0 \le \alpha < 1\), that describes the proportion of the stiffness in parallel with the actuator and force sensor:
 \begin{subequations}
@@ -393,36 +403,28 @@ The overall stiffness \(k\) stays constant:
 \end{equation}
 
 \begin{equation}
+\label{eq:Gk_mimo_tf}
 \begin{bmatrix} f_u \\ f_v \end{bmatrix} =
 \bm{G}_k
 \begin{bmatrix} F_u \\ F_v \end{bmatrix}
 \end{equation}
 
 \begin{equation}
-\begin{bmatrix} f_u \\ f_v \end{bmatrix} =
-\frac{1}{G_{kp}}
+\label{eq:Gk}
+\bm{G}_k =
 \begin{bmatrix}
-   G_{kz} & -G_{kc} \\
-   G_{kc} &  G_{kz}
+  \frac{\left( \frac{s^2}{{\omega_0}^2} - \frac{\Omega^2}{{\omega_0}^2} + \alpha \right) \left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right) + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2} & \frac{- \left( 2 \xi \frac{s}{\omega_0} + 1 - \alpha \right) \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2} \\
+  \frac{\left( 2 \xi \frac{s}{\omega_0} + 1 - \alpha \right) \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2} & \frac{\left( \frac{s^2}{{\omega_0}^2} - \frac{\Omega^2}{{\omega_0}^2} + \alpha \right) \left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right) + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2}
 \end{bmatrix}
-\begin{bmatrix} F_u \\ F_v \end{bmatrix}
 \end{equation}
-With:
-\begin{subequations}
-  \begin{align}
-    G_{kp} &= \left( \frac{s^2}{{\omega_0}^2} + 2\xi \frac{s}{\omega_0} + 1 - \frac{\Omega^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0}\frac{s}{\omega_0} \right)^2 \\
-    G_{kz} &= \left( \frac{s^2}{{\omega_0}^2} - \frac{\Omega^2}{{\omega_0}^2} + \alpha \right) \left( \frac{s^2}{{\omega_0}^2} + 2\xi \frac{s}{\omega_0} + 1 - \frac{\Omega^2}{{\omega_0}^2} \right) + \left( 2 \frac{\Omega}{\omega_0}\frac{s}{\omega_0} \right)^2 \\
-    G_{kc} &= \left( 2 \xi \frac{s}{\omega_0} + 1 - \alpha \right) \left( 2 \frac{\Omega}{\omega_0}\frac{s}{\omega_0} \right)
-  \end{align}
-\end{subequations}
 
 \subsection{Effect of the Parallel Stiffness on the Plant Dynamics}
-\label{sec:orge20adc9}
+\label{sec:org4b26266}
 \begin{equation}
-  \begin{align}
+  \begin{aligned}
     \alpha > \frac{\Omega^2}{{\omega_0}^2} \\
     \Leftrightarrow k_p > m \Omega^2
-  \end{align}
+  \end{aligned}
 \end{equation}
 
 \begin{figure}[htbp]
@@ -438,7 +440,7 @@ With:
 \end{figure}
 
 \subsection{Optimal Parallel Stiffness}
-\label{sec:orgb14b5c2}
+\label{sec:orgfd42bdb}
 \begin{figure}[htbp]
 \begin{subfigure}[c]{0.49\linewidth}
 \includegraphics[width=\linewidth]{figs/root_locus_iff_kps.pdf}
@@ -453,62 +455,15 @@ With:
 \end{figure}
 
 
-\section{Direct Velocity Feedback}
-\label{sec:org7628683}
-\subsection{System Schematic and Control Architecture}
-\label{sec:org6953bc7}
-\begin{figure}[htbp]
-\centering
-\includegraphics[scale=1]{figs/system_dvf.pdf}
-\caption{\label{fig:system_dvf}System with relative velocity sensors and with decentralized controllers \(K_V\)}
-\end{figure}
-
-\subsection{Equations}
-\label{sec:orgfab42cd}
-
-\begin{equation}
-\begin{bmatrix} v_u \\ v_v \end{bmatrix} =
-\bm{G}_v
-\begin{bmatrix} F_u \\ F_v \end{bmatrix}
-\end{equation}
-
-\begin{equation}
-\begin{bmatrix} v_u \\ v_v \end{bmatrix} =
-\frac{1}{k} \frac{1}{G_{vp}}
-\begin{bmatrix}
-   G_{vz} & G_{vc} \\
-  -G_{vc} & G_{vz}
-\end{bmatrix}
-\begin{bmatrix} F_u \\ F_v \end{bmatrix}
-\end{equation}
-With:
-\begin{subequations}
-  \begin{align}
-    G_{vp} &= \left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2 \\
-    G_{vz} &= s \left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right) \\
-    G_{vc} &= 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0}
-  \end{align}
-\end{subequations}
-
-
-\subsection{Relative Direct Velocity Feedback}
-\label{sec:org5cf0d6b}
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[scale=1]{figs/root_locus_dvf.pdf}
-\caption{\label{fig:root_locus_dvf}Root Locus for Decentralized Direct Velocity Feedback for several rotational speeds \(\Omega\)}
-\end{figure}
-
 \section{Comparison of the Proposed Active Damping Techniques for Rotating Positioning Stages}
-\label{sec:orga2b60a8}
+\label{sec:org67dd4e8}
 \subsection{Physical Comparison}
-\label{sec:orgb69316c}
+\label{sec:orgf742b29}
 
 
 
 \subsection{Attainable Damping}
-\label{sec:org5c23e13}
+\label{sec:orgdb615c3}
 
 \begin{figure}[htbp]
 \centering
@@ -518,7 +473,7 @@ With:
 
 
 \subsection{Transmissibility and Compliance}
-\label{sec:org723fb63}
+\label{sec:org59532ce}
 
 
 \begin{figure}[htbp]
@@ -535,11 +490,11 @@ With:
 \end{figure}
 
 \section{Conclusion}
-\label{sec:orgd52b568}
+\label{sec:orgde4f24d}
 \label{sec:conclusion}
 
 \section*{Acknowledgment}
-\label{sec:orge4d73e9}
+\label{sec:org3284e1c}
 
 \bibliography{ref.bib}
 \end{document}
