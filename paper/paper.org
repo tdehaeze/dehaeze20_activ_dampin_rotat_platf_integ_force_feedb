@@ -153,7 +153,6 @@ To study the dynamics of the system, the differential equations of motions eqref
 \begin{equation}
   \begin{bmatrix} d_u \\ d_v \end{bmatrix} = \bm{G}_d \begin{bmatrix} F_u \\ F_v \end{bmatrix}
 \end{equation}
-
 with $\bm{G}_d$ a $2 \times 2$ transfer function matrix
 #+name: eq:Gd_m_k_c
 \begin{equation}
@@ -177,7 +176,7 @@ One can verify that without rotation ($\Omega = 0$) the system becomes equivalen
 
 # Change of variables
 In order to make this study less dependent on the system parameters, the following change of variable is performed:
-- $\omega_0 = \sqrt{\frac{k}{m}}$: Natural frequency of the mass-spring system in $\si{\radian/\s}$
+- $\omega_0 = \sqrt{\frac{k}{m}}$: Undamped natural frequency of the mass-spring system in $\si{\radian/\s}$
 - $\xi = \frac{c}{2 \sqrt{k m}}$: Damping ratio
 
 The transfer function matrix eqref:eq:Gd_m_k_c becomes equal to
@@ -209,20 +208,17 @@ Supposing small damping ($\xi \ll 1$), two pairs of complex conjugate poles are 
 #+name: eq:pole_values
 \begin{subequations}
   \begin{align}
-    p_{+} &= - \xi \omega_0 \left( 1 + \frac{\Omega}{\omega_0} \right) \pm j \left( \omega_0 + \Omega \right) \\
-    p_{-} &= - \xi \omega_0 \left( 1 - \frac{\Omega}{\omega_0} \right) \pm j \left( \omega_0 - \Omega \right)
+    p_{+} &= - \xi \omega_0 \left( 1 + \frac{\Omega}{\omega_0} \right) \pm j \omega_0 \left( 1 + \frac{\Omega}{\omega_0} \right) \\
+    p_{-} &= - \xi \omega_0 \left( 1 - \frac{\Omega}{\omega_0} \right) \pm j \omega_0 \left( 1 - \frac{\Omega}{\omega_0} \right)
   \end{align}
 \end{subequations}
 
-When the rotation speed in non-null, the resonance frequency is split into two pairs of complex conjugate poles.
+The real part and complex part of these two pairs of complex conjugate poles are represented in Figure ref:fig:campbell_diagram as a function of the rotational speed $\Omega$.
+
 As the rotation speed increases, $p_{+}$ goes to higher frequencies and $p_{-}$ to lower frequencies.
-
-# The system goes unstable at some frequency w0
-When the rotational speed $\Omega$ reaches $\omega_0$, the real part $p_{-}$ is positive meaning the system becomes unstable.
-The stiffness of the X-Y stage is too low to hold to rotating payload hence the instability.
-Stiff positioning platforms should be used if high rotational speeds or heavy payloads are used.
-
-This is graphically represented with the Campbell Diagram in Figure ref:fig:campbell_diagram.
+When the rotational speed $\Omega$ reaches $\omega_0$, the real part $p_{-}$ becomes positive rendering the system unstable.
+Physically, the negative stiffness term induced by centrifugal forces exceeds the spring stiffness.
+Thus, stiff positioning platforms should be used when working at high rotational speeds.
 
 #+name: fig:campbell_diagram
 #+caption: Campbell Diagram : Evolution of the complex and real parts of the system's poles as a function of the rotational speed $\Omega$
@@ -232,8 +228,8 @@ This is graphically represented with the Campbell Diagram in Figure ref:fig:camp
 
 # Bode Plots for different ratio W/w0
 Looking at the transfer function matrix $\bm{G}_d$ eqref:eq:Gd_w0_xi_k, one can see it has two distinct terms that can be studied separately:
-- the direct (diagonal) terms
-- the coupling (off-diagonal) terms
+- the direct (diagonal) terms (Figure ref:fig:plant_compare_rotating_speed_direct)
+- the coupling (off-diagonal) terms (Figure ref:fig:plant_compare_rotating_speed_coupling)
 
 The bode plot of the direct and coupling terms are shown in Figure ref:fig:plant_compare_rotating_speed for several rotational speed $\Omega$.
 
@@ -248,11 +244,11 @@ When the
 | file:figs/plant_compare_rotating_speed_direct.pdf                             | file:figs/plant_compare_rotating_speed_coupling.pdf                               |
 | <<fig:plant_compare_rotating_speed_direct>> Direct Terms $d_u/F_u$, $d_v/F_v$ | <<fig:plant_compare_rotating_speed_coupling>> Coupling Terms $d_v/F_u$, $d_u/F_v$ |
 
-In the rest of this study, $\Omega < \omega_0$
+In the rest of this study, rotational speeds smaller than the undamped natural frequency of the system are used ($\Omega < \omega_0$).
 
 * Decentralized Integral Force Feedback
-** System Schematic and Control Architecture
-Force Sensors are added in series with the actuators as shown in Figure [[fig:system_iff]].
+** Force Sensors and Control Architecture
+In order to apply Decentralized Integral Force Feedback to the system, force sensors are added in series of the two actuators (Figure ref:fig:system_iff).
 
 # Reference to IFF control
 
@@ -335,7 +331,7 @@ It increases with the rotational speed $\Omega$.
 \end{equation}
 
 # Problem of zero with a positive real part
-Also, as one zero has a positive real part, the *IFF control is no more unconditionally stable*.
+Also, as one zero has a positive real part, the IFF control is no more unconditionally stable.
 This is due to the fact that the zeros of the plant are the poles of the closed loop system with an infinite gain.
 Thus, for some finite IFF gain, one pole will have a positive real part and the system will be unstable.
 
@@ -381,7 +377,7 @@ This means that at low frequency, the system is decoupled (the force sensor remo
 # Explain that now the low frequency loop gain does not reach a gain more than 1 (if g not so high)
 
 #+name: fig:loop_gain_modified_iff
-#+caption: Bode Plot of the Loop Gain for IFF with and without the HPF
+#+caption: Bode Plot of the Loop Gain for IFF with and without the HPF, $\Omega = 0.1 \omega_0$
 #+attr_latex: :scale 1
 [[file:figs/loop_gain_modified_iff.pdf]]
 
@@ -392,7 +388,7 @@ This means that at low frequency, the system is decoupled (the force sensor remo
 \end{equation}
 
 #+name: fig:root_locus_modified_iff
-#+caption: Root Locus for IFF with and without the HPF
+#+caption: Root Locus for IFF with and without the HPF, $\Omega = 0.1 \omega_0$
 #+attr_latex: :scale 1
 [[file:figs/root_locus_modified_iff.pdf]]
 
@@ -408,7 +404,7 @@ This means that at low frequency, the system is decoupled (the force sensor remo
 # Trade off
 
 #+name: fig:root_locus_wi_modified_iff
-#+caption: Root Locus for several HPF cut-off frequencies $\omega_i$
+#+caption: Root Locus for several HPF cut-off frequencies $\omega_i$, $\Omega = 0.1 \omega_0$
 #+attr_latex: :scale 1
 [[file:figs/root_locus_wi_modified_iff.pdf]]
 
@@ -486,7 +482,7 @@ The overall stiffness $k$ stays constant:
 \end{equation}
 
 #+name: fig:plant_iff_kp
-#+caption: Bode Plot of $f_u/F_u$ without parallel spring, with parallel springs with stiffness $k_p < m \Omega^2$ and $k_p > m \Omega^2$
+#+caption: Bode Plot of $f_u/F_u$ without parallel spring, with parallel springs with stiffness $k_p < m \Omega^2$ and $k_p > m \Omega^2$, $\Omega = 0.1 \omega_0$
 #+attr_latex: :scale 1
 [[file:figs/plant_iff_kp.pdf]]
 
@@ -498,7 +494,7 @@ The overall stiffness $k$ stays constant:
 # Show that it is the case on the root locus
 
 #+name: fig:root_locus_iff_kp
-#+caption: Root Locus for IFF without parallel spring, with parallel springs with stiffness $k_p < m \Omega^2$ and $k_p > m \Omega^2$
+#+caption: Root Locus for IFF without parallel spring, with parallel springs with stiffness $k_p < m \Omega^2$ and $k_p > m \Omega^2$, $\Omega = 0.1 \omega_0$
 #+attr_latex: :scale 1
 [[file:figs/root_locus_iff_kp.pdf]]
 
@@ -515,11 +511,10 @@ The overall stiffness $k$ stays constant:
 # Example with kp = 5 m Omega
 
 #+name: fig:root_locus_iff_kps_opt
-#+caption: Root Locus for IFF when parallel stiffness is used
+#+caption: Root Locus for IFF when parallel stiffness is used, $\Omega = 0.1 \omega_0$
 #+attr_latex: :environment subfigure :width 0.49\linewidth :align c
 | file:figs/root_locus_iff_kps.pdf                 | file:figs/root_locus_opt_gain_iff_kp.pdf                                          |
 | <<fig:root_locus_iff_kps>> Three values of $k_p$ | <<fig:root_locus_opt_gain_iff_kp>> $k_p = 5 m \Omega^2$, optimal damping is shown |
-
 
 * Direct Velocity Feedback                                          :noexport:
 ** System Schematic and Control Architecture
@@ -593,7 +588,7 @@ With:
 ** Attainable Damping
 
 #+name: fig:comp_root_locus
-#+caption: Root Locus for the three proposed decentralized active damping techniques: IFF with HFP, IFF with parallel springs, and relative DVF
+#+caption: Root Locus for the three proposed decentralized active damping techniques: IFF with HFP, IFF with parallel springs, and relative DVF, $\Omega = 0.1 \omega_0$
 #+attr_latex: :scale 1
 [[file:figs/comp_root_locus.pdf]]
 
@@ -611,7 +606,7 @@ With:
 # The roll-off is -1 instead of -2
 
 #+name: fig:comp_active_damping
-#+caption: Comparison of the three proposed Active Damping Techniques
+#+caption: Comparison of the two proposed Active Damping Techniques, $\Omega = 0.1 \omega_0$
 #+attr_latex: :environment subfigure :width 0.45\linewidth :align c
 | file:figs/comp_compliance.pdf            | file:figs/comp_transmissibility.pdf      |
 | <<fig:comp_compliance>> Transmissibility | <<fig:comp_transmissibility>> Compliance |
