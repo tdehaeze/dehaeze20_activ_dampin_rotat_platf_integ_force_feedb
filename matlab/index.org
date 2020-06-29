@@ -143,8 +143,7 @@ It is shown in Figure [[fig:campbell_diagram]], and one can see that the system 
   ax2 = subplot(1,2,2);
   hold on;
   for p_i = 1:size(p_ws, 1)
-      plot(Ws,  imag(p_ws(p_i, :)), 'k-')
-      plot(Ws, -imag(p_ws(p_i, :)), 'k-')
+      plot(Ws, imag(p_ws(p_i, :)), 'k-')
   end
   hold off;
   xlabel('Rotation Frequency [rad/s]'); ylabel('Imaginary Part');
@@ -164,10 +163,15 @@ It is shown in Figure [[fig:campbell_diagram]], and one can see that the system 
 
   ax1 = subplot(1,2,1);
   hold on;
-  for p_i = 1:size(p_ws, 1)
-      plot(Ws, real(p_ws(p_i, :)), 'k-')
-  end
-  plot(Ws, zeros(size(Ws)), 'k--')
+  set(gca,'ColorOrderIndex', 1);
+  plot(Ws, real(p_ws(1, :)), '-', 'DisplayName', '$p_{+}$')
+  set(gca,'ColorOrderIndex', 1);
+  plot(Ws, real(p_ws(4, :)), '-', 'HandleVisibility', 'off')
+  set(gca,'ColorOrderIndex', 2);
+  plot(Ws, real(p_ws(2, :)), '-', 'DisplayName', '$p_{-}$')
+  set(gca,'ColorOrderIndex', 2);
+  plot(Ws, real(p_ws(3, :)), '-', 'HandleVisibility', 'off')
+  plot(Ws, zeros(size(Ws)), 'k--', 'HandleVisibility', 'off')
   hold off;
   xlabel('Rotation Frequency $\Omega$'); ylabel('Real Part');
   xlim([0, 2*w0]);
@@ -175,14 +179,19 @@ It is shown in Figure [[fig:campbell_diagram]], and one can see that the system 
   xticklabels({'$0$', '', '$\omega_0$', '', '$2 \omega_0$'})
   ylim([-3*xi, xi]);
   yticks([-3*xi, -2*xi, -xi, 0, xi])
-  yticklabels({'', '', '$-\xi$', '$0$', ''})
+  yticklabels({'', '', '$-\xi\omega_0$', '$0$', ''})
+  legend('location', 'northwest');
 
   ax2 = subplot(1,2,2);
   hold on;
-  for p_i = 1:size(p_ws, 1)
-      plot(Ws,  imag(p_ws(p_i, :)), 'k-')
-      plot(Ws, -imag(p_ws(p_i, :)), 'k-')
-  end
+  set(gca,'ColorOrderIndex', 1);
+  plot(Ws, imag(p_ws(1, :)), '-')
+  set(gca,'ColorOrderIndex', 1);
+  plot(Ws, imag(p_ws(4, :)), '-')
+  set(gca,'ColorOrderIndex', 2);
+  plot(Ws, imag(p_ws(2, :)), '-')
+  set(gca,'ColorOrderIndex', 2);
+  plot(Ws, imag(p_ws(3, :)), '-')
   plot(Ws, zeros(size(Ws)), 'k--')
   hold off;
   xlabel('Rotation Frequency $\Omega$'); ylabel('Imaginary Part');
@@ -364,7 +373,7 @@ They are compared in Figure [[fig:plant_compare_rotating_speed]].
   ax4 = subplot(2, 2, 4);
   hold on;
   for W_i = 1:length(Ws)
-      plot(freqs, 180/pi*angle(squeeze(freqresp(Gs{W_i}(1,1), freqs))))
+      plot(freqs, 180/pi*angle(squeeze(freqresp(Gs{W_i}(2,1), freqs))))
   end
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
   xlabel('Frequency [rad/s]'); ylabel('Phase [deg]');
