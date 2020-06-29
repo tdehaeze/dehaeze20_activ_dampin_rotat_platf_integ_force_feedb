@@ -29,7 +29,6 @@
 - Section [[sec:iff_pure_int]]
 - Section [[sec:iff_pseudo_int]]
 - Section [[sec:iff_parallel_stiffness]]
-- Section [[sec:dvf]]
 - Section [[sec:comparison]]
 - Section [[sec:notations]]
 
@@ -215,7 +214,6 @@ Define the rotating speed for the Simscape Model.
 
 #+begin_src matlab :exports none
   Kiff = tf(zeros(2));
-  Kdvf = tf(zeros(2));
 
   kp = 0; % Parallel Stiffness [N/m]
   cp = 0; % Parallel Damping [N/(m/s)]
@@ -492,7 +490,6 @@ The rotation speed is set to $\Omega = 0.1 \omega_0$.
 
 #+begin_src matlab :exports none
   Kiff = tf(zeros(2));
-  Kdvf = tf(zeros(2));
 #+end_src
 
 #+begin_src matlab
@@ -1294,7 +1291,6 @@ The same transfer function from $[F_u, F_v]$ to $[f_u, f_v]$ is written down fro
 
 #+begin_src matlab :exports none
   Kiff = tf(zeros(2));
-  Kdvf = tf(zeros(2));
 #+end_src
 
 #+begin_src matlab
@@ -1897,280 +1893,6 @@ Let's take $k_p = 5 m \Omega^2$ and find the optimal IFF control gain $g$ such t
   exportFig('figs-inkscape/root_locus_opt_gain_iff_kp.pdf', 'width', 'wide', 'height', 'tall', 'png', false, 'pdf', false, 'svg', true);
 #+end_src
 
-* Direct Velocity Feedback
-:PROPERTIES:
-:header-args:matlab+: :tangle matlab/s5_dvf.m
-:header-args:matlab+: :comments org :mkdirp yes
-:END:
-<<sec:dvf>>
-
-** Introduction                                                      :ignore:
-** Matlab Init                                              :noexport:ignore:
-#+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
-  <<matlab-dir>>
-#+end_src
-
-#+begin_src matlab :exports none :results silent :noweb yes
-  <<matlab-init>>
-#+end_src
-
-#+begin_src matlab :tangle no
-  addpath('./matlab/');
-  addpath('./src/');
-#+end_src
-
-** Schematic
-
-#+name: fig:system_dvf
-#+caption: Figure caption
-[[file:figs-tikz/system_dvf.png]]
-
-** Equations
-The sensed relative velocity are equal to:
-#+begin_important
-\begin{equation}
-\begin{bmatrix} \dot{d}_u \\ \dot{d}_v \end{bmatrix} =
-\bm{G}_v
-\begin{bmatrix} F_u \\ F_v \end{bmatrix}
-\end{equation}
-
-\begin{equation}
-\begin{bmatrix} \dot{d}_u \\ \dot{d}_v \end{bmatrix} =
-\frac{s}{k} \frac{1}{G_{vp}}
-\begin{bmatrix}
-   G_{vz} & G_{vc} \\
-  -G_{vc} & G_{vz}
-\end{bmatrix}
-\begin{bmatrix} F_u \\ F_v \end{bmatrix}
-\end{equation}
-With:
-\begin{align}
-  G_{vp} &= \left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2 \\
-  G_{vz} &= \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \\
-  G_{vc} &= 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0}
-\end{align}
-#+end_important
-
-** Plant Parameters
-Let's define initial values for the model.
-#+begin_src matlab
-  k = 1;    % Actuator Stiffness [N/m]
-  c = 0.05; % Actuator Damping [N/(m/s)]
-  m = 1;    % Payload mass [kg]
-#+end_src
-
-#+begin_src matlab
-  xi = c/(2*sqrt(k*m));
-  w0 = sqrt(k/m); % [rad/s]
-#+end_src
-
-#+begin_src matlab :exports none
-  kp = 0; % [N/m]
-  cp = 0; % [N/(m/s)]
-#+end_src
-
-** Comparison of the Analytical Model and the Simscape Model
-The rotating speed is set to $\Omega = 0.1 \omega_0$.
-#+begin_src matlab
-  W = 0.1*w0;
-#+end_src
-
-#+begin_src matlab :exports none
-  Kiff = tf(zeros(2));
-  Kdvf = tf(zeros(2));
-#+end_src
-
-#+begin_src matlab
-  open('rotating_frame.slx');
-#+end_src
-
-And the transfer function from $[F_u, F_v]$ to $[v_u, v_v]$ is identified using the Simscape model.
-#+begin_src matlab
-  %% Name of the Simulink File
-  mdl = 'rotating_frame';
-
-  %% Input/Output definition
-  clear io; io_i = 1;
-  io(io_i) = linio([mdl, '/K'], 1, 'openinput');  io_i = io_i + 1;
-  io(io_i) = linio([mdl, '/G'], 1, 'openoutput'); io_i = io_i + 1;
-#+end_src
-
-#+begin_src matlab
-  Gdvf = linearize(mdl, io, 0);
-
-  %% Input/Output definition
-  Gdvf.InputName  = {'Fu', 'Fv'};
-  Gdvf.OutputName = {'Vu', 'Vv'};
-#+end_src
-
-The same transfer function from $[F_u, F_v]$ to $[v_u, v_v]$ is written down from the analytical model.
-#+begin_src matlab
-  Gdvf_th = (s/k)/(((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))^2 + (2*W*s/(w0^2))^2) * ...
-            [(s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2), 2*W*s/(w0^2) ; ...
-             -2*W*s/(w0^2), (s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2)];
-
-  Gdvf_th.InputName  = {'Fu', 'Fv'};
-  Gdvf_th.OutputName = {'vu', 'vv'};
-#+end_src
-
-The two are compared in Figure [[fig:plant_iff_comp_simscape_analytical]] and found to perfectly match.
-
-#+begin_src matlab :exports none
-  freqs = logspace(-1, 1, 1000);
-
-  figure;
-  ax1 = subplot(2, 2, 1);
-  hold on;
-  plot(freqs, abs(squeeze(freqresp(Gdvf(1,1), freqs))), '-')
-  plot(freqs, abs(squeeze(freqresp(Gdvf_th(1,1), freqs))), '--')
-  hold off;
-  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
-  set(gca, 'XTickLabel',[]); ylabel('Magnitude [$\frac{m/s}{N}$]');
-  title('$v_u/F_u$, $v_v/F_v$');
-
-  ax3 = subplot(2, 2, 3);
-  hold on;
-  plot(freqs, 180/pi*angle(squeeze(freqresp(Gdvf(1,1), freqs))), '-')
-  plot(freqs, 180/pi*angle(squeeze(freqresp(Gdvf_th(1,1), freqs))), '--')
-  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
-  xlabel('Frequency [rad/s]'); ylabel('Phase [deg]');
-  yticks(-180:90:180);
-  ylim([-180 180]);
-  hold off;
-
-  ax2 = subplot(2, 2, 2);
-  hold on;
-  plot(freqs, abs(squeeze(freqresp(Gdvf(1,2), freqs))), '-')
-  plot(freqs, abs(squeeze(freqresp(Gdvf_th(1,2), freqs))), '--')
-  hold off;
-  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
-  set(gca, 'XTickLabel',[]); ylabel('Magnitude [$\frac{m/s}{N}$]');
-  title('$v_u/F_v$, $v_v/F_u$');
-
-  ax4 = subplot(2, 2, 4);
-  hold on;
-  plot(freqs, 180/pi*angle(squeeze(freqresp(Gdvf(1,2), freqs))), '-')
-  plot(freqs, 180/pi*angle(squeeze(freqresp(Gdvf_th(1,2), freqs))), '--')
-  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
-  xlabel('Frequency [rad/s]'); ylabel('Phase [deg]');
-  yticks(-180:90:180);
-  ylim([-180 180]);
-  hold off;
-
-  linkaxes([ax1,ax2,ax3,ax4],'x');
-  xlim([freqs(1), freqs(end)]);
-
-  linkaxes([ax1,ax2],'y');
-#+end_src
-
-#+begin_src matlab :tangle no :exports results :results file replace
-  exportFig('figs/plant_dvf_comp_simscape_analytical.pdf', 'width', 'full', 'height', 'full');
-#+end_src
-
-#+name: fig:plant_dvf_comp_simscape_analytical
-#+caption: Comparison of the transfer functions from $[F_u, F_v]$ to $[v_u, v_v]$ between the Simscape model and the analytical one
-#+RESULTS:
-[[file:figs/plant_dvf_comp_simscape_analytical.png]]
-
-** Root Locus
-The Decentralized Direct Velocity Feedback controller consist of a pure gain on the diagonal:
-\begin{equation}
-  K_{\text{DVF}}(s) = g \begin{bmatrix}
-  1 & 0 \\
-  0 & 1
-\end{bmatrix}
-\end{equation}
-
-The corresponding Root Locus plots for the following rotating speeds are shown in Figure [[fig:root_locus_dvf]].
-#+begin_src matlab
-  Ws = [0, 0.2, 0.7, 1.1]*w0; % Rotating Speeds [rad/s]
-#+end_src
-
-It is shown that for rotating speed $\Omega < \omega_0$, the closed loop system is unconditionally stable and arbitrary damping can be added to the poles.
-#+begin_src matlab :exports none
-  gains = logspace(-2, 1, 100);
-
-  figure;
-  hold on;
-  for W_i = 1:length(Ws)
-      W = Ws(W_i);
-
-      Gdvf = (s/k)/(((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))^2 + (2*W*s/(w0^2))^2) * ...
-             [(s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2), 2*W*s/(w0^2) ; ...
-              -2*W*s/(w0^2), (s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2)];
-
-      set(gca,'ColorOrderIndex',W_i);
-      plot(real(pole(Gdvf)),  imag(pole(Gdvf)), 'x', ...
-           'DisplayName', sprintf('$\\Omega = %.2f \\omega_0 $', W/w0));
-
-      set(gca,'ColorOrderIndex',W_i);
-      plot(real(tzero(Gdvf)),  imag(tzero(Gdvf)), 'o', ...
-           'HandleVisibility', 'off');
-   
-      for g = gains
-          set(gca,'ColorOrderIndex',W_i);
-          cl_poles = pole(feedback(Gdvf, g*eye(2)));
-
-          plot(real(cl_poles), imag(cl_poles), '.', ...
-               'HandleVisibility', 'off');
-      end
-  end
-  hold off;
-  axis square;
-  xlim([-2, 0.5]); ylim([0, 2.5]);
-
-  xlabel('Real Part'); ylabel('Imaginary Part');
-  legend('location', 'northwest');
-#+end_src
-
-#+begin_src matlab :tangle no :exports results :results file replace
-  exportFig('figs/root_locus_dvf.pdf', 'width', 'wide', 'height', 'tall');
-#+end_src
-
-#+name: fig:root_locus_dvf
-#+caption: Root Locus for the Decentralized Direct Velocity Feedback controller. Several rotating speed are shown.
-#+RESULTS:
-[[file:figs/root_locus_dvf.png]]
-
-#+begin_src matlab :exports none :tangle no
-  gains = logspace(-2, 1, 1000);
-
-  figure;
-  hold on;
-  for W_i = 1:length(Ws)
-      W = Ws(W_i);
-
-      Gdvf = (s/k)/(((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))^2 + (2*W*s/(w0^2))^2) * ...
-             [(s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2), 2*W*s/(w0^2) ; ...
-              -2*W*s/(w0^2), (s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2)];
-
-      set(gca,'ColorOrderIndex',W_i);
-      plot(real(pole(Gdvf)),  imag(pole(Gdvf)), 'x', ...
-           'DisplayName', sprintf('$\\Omega = %.2f \\omega_0 $', W/w0));
-
-      set(gca,'ColorOrderIndex',W_i);
-      plot(real(tzero(Gdvf)),  imag(tzero(Gdvf)), 'o', ...
-           'HandleVisibility', 'off');
-
-      poles_dvf = rootLocusPolesSorted(Gdvf, eye(2), gains, 'd_max', 1e-4);
-      for p_i = 1:size(poles_dvf, 2)
-          set(gca,'ColorOrderIndex', W_i);
-          plot(real(poles_dvf(:, p_i)), imag(poles_dvf(:, p_i)), '-', ...
-               'HandleVisibility', 'off');
-      end
-  end
-  hold off;
-  axis square;
-  xlim([-2, 0.5]); ylim([0, 2.5]);
-
-  xlabel('Real Part'); ylabel('Imaginary Part');
-  legend('location', 'northwest');
-#+end_src
-
-#+begin_src matlab :tangle no :exports none :results none
-  exportFig('figs-inkscape/root_locus_dvf.pdf', 'width', 'wide', 'height', 'tall', 'png', false, 'pdf', false, 'svg', true);
-#+end_src
-
 * Comparison
 :PROPERTIES:
 :header-args:matlab+: :tangle matlab/s6_act_damp_comparison.m
@@ -2241,13 +1963,6 @@ IFF With parallel Stiffness
   k = k + kp;
 #+end_src
 
-DVF
-#+begin_src matlab
-  Gdvf = (s/k)/(((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))^2 + (2*W*s/(w0^2))^2) * ...
-         [(s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2), 2*W*s/(w0^2) ; ...
-          -2*W*s/(w0^2), (s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2)];
-#+end_src
-
 #+begin_src matlab :exports none
   figure;
 
@@ -2281,20 +1996,6 @@ DVF
       plot(real(cl_poles), imag(cl_poles), '.', ...
            'HandleVisibility', 'off');
   end
-
-  set(gca,'ColorOrderIndex',3);
-  plot(real(pole(Gdvf)),  imag(pole(Gdvf)), 'x', ...
-       'DisplayName', 'DVF');
-  set(gca,'ColorOrderIndex',3);
-  plot(real(tzero(Gdvf)),  imag(tzero(Gdvf)), 'o', ...
-       'HandleVisibility', 'off');
-  for g = gains
-      Kdvf = g*eye(2);
-      cl_poles = pole(feedback(Gdvf, Kdvf));
-      set(gca,'ColorOrderIndex',3);
-      plot(real(cl_poles), imag(cl_poles), '.', ...
-           'HandleVisibility', 'off');
-  end
   hold off;
   axis square;
   xlim([-1.2, 0.05]); ylim([0, 1.25]);
@@ -2308,7 +2009,7 @@ DVF
 #+end_src
 
 #+name: fig:comp_root_locus
-#+caption: Root Locus plot - Comparison of IFF with additional high pass filter, IFF with additional parallel stiffness and DVF
+#+caption: Root Locus plot - Comparison of IFF with additional high pass filter, IFF with additional parallel stiffness
 #+RESULTS:
 [[file:figs/comp_root_locus.png]]
 
@@ -2317,7 +2018,6 @@ DVF
 
   poles_iff_hpf = rootLocusPolesSorted(Giff, 1/(s + wi)*eye(2), gains, 'd_max', 1e-4);
   poles_iff_kp = rootLocusPolesSorted(Giff_kp, 1/s*eye(2), gains, 'd_max', 1e-4);
-  poles_dvf = rootLocusPolesSorted(Gdvf, eye(2), gains, 'd_max', 1e-4);
 
   figure;
 
@@ -2343,18 +2043,6 @@ DVF
   for p_i = 1:size(poles_iff_kp, 2)
       set(gca,'ColorOrderIndex',2);
       plot(real(poles_iff_kp(:, p_i)), imag(poles_iff_kp(:, p_i)), '-', ...
-           'HandleVisibility', 'off');
-  end
-
-  set(gca,'ColorOrderIndex',3);
-  plot(real(pole(Gdvf)),  imag(pole(Gdvf)), 'x', ...
-       'DisplayName', 'DVF');
-  set(gca,'ColorOrderIndex',3);
-  plot(real(tzero(Gdvf)),  imag(tzero(Gdvf)), 'o', ...
-       'HandleVisibility', 'off');
-  for p_i = 1:size(poles_dvf, 2)
-      set(gca,'ColorOrderIndex',3);
-      plot(real(poles_dvf(:, p_i)), imag(poles_dvf(:, p_i)), '-', ...
            'HandleVisibility', 'off');
   end
   hold off;
@@ -2408,28 +2096,10 @@ In order to compare to three considered Active Damping techniques, gains that yi
   end
 #+end_src
 
-#+begin_src matlab :exports none
-  %% Direct Velocity Feedback
-  gains = logspace(0, 2, 100);
-  opt_zeta_dvf = 0;
-  opt_gain_dvf = 0;
-
-  for g = gains
-      Kdvf = g*eye(2);
-
-      [w, zeta] = damp(minreal(feedback(Gdvf, Kdvf)));
-
-      if min(zeta) > opt_zeta_dvf && all(zeta > 0) && min(zeta) < 0.85
-        opt_zeta_dvf = min(zeta);
-        opt_gain_dvf = g;
-      end
-  end
-#+end_src
-
 The obtained damping ratio and control are shown below.
 
 #+begin_src matlab :exports results :results value table replace :tangle no :post addhdr(*this*)
-  data2orgtable([opt_zeta_iff, opt_zeta_kp, opt_zeta_dvf; opt_gain_iff, opt_gain_kp, opt_gain_dvf]', {'Modified IFF', 'IFF with $k_p$', 'DVF'}, {'Obtained $\xi$', 'Control Gain'}, ' %.2f ');
+  data2orgtable([opt_zeta_iff, opt_zeta_kp; opt_gain_iff, opt_gain_kp]', {'Modified IFF', 'IFF with $k_p$'}, {'Obtained $\xi$', 'Control Gain'}, ' %.2f ');
 #+end_src
 
 #+RESULTS:
@@ -2437,22 +2107,17 @@ The obtained damping ratio and control are shown below.
 |----------------+----------------+--------------|
 | Modified IFF   |           0.83 |          2.0 |
 | IFF with $k_p$ |           0.83 |         2.01 |
-| DVF            |           0.85 |         1.67 |
 
-** Transmissibility
+** Passive Damping - Critical Damping
+#+begin_src matlab
+  c_opt = 2*sqrt(k*m);
+#+end_src
+
+** Transmissibility And Compliance
 <<sec:comp_transmissibilty>>
 
 #+begin_src matlab
   open('rotating_frame.slx');
-#+end_src
-
-*** Open Loop                                                       :ignore:
-#+begin_src matlab :exports none
-  Kdvf = tf(zeros(2));
-  Kiff = tf(zeros(2));
-
-  kp = 0;
-  cp = 0;
 #+end_src
 
 #+begin_src matlab
@@ -2462,23 +2127,57 @@ The obtained damping ratio and control are shown below.
   %% Input/Output definition
   clear io; io_i = 1;
   io(io_i) = linio([mdl, '/dw'], 1, 'input');  io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/fd'], 1, 'input');  io_i = io_i + 1;
   io(io_i) = linio([mdl, '/Meas'], 1, 'output');  io_i = io_i + 1;
 #+end_src
 
+*** Open Loop                                                       :ignore:
+#+begin_src matlab :exports none
+  Kiff = tf(zeros(2));
+
+  kp = 0;
+  cp = 0;
+#+end_src
+
 #+begin_src matlab
-  Tol = linearize(mdl, io, 0);
+  G_ol = linearize(mdl, io, 0);
 
   %% Input/Output definition
-  Tol.InputName  = {'Dwx', 'Dwy'};
-  Tol.OutputName = {'Dx', 'Dy'};
+  G_ol.InputName  = {'Dwx', 'Dwy', 'Fdx', 'Fdy'};
+  G_ol.OutputName = {'Dx', 'Dy'};
+#+end_src
+
+*** Passive Damping
+#+begin_src matlab
+  kp = 0;
+  cp = 0;
+#+end_src
+
+#+begin_src matlab
+  c_old = c;
+  c = c_opt;
+#+end_src
+
+#+begin_src matlab :exports none
+  Kiff = tf(zeros(2));
+#+end_src
+
+#+begin_src matlab
+  G_pas = linearize(mdl, io, 0);
+
+  %% Input/Output definition
+  G_pas.InputName  = {'Dwx', 'Dwy', 'Fdx', 'Fdy'};
+  G_pas.OutputName = {'Dx', 'Dy'};
+#+end_src
+
+#+begin_src matlab
+  c = c_old;
 #+end_src
 
 *** Pseudo Integrator IFF                                           :ignore:
 #+begin_src matlab :exports none
   kp = 0;
   cp = 0;
-
-  Kdvf = tf(zeros(2));
 #+end_src
 
 #+begin_src matlab
@@ -2486,11 +2185,11 @@ The obtained damping ratio and control are shown below.
 #+end_src
 
 #+begin_src matlab
-  Tiff = linearize(mdl, io, 0);
+  G_iff = linearize(mdl, io, 0);
 
   %% Input/Output definition
-  Tiff.InputName  = {'Dwx', 'Dwy'};
-  Tiff.OutputName = {'Dx', 'Dy'};
+  G_iff.InputName  = {'Dwx', 'Dwy', 'Fdx', 'Fdy'};
+  G_iff.OutputName = {'Dx', 'Dy'};
 #+end_src
 
 *** IFF With parallel Stiffness                                     :ignore:
@@ -2503,36 +2202,12 @@ The obtained damping ratio and control are shown below.
   Kiff = opt_gain_kp/s*tf(eye(2));
 #+end_src
 
-#+begin_src matlab :exports none
-  Kdvf = tf(zeros(2));
-#+end_src
-
 #+begin_src matlab
-  Tiff_kp = linearize(mdl, io, 0);
+  G_kp = linearize(mdl, io, 0);
 
   %% Input/Output definition
-  Tiff_kp.InputName  = {'Dwx', 'Dwy'};
-  Tiff_kp.OutputName = {'Dx', 'Dy'};
-#+end_src
-
-*** DVF                                                             :ignore:
-#+begin_src matlab :exports none
-  kp = 0;
-  cp = 0;
-
-  Kiff = tf(zeros(2));
-#+end_src
-
-#+begin_src matlab
-  Kdvf = opt_gain_kp*tf(eye(2));
-#+end_src
-
-#+begin_src matlab
-  Tdvf = linearize(mdl, io, 0);
-
-  %% Input/Output definition
-  Tdvf.InputName  = {'Dwx', 'Dwy'};
-  Tdvf.OutputName = {'Dx', 'Dy'};
+  G_kp.InputName  = {'Dwx', 'Dwy', 'Fdx', 'Fdy'};
+  G_kp.OutputName = {'Dx', 'Dy'};
 #+end_src
 
 *** Transmissibility                                                :ignore:
@@ -2541,13 +2216,13 @@ The obtained damping ratio and control are shown below.
 
   figure;
   hold on;
-  plot(freqs, abs(squeeze(freqresp(Tiff(1,1), freqs))), ...
+  plot(freqs, abs(squeeze(freqresp(G_iff({'Dx'}, {'Dwx'}), freqs))), ...
        'DisplayName', 'IFF + HPF')
-  plot(freqs, abs(squeeze(freqresp(Tiff_kp(1,1), freqs))), ...
+  plot(freqs, abs(squeeze(freqresp(G_kp( {'Dx'}, {'Dwx'}), freqs))), ...
        'DisplayName', 'IFF + $k_p$')
-  plot(freqs, abs(squeeze(freqresp(Tdvf(1,1), freqs))), ...
-       'DisplayName', 'DVF')
-  plot(freqs, abs(squeeze(freqresp(Tol(1,1), freqs))), 'k-', ...
+  plot(freqs, abs(squeeze(freqresp(G_pas({'Dx'}, {'Dwx'}), freqs))), ...
+       'DisplayName', 'Passive')
+  plot(freqs, abs(squeeze(freqresp(G_ol( {'Dx'}, {'Dwx'}), freqs))), 'k-', ...
        'DisplayName', 'Open-Loop')
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
@@ -2568,110 +2243,19 @@ The obtained damping ratio and control are shown below.
   exportFig('figs-inkscape/comp_transmissibility.pdf', 'width', 'half', 'height', 'tall', 'png', false, 'pdf', false, 'svg', true);
 #+end_src
 
-** Compliance
-<<sec:comp_compliance>>
-*** Open Loop                                                       :ignore:
-#+begin_src matlab :exports none
-  Kdvf = tf(zeros(2));
-  Kiff = tf(zeros(2));
-
-  kp = 0;
-  cp = 0;
-#+end_src
-
-#+begin_src matlab
-  %% Name of the Simulink File
-  mdl = 'rotating_frame';
-
-  %% Input/Output definition
-  clear io; io_i = 1;
-  io(io_i) = linio([mdl, '/fd'], 1, 'input');  io_i = io_i + 1;
-  io(io_i) = linio([mdl, '/Meas'], 1, 'output');  io_i = io_i + 1;
-#+end_src
-
-#+begin_src matlab
-  Col = linearize(mdl, io, 0);
-
-  %% Input/Output definition
-  Col.InputName  = {'Fdx', 'Fdy'};
-  Col.OutputName = {'Dx', 'Dy'};
-#+end_src
-
-*** Pseudo Integrator IFF                                           :ignore:
-#+begin_src matlab :exports none
-  kp = 0;
-  cp = 0;
-
-  Kdvf = tf(zeros(2));
-#+end_src
-
-#+begin_src matlab
-  Kiff = opt_gain_iff/(wi + s)*tf(eye(2));
-#+end_src
-
-#+begin_src matlab
-  Ciff = linearize(mdl, io, 0);
-
-  %% Input/Output definition
-  Ciff.InputName  = {'Fdx', 'Fdy'};
-  Ciff.OutputName = {'Dx', 'Dy'};
-#+end_src
-
-*** IFF With parallel Stiffness                                     :ignore:
-#+begin_src matlab
-  kp = 5*m*W^2;
-  cp = 0.01;
-#+end_src
-
-#+begin_src matlab
-  Kiff = opt_gain_kp/s*tf(eye(2));
-#+end_src
-
-#+begin_src matlab :exports none
-  Kdvf = tf(zeros(2));
-#+end_src
-
-#+begin_src matlab
-  Ciff_kp = linearize(mdl, io, 0);
-
-  %% Input/Output definition
-  Ciff_kp.InputName  = {'Fdx', 'Fdy'};
-  Ciff_kp.OutputName = {'Dx', 'Dy'};
-#+end_src
-
-*** DVF                                                             :ignore:
-#+begin_src matlab :exports none
-  kp = 0;
-  cp = 0;
-
-  Kiff = tf(zeros(2));
-#+end_src
-
-#+begin_src matlab
-  Kdvf = opt_gain_kp*tf(eye(2));
-#+end_src
-
-#+begin_src matlab
-  Cdvf = linearize(mdl, io, 0);
-
-  %% Input/Output definition
-  Cdvf.InputName  = {'Fdx', 'Fdy'};
-  Cdvf.OutputName = {'Dx', 'Dy'};
-#+end_src
-
 *** Compliance                                                      :ignore:
 #+begin_src matlab :exports none
   freqs = logspace(-2, 1, 1000);
 
   figure;
   hold on;
-  plot(freqs, abs(squeeze(freqresp(Ciff(1,1), freqs))), ...
+  plot(freqs, abs(squeeze(freqresp(G_iff({'Dx'}, {'Fdx'}), freqs))), ...
        'DisplayName', 'IFF + HPF')
-  plot(freqs, abs(squeeze(freqresp(Ciff_kp(1,1), freqs))), ...
+  plot(freqs, abs(squeeze(freqresp(G_kp( {'Dx'}, {'Fdx'}), freqs))), ...
        'DisplayName', 'IFF + $k_p$')
-  plot(freqs, abs(squeeze(freqresp(Cdvf(1,1), freqs))), ...
-       'DisplayName', 'DVF')
-  plot(freqs, abs(squeeze(freqresp(Col(1,1), freqs))), 'k-', ...
+  plot(freqs, abs(squeeze(freqresp(G_pas({'Dx'}, {'Fdx'}), freqs))), ...
+       'DisplayName', 'Passive')
+  plot(freqs, abs(squeeze(freqresp(G_ol( {'Dx'}, {'Fdx'}), freqs))), 'k-', ...
        'DisplayName', 'Open-Loop')
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
