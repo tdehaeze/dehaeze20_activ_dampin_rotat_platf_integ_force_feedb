@@ -231,11 +231,9 @@ For $\Omega > \omega_0$, the low frequency complex conjugate poles $p_{-}$ becom
 <<sec:iff>>
 ** Force Sensors and Control Architecture
 # Description of the control architecture
-In order to apply Decentralized Integral Force Feedback to the system, force sensors are added in series with the two actuators (Figure ref:fig:system_iff).
-Two identical controllers $K_F$ are added to feedback each of the sensed forces to its collocated actuator.
-The control diagram is shown in Figure ref:fig:control_diagram_iff.
-
-# Decentralized aspect + SISO approach
+In order to apply IFF to the system, force sensors are added in series with the two actuators (Figure ref:fig:system_iff).
+As this study focuses on decentralized control, two identical controllers $K_F$ are used to feedback each of the sensed force to its associated actuator and no attempt is made to counteract the interactions in the system.
+The control diagram is schematically shown in Figure ref:fig:control_diagram_iff.
 
 #+attr_latex: :options [t]{0.55\linewidth}
 #+begin_minipage
@@ -254,7 +252,7 @@ The control diagram is shown in Figure ref:fig:control_diagram_iff.
 #+end_minipage
 
 ** Plant Dynamics
-The forces measured by the force sensors are equal to:
+The forces measured by the two force sensors are equal to
 #+name: eq:measured_force
 \begin{equation}
   \begin{bmatrix} f_{u} \\ f_{v} \end{bmatrix} =
@@ -262,7 +260,7 @@ The forces measured by the force sensors are equal to:
   \begin{bmatrix} d_u \\ d_v \end{bmatrix}
 \end{equation}
 
-Re-injecting eqref:eq:Gd_w0_xi_k into eqref:eq:measured_force yields:
+Re-injecting eqref:eq:Gd_w0_xi_k into eqref:eq:measured_force yields
 #+name: eq:Gf_mimo_tf
 \begin{equation}
   \begin{bmatrix} f_{u} \\ f_{v} \end{bmatrix} = \bm{G}_{f} \begin{bmatrix} F_u \\ F_v \end{bmatrix}
@@ -276,7 +274,7 @@ with $\bm{G}_f$ a $2 \times 2$ transfer function matrix
 \end{bmatrix}
 \end{equation}
 
-The zeros of the diagonal terms are equal to (neglecting the damping for simplicity)
+The zeros of the diagonal terms of $\bm{G}_f$ are equal to (neglecting the damping for simplicity)
 \begin{subequations}
   \begin{align}
     z_c &= \pm j \omega_0 \sqrt{\frac{1}{2} \sqrt{8 \frac{\Omega^2}{{\omega_0}^2} + 1} + \frac{\Omega^2}{{\omega_0}^2} + \frac{1}{2} } \label{eq:iff_zero_cc} \\
@@ -284,25 +282,23 @@ The zeros of the diagonal terms are equal to (neglecting the damping for simplic
   \end{align}
 \end{subequations}
 
-The frequency of the two complex conjugate zeros $z_c$ eqref:eq:iff_zero_cc is between the frequency of the two pairs of complex conjugate poles $p_{-}$ and $p_{+}$ eqref:eq:pole_values.
-This is the expected behavior of a collocated pair of actuator and sensor.
+It can be easily shown that the frequency of the two complex conjugate zeros $z_c$ eqref:eq:iff_zero_cc lies between the frequency of the two pairs of complex conjugate poles $p_{-}$ and $p_{+}$ eqref:eq:pole_values.
 
-However for non-null rotational speeds, two real zeros $z_r$ eqref:eq:iff_zero_real appear in the diagonal terms which represent a non-minimum phase behavior.
+For non-null rotational speeds, two real zeros $z_r$ eqref:eq:iff_zero_real appear in the diagonal terms inducing a non-minimum phase behavior.
 This can be seen in the Bode plot of the diagonal terms (Figure ref:fig:plant_iff_compare_rotating_speed) where the magnitude experiences an increase of its slope without any change of phase.
 
 # Show that the low frequency gain is no longer zero
-The low frequency gain of $\bm{G}_f$ is no longer zero, and increases with the rotational speed $\Omega$
+Similarly, the low frequency gain of $\bm{G}_f$ is no longer zero and increases with the rotational speed $\Omega$
 #+name: low_freq_gain_iff_plan
 \begin{equation}
   \lim_{\omega \to 0} \left| \bm{G}_f (j\omega) \right| = \begin{bmatrix}
-  \frac{- \Omega^2}{{\omega_0}^2 - \Omega^2} & 0 \\
-  0  & \frac{- \Omega^2}{{\omega_0}^2 - \Omega^2}
+  \frac{\Omega^2}{{\omega_0}^2 - \Omega^2} & 0 \\
+  0  & \frac{\Omega^2}{{\omega_0}^2 - \Omega^2}
 \end{bmatrix}
 \end{equation}
 
 # Explain why do we have this low frequency gain
-This low frequency gain can be explained as follows: a constant force induces a small displacement of the mass, which then increases the centrifugal forces measured by the force sensors.
-# Another way to explain this low frequency gain is to model the centrifugal forces by a negative stiffness $k_p = -m \Omega^2$ in parallel with both the actuator and force sensor as in Figure ref:fig:system_parallel_springs.
+This low frequency gain can be explained as follows: a constant force $F_u$ induces a small displacement of the mass $d_u = \frac{F_u}{k - m\Omega^2}$, which increases the centrifugal force $m\Omega^2d_u = \frac{\Omega^2}{{\omega_0}^2 - \Omega^2} F_u$ which is measured by the force sensors.
 
 #+name: fig:plant_iff_compare_rotating_speed
 #+caption: Bode plot of the diagonal terms of $\bm{G}_f$ for several rotational speeds $\Omega$
@@ -310,36 +306,30 @@ This low frequency gain can be explained as follows: a constant force induces a 
 [[file:figs/plant_iff_compare_rotating_speed.pdf]]
 
 ** Decentralized Integral Force Feedback with Pure Integrators
-The two IFF controllers $K_F$ are pure integrators
+The two IFF controllers $K_F$ consist of a pure integrator
 #+NAME: eq:Kf_pure_int
 \begin{equation}
   \bm{K}_F(s) = \begin{bmatrix} K_F(s) & 0 \\ 0 & K_F(s) \end{bmatrix}, \quad K_F(s) = g \cdot \frac{1}{s}
 \end{equation}
-where $g$ is a scalar value representing the gain of the controller.
+where $g$ is a scalar representing the gain of the controller.
 
 # General explanation for the Root Locus Plot
-In order to see how the controller affects the poles of the closed loop system, the Root Locus is constructed as follows.
-The poles of the closed-loop system are drawn in the complex plane as the gain $g$ varies from $0$ to $\infty$ for the two controllers simultaneously.
-The closed-loop poles start at the open-loop poles (shown by $\tikz[baseline=-0.6ex] \node[cross out, draw=black, minimum size=1ex, line width=2pt, inner sep=0pt, outer sep=0pt] at (0, 0){};$) for $g = 0$ and coincide with the transmission zeros (shown by $\tikz[baseline=-0.6ex] \draw[line width=2pt, inner sep=0pt, outer sep=0pt] (0,0) circle[radius=3pt];$) as $g \to \infty$.
-The direction of increasing gains is shown by the arrows $\tikz[baseline=-0.6ex] \draw[-{Stealth[round]},line width=2pt] (0,0) -- (0.3,0);$.
+In order to see how the IFF affects the poles of the closed loop system, a Root Locus (Figure ref:fig:root_locus_pure_iff) is constructed as follows: the poles of the closed-loop system are drawn in the complex plane as the gain $g$ varies from $0$ to $\infty$ for the two controllers simultaneously.
+As explained in cite:preumont08_trans_zeros_struc_contr_with,skogestad07_multiv_feedb_contr, the closed-loop poles start at the open-loop poles (shown by $\tikz[baseline=-0.6ex] \node[cross out, draw=black, minimum size=1ex, line width=2pt, inner sep=0pt, outer sep=0pt] at (0, 0){};$) for $g = 0$ and coincide with the transmission zeros (shown by $\tikz[baseline=-0.6ex] \draw[line width=2pt, inner sep=0pt, outer sep=0pt] (0,0) circle[radius=3pt];$) as $g \to \infty$.
+The direction of increasing gain is indicated by arrows $\tikz[baseline=-0.6ex] \draw[-{Stealth[round]},line width=2pt] (0,0) -- (0.3,0);$.
 
 #+name: fig:root_locus_pure_iff
-#+caption: Root Locus for the Decentralized Integral Force Feedback
+#+caption: Root Locus for the Decentralized Integral Force Feedback for several rotating speeds $\Omega$
 #+attr_latex: :scale 1
 [[file:figs/root_locus_pure_iff.pdf]]
 
 # IFF is usually known for its guaranteed stability (add reference) which is not the case anymore due to gyroscopic effects
-Whereas collocated IFF is known for its guaranteed stability, which is the case here for $\Omega = 0$, this property is lost as soon as the rotational speed in non-null due to gyroscopic effects.
+Whereas collocated IFF is usually associated with unconditional stability cite:preumont91_activ, this property is lost as soon as the rotational speed in non-null due to gyroscopic effects.
 This can be seen in the Root Locus (Figure ref:fig:root_locus_pure_iff) where the pole corresponding to the controller is bounded to the right half plane implying closed-loop system instability.
 
-# Physical Interpretation ?
-# This instability can be explained by the gyroscopic effects.
-# At low frequency, the gain is very large and thus no force is transmitted to the payload.
-# This means that at low frequency, the system is decoupled (the force sensor removed) and thus the system is unstable.
-
 # Introduce next two sections
-Two system modifications are proposed in the next sections to deal with this stability problem.
-Either the control law can be change (Section ref:sec:iff_hpf) or the mechanical system slightly modified (Section ref:sec:iff_kp).
+In order to apply Decentralized IFF on rotating positioning stages, two solutions are proposed to deal with this instability problem.
+The first one consists of slightly modifying the control law (Section ref:sec:iff_hpf) while the second one consists of adding springs in parallel with the force sensors (Section ref:sec:iff_kp).
 
 * Integral Force Feedback with High Pass Filters
 <<sec:iff_hpf>>
