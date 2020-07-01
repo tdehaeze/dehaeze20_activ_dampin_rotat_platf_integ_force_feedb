@@ -354,63 +354,58 @@ Either the control law can be change (Section ref:sec:iff_hpf) or the mechanical
 ** Modification of the Control Low
 # Reference to Preumont where its done
 
-In order to limit the low frequency loop gain, an high pass filter (HPF) can be added to the controller.
-The controller becomes
+In order to limit the low frequency controller gain, an high pass filter (HPF) can be added to the controller which becomes
 #+NAME: eq:IFF_LHF
 \begin{equation}
   \bm{K}_F(s) = \begin{bmatrix} K_F(s) & 0 \\ 0 & K_F(s) \end{bmatrix}, \quad K_{F}(s) = g \cdot \frac{1}{s} \cdot \underbrace{\frac{s/\omega_i}{1 + s/\omega_i}}_{\text{HPF}} = g \cdot \frac{1}{s + \omega_i}
 \end{equation}
-This is equivalent as to slightly shifting to pole to the left along the real axis.
+
+This is equivalent as to slightly shifting to controller pole to the left along the real axis.
 This modification of the IFF controller is typically done to avoid saturation associated with the pure integrator cite:preumont91_activ.
+This is however not the case in this study as it will become in the next section.
 
 ** Feedback Analysis
 # Explain what do we mean for Loop Gain (loop gain for the decentralized loop)
+The loop gains for an individual decentralized controller $K_F(s)$ with and without the added HPF are shown in Figure ref:fig:loop_gain_modified_iff.
+The effect of the added HPF is a limitation of the low frequency gain.
 
-#+attr_latex: :options [c]{0.45\linewidth}
+# Explain how the root locus changes (the pole corresponding to the controller is moved to the left)
+The Root Loci for the decentralized IFF with and without the HPF are displayed in Figure ref:fig:root_locus_modified_iff.
+With the added HPF, the poles of the closed loop system are shown to be stable up to some value of the gain $g_\text{max}$
+#+NAME: eq:gmax_iff_hpf
+\begin{equation}
+  g_{\text{max}} = \omega_i \left( \frac{{\omega_0}^2}{\Omega^2} - 1 \right)
+\end{equation}
+This gain also corresponds as to when the low frequency loop gain reaches one.
+
+#+attr_latex: :options [b]{0.45\linewidth}
 #+begin_minipage
 #+name: fig:loop_gain_modified_iff
-#+caption: Bode Plot of the loop gain for IFF with and without the HPF with, $g = 2$, $\omega_i = 0.1 \omega_0$ and $\Omega = 0.1 \omega_0$
+#+caption: Modification of the loop gain with the added HFP, $g = 2$, $\omega_i = 0.1 \omega_0$ and $\Omega = 0.1 \omega_0$
 #+attr_latex: :scale 1 :float nil
 [[file:figs/loop_gain_modified_iff.pdf]]
 #+end_minipage
 \hfill
-#+attr_latex: :options [c]{0.5\linewidth}
+#+attr_latex: :options [b]{0.5\linewidth}
 #+begin_minipage
 #+name: fig:root_locus_modified_iff
-#+caption: Root Locus for IFF with and without the HPF, $\omega_i = 0.1 \omega_0$ and $\Omega = 0.1 \omega_0$
+#+caption: Modification of the Root Locus with the added HPF, $\omega_i = 0.1 \omega_0$ and $\Omega = 0.1 \omega_0$
 #+attr_latex: :scale 1 :float nil
 [[file:figs/root_locus_modified_iff.pdf]]
 #+end_minipage
 
-# Explain that now the low frequency loop gain does not reach a gain more than 1 (if g not so high)
-
-
-# Explain how the root locus changes (the pole corresponding to the controller is moved to the left)
-
-# Explain that it is stable for small values of $g$ but at some point, the system goes unstable
-# Explain what is the maximum value of the gain
-As shown in Figure ref:fig:root_locus_modified_iff, the poles of the closed loop system are stable for $g < g_\text{max}$
-\begin{equation}
-  g_{\text{max}} = \omega_i \left( \frac{{\omega_0}^2}{\Omega^2} - 1 \right)
-\end{equation}
-
 # Small rotational speeds allows to increase the control gain
 # Large wi allows more gain but less damping
-
-# Say that this corresponds as to have a low frequency gain of the loop gain less thank 1
 
 ** Optimal Control Parameters
 
 # Controller: two parameters: gain and wi
-Two parameters can be tuned for the controller eqref:eq:IFF_LHF, the gain $g$ and the frequency of the pole $\omega_i$.
+Two parameters can be tuned for the controller eqref:eq:IFF_LHF: the gain $g$ and the location of the pole $\omega_i$.
+The optimal values of $\omega_i$ and $g$ are considered as the values for which the damping of all the closed-loop poles are simultaneously maximized.
 
-# Try few wi
-Root Locus plots for several $\omega_i$ are shown in Figure ref:fig:root_locus_wi_modified_iff.
-
-# Small wi seems to allow more damping to be added
-# but the gain is limited to small values
-
-# Trade off
+# Root Loci
+The Root Loci for several $\omega_i$ are shown in Figure ref:fig:root_locus_wi_modified_iff.
+It is shown that even tough small $\omega_i$ seems to allow more damping to be added to the system resonances, the control gain $g$ may be limited to small values due to Eq. eqref:eq:gmax_iff_hpf.
 
 #+name: fig:root_locus_wi_modified_iff
 #+caption: Root Locus for several HPF cut-off frequencies $\omega_i$, $\Omega = 0.1 \omega_0$
@@ -418,7 +413,6 @@ Root Locus plots for several $\omega_i$ are shown in Figure ref:fig:root_locus_w
 [[file:figs/root_locus_wi_modified_iff.pdf]]
 
 # Study this trade-off
-The optimal values of $\omega_i$ and $g$ may be considered as the values for which the closed-loop poles are equally damped.
 
 # Explain how the figure is obtained
 
@@ -427,7 +421,7 @@ The optimal values of $\omega_i$ and $g$ may be considered as the values for whi
 # wi = 0.1 w0 is chosen
 
 #+name: fig:mod_iff_damping_wi
-#+caption: Attainable damping ratio $\xi_\text{cl}$ as a function of the HPF cut-off frequency. Corresponding control gain $g_\text{opt}$ and $g_\text{max}$ are also shown
+#+caption: Attainable damping ratio $\xi_\text{cl}$ as a function of the ratio $\omega_i/\omega_0$. Corresponding control gain $g_\text{opt}$ and $g_\text{max}$ are also shown
 #+attr_latex: :scale 1
 [[file:figs/mod_iff_damping_wi.pdf]]
 
@@ -436,14 +430,25 @@ The optimal values of $\omega_i$ and $g$ may be considered as the values for whi
 ** Stiffness in Parallel with the Force Sensor
 # Zeros = remove force sensor
 # We want to have stable zeros => add stiffnesses in parallel
-Stiffness can be added in parallel to the force sensor to counteract the negative stiffness due to centrifugal forces.
-If the added stiffness is higher than the maximum negative stiffness, then the poles of the IFF damped system will stay in the (stable) right half-plane.
+As was shown in the previous sections, the instability when using Decentralized IFF for rotating positioning platforms is due to Gyroscopic effects, more precisely to the negative stiffnesses induced by centrifugal forces.
+The idea in this section is to include additional springs in parallel with the force sensors to counteract the negative stiffness due to centrifugal forces.
+Such springs are schematically shown in Figure ref:fig:system_parallel_springs where $k_a$ is the stiffness of the actuator and $k_p$ the stiffness in parallel with the actuator and force sensor.
 
+#+attr_latex: :options [t]{0.55\linewidth}
+#+begin_minipage
 #+name: fig:system_parallel_springs
-#+caption:
-#+attr_latex: :scale 1
+#+caption: Studied system with additional springs in parallel with the actuators and force sensors
+#+attr_latex: :scale 1 :float nil
 [[file:figs/system_parallel_springs.pdf]]
-
+#+end_minipage
+\hfill
+#+attr_latex: :options [t]{0.40\linewidth}
+#+begin_minipage
+#+name: fig:cedrat_xy25xs
+#+caption: XY Piezoelectric Stage (XY25XS from Cedrat Technology)
+#+attr_latex: :width \linewidth :float nil
+[[file:figs/cedrat_xy25xs.png]]
+#+end_minipage
 
 # Sensed Force
 The forces measured by the force sensors are equal to:
@@ -456,9 +461,9 @@ The forces measured by the force sensors are equal to:
 
 # Maybe add the fact that this is equivalent to amplified piezo for instance
 # Add reference to cite:souleille18_concep_activ_mount_space_applic
-This could represent a system where
+This could represent a system where ref:fig:cedrat_xy25xs.
 
-** Plant Dynamics
+** Effect of the Parallel Stiffness on the Plant Dynamics
 
 We define an adimensional parameter $\alpha$, $0 \le \alpha < 1$, that describes the proportion of the stiffness in parallel with the actuator and force sensor:
 \begin{subequations}
@@ -493,7 +498,6 @@ The overall stiffness $k$ stays constant:
 # News terms with \alpha are added
 # w0 and xi are the same as before => only the zeros are changing and not the poles.
 
-** Effect of the Parallel Stiffness on the Plant Dynamics
 # Negative Stiffness due to rotation => the stiffness should be larger than that
 
 # For kp < negative stiffness => real zeros => non-minimum phase
@@ -504,6 +508,9 @@ The overall stiffness $k$ stays constant:
     \Leftrightarrow k_p > m \Omega^2
   \end{aligned}
 \end{equation}
+
+If the added stiffness is higher than the maximum negative stiffness, then the poles of the IFF damped system will stay in the (stable) right half-plane.
+
 
 #+name: fig:plant_iff_kp
 #+caption: Bode Plot of $f_u/F_u$ without parallel spring, with parallel springs with stiffness $k_p < m \Omega^2$ and $k_p > m \Omega^2$, $\Omega = 0.1 \omega_0$
@@ -571,6 +578,8 @@ The overall stiffness $k$ stays constant:
 
 * Conclusion
 <<sec:conclusion>>
+
+MIMO approach to study the coupling effects?
 
 * Acknowledgment
 :PROPERTIES:
