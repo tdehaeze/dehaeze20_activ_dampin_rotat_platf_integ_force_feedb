@@ -157,20 +157,15 @@ One can verify that without rotation ($\Omega = 0$) the system becomes equivalen
 \end{subequations}
 
 ** Transfer Functions in the Laplace domain
-To study the dynamics of the system, the differential equations of motions eqref:eq:eom_coupled are transformed in the Laplace domain and the transfer function matrix from $\begin{bmatrix}F_u & F_v\end{bmatrix}$ to $\begin{bmatrix}d_u & d_v\end{bmatrix}$ is obtained:
-#+name: eq:Gd_mimo_tf
-\begin{equation}
-  \begin{bmatrix} d_u \\ d_v \end{bmatrix} = \bm{G}_d \begin{bmatrix} F_u \\ F_v \end{bmatrix}
-\end{equation}
-with $\bm{G}_d$ a $2 \times 2$ transfer function matrix
-#+name: eq:Gd_m_k_c
-\begin{equation}
-  \bm{G}_{d} =
+To study the dynamics of the system, the differential equations of motions eqref:eq:eom_coupled are transformed in the Laplace domain and the $2 \times 2$ transfer function matrix $\bm{G}_d$ from $\begin{bmatrix}F_u & F_v\end{bmatrix}$ to $\begin{bmatrix}d_u & d_v\end{bmatrix}$ is obtained
+\begin{align}
+  \begin{bmatrix} d_u \\ d_v \end{bmatrix} &= \bm{G}_d \begin{bmatrix} F_u \\ F_v \end{bmatrix} \label{eq:Gd_mimo_tf} \\
+  \bm{G}_{d} &=
   \begin{bmatrix}
     \frac{ms^2 + cs + k - m \Omega^2}{\left( m s^2 + cs + k - m \Omega^2 \right)^2 + \left( 2 m \Omega s \right)^2} & \frac{2 m \Omega s}{\left( m s^2 + cs + k - m \Omega^2 \right)^2 + \left( 2 m \Omega s \right)^2} \\
     \frac{-2 m \Omega s}{\left( m s^2 + cs + k - m \Omega^2 \right)^2 + \left( 2 m \Omega s \right)^2} & \frac{ms^2 + cs + k - m \Omega^2}{\left( m s^2 + cs + k - m \Omega^2 \right)^2 + \left( 2 m \Omega s \right)^2}
-  \end{bmatrix}
-\end{equation}
+  \end{bmatrix} \label{eq:Gd_m_k_c}
+\end{align}
 
 # Change of variables
 To simply the analysis, the following change of variable is performed:
@@ -320,6 +315,7 @@ This low frequency gain can be explained as follows: a constant force induces a 
 
 ** Decentralized Integral Force Feedback with Pure Integrators
 The two IFF controllers $K_F$ are pure integrators
+#+NAME: eq:Kf_pure_int
 \begin{equation}
   \bm{K}_F(s) = \begin{bmatrix} K_F(s) & 0 \\ 0 & K_F(s) \end{bmatrix}, \quad K_F(s) = g \cdot \frac{1}{s}
 \end{equation}
@@ -428,11 +424,14 @@ It is shown that even tough small $\omega_i$ seems to allow more damping to be a
 * Integral Force Feedback with Parallel Springs
 <<sec:iff_kp>>
 ** Stiffness in Parallel with the Force Sensor
-# Zeros = remove force sensor
-# We want to have stable zeros => add stiffnesses in parallel
+
 As was shown in the previous sections, the instability when using Decentralized IFF for rotating positioning platforms is due to Gyroscopic effects, more precisely to the negative stiffnesses induced by centrifugal forces.
-The idea in this section is to include additional springs in parallel with the force sensors to counteract the negative stiffness due to centrifugal forces.
+The idea in this section is to include additional springs in parallel with the force sensors to counteract this negative stiffness.
 Such springs are schematically shown in Figure ref:fig:system_parallel_springs where $k_a$ is the stiffness of the actuator and $k_p$ the stiffness in parallel with the actuator and force sensor.
+
+Such system could consist of additional springs, or it could also be
+This could represent a system where ref:fig:cedrat_xy25xs.
+The use of such amplified piezoelectric actuator for IFF is discussed in  cite:souleille18_concep_activ_mount_space_applic.
 
 #+attr_latex: :options [t]{0.55\linewidth}
 #+begin_minipage
@@ -450,8 +449,8 @@ Such springs are schematically shown in Figure ref:fig:system_parallel_springs w
 [[file:figs/cedrat_xy25xs.png]]
 #+end_minipage
 
-# Sensed Force
-The forces measured by the force sensors are equal to:
+** Effect of the Parallel Stiffness on the Plant Dynamics
+The forces measured by the sensors are equal to
 #+name: eq:measured_force_kp
 \begin{equation}
   \begin{bmatrix} f_{u} \\ f_{v} \end{bmatrix} =
@@ -459,33 +458,24 @@ The forces measured by the force sensors are equal to:
   \begin{bmatrix} d_u \\ d_v \end{bmatrix}
 \end{equation}
 
-# Maybe add the fact that this is equivalent to amplified piezo for instance
-# Add reference to cite:souleille18_concep_activ_mount_space_applic
-This could represent a system where ref:fig:cedrat_xy25xs.
-
-** Effect of the Parallel Stiffness on the Plant Dynamics
-
-We define an adimensional parameter $\alpha$, $0 \le \alpha < 1$, that describes the proportion of the stiffness in parallel with the actuator and force sensor:
+A scalar parameter $\alpha$ ($0 \le \alpha < 1$) is defined to describe the fraction of the total stiffness in parallel with the actuator and force sensor
 \begin{subequations}
   \begin{align}
     k_p &= \alpha k \\
     k_a &= (1 - \alpha) k
   \end{align}
 \end{subequations}
-
-The overall stiffness $k$ stays constant:
-\begin{equation}
-  k = k_a + k_p
-\end{equation}
+Note that the overall stiffness $k = k_a + k_p$ is kept constant.
 
 # Equations: sensed force
+The equations of motion are derived and transformed in the Laplace domain
 #+name: eq:Gk_mimo_tf
 \begin{equation}
 \begin{bmatrix} f_u \\ f_v \end{bmatrix} =
 \bm{G}_k
 \begin{bmatrix} F_u \\ F_v \end{bmatrix}
 \end{equation}
-
+with $\bm{G}_k$ a $2 \times 2$ transfer function matrix
 #+name: eq:Gk
 \begin{equation}
 \bm{G}_k =
@@ -497,94 +487,117 @@ The overall stiffness $k$ stays constant:
 
 # News terms with \alpha are added
 # w0 and xi are the same as before => only the zeros are changing and not the poles.
+Comparing $\bm{G}_k$ eqref:eq:Gk with $\bm{G}_f$ eqref:eq:Gf shows that while the poles of the system are kept the same, the zeros of the diagonal terms have changed.
 
 # Negative Stiffness due to rotation => the stiffness should be larger than that
-
-# For kp < negative stiffness => real zeros => non-minimum phase
-# For kp > negative stiffness => complex conjugate zeros => minimum phase
+The two real zeros $z_r$ eqref:eq:iff_zero_real that were inducing non-minimum phase behavior are transformed into complex conjugate zeros for
 \begin{equation}
   \begin{aligned}
-    \alpha > \frac{\Omega^2}{{\omega_0}^2} \\
-    \Leftrightarrow k_p > m \Omega^2
+    \alpha &> \frac{\Omega^2}{{\omega_0}^2} \\
+    \Leftrightarrow k_p &> m \Omega^2
   \end{aligned}
 \end{equation}
 
-If the added stiffness is higher than the maximum negative stiffness, then the poles of the IFF damped system will stay in the (stable) right half-plane.
-
+Thus, if the added parallel stiffness $k_p$ is higher than the negative stiffness induced by centrifugal forces $m \Omega^2$, the direct dynamics from actuator to force sensor will show minimum phase behavior.
+This is confirmed by the Bode plot in Figure ref:fig:plant_iff_kp.
+#  while recovering the alternating poles and zeros near the imaginary axis.
 
 #+name: fig:plant_iff_kp
 #+caption: Bode Plot of $f_u/F_u$ without parallel spring, with parallel springs with stiffness $k_p < m \Omega^2$ and $k_p > m \Omega^2$, $\Omega = 0.1 \omega_0$
 #+attr_latex: :scale 1
 [[file:figs/plant_iff_kp.pdf]]
 
-# Location of the zeros as a function of kp => maybe to complex
-# Do we talk about siso zeros of mimo (transmission zeros)?
-
-# Try to show that we don't have anymore real zeros that was making the system non-minimum phase
-
-# Show that it is the case on the root locus
+# Root Locus plot
+Figure ref:fig:root_locus_iff_kp shows Root Loci plots for $k_p = 0$, $k_p < m \Omega^2$ and $k_p > m \Omega^2$ when $K_F$ is a pure integrator eqref:eq:Kf_pure_int.
+It is shown that if the added stiffness is higher than the maximum negative stiffness, the poles of the closed-loop system stay in the (stable) right half-plane, and hence the unconditional stability of IFF is recovered.
 
 #+name: fig:root_locus_iff_kp
 #+caption: Root Locus for IFF without parallel spring, with parallel springs with stiffness $k_p < m \Omega^2$ and $k_p > m \Omega^2$, $\Omega = 0.1 \omega_0$
 #+attr_latex: :scale 1
 [[file:figs/root_locus_iff_kp.pdf]]
 
-# For kp > m Omega => unconditionally stable
-
 ** Optimal Parallel Stiffness
-# Attainable damping generally proportional to the distance between the poles and zeros (add reference, probably preumont)
 # The zero is the poles of the system without the force sensors => w0 = sqrt(kp/m) +/- Omega ?? => seems not true
 # Thus, small kp is wanted: kp close to m Omega^2 should give the optimal damping but is not acceptable for robustness reasons
-
-
-# Large Stiffness decreases the attainable damping
+Figure ref:fig:root_locus_iff_kps shows Root Loci plots for several parallel stiffnesses $k_p > m \Omega^2$.
+It is shown that large parallel stiffness $k_p$ reduces the attainable damping.
+This can be explained by the fact that as the parallel stiffnesses increases, the transmission zeros are closer to the poles.
+As explained in cite:preumont18_vibrat_contr_activ_struc_fourt_edition, the attainable damping is generally proportional to the distance between the poles and zeros.
+The frequency of the transmission zeros of the system are increasing with the fraction used as parallel stiffness $k_p$.
 
 # Example with kp = 5 m Omega
+For any $k_p > m \Omega^2$, the control gain $g$ can be tuned such that the maximum simultaneous damping is added to the resonances of the system as shown in Figure ref:fig:root_locus_opt_gain_iff_kp for $k_p = 5 m \Omega^2$.
 
 #+name: fig:root_locus_iff_kps_opt
-#+caption: Root Locus for IFF when parallel stiffness is used, $\Omega = 0.1 \omega_0$
+#+caption: Root Locus for IFF when parallel stiffness $k_p$ is added, $\Omega = 0.1 \omega_0$
 #+attr_latex: :environment subfigure :width 0.49\linewidth :align c
-| file:figs/root_locus_iff_kps.pdf                 | file:figs/root_locus_opt_gain_iff_kp.pdf                                          |
-| <<fig:root_locus_iff_kps>> Three values of $k_p$ | <<fig:root_locus_opt_gain_iff_kp>> $k_p = 5 m \Omega^2$, optimal damping is shown |
+| file:figs/root_locus_iff_kps.pdf                                          | file:figs/root_locus_opt_gain_iff_kp.pdf                                                           |
+| <<fig:root_locus_iff_kps>> Comparison of three parallel stiffnesses $k_p$ | <<fig:root_locus_opt_gain_iff_kp>> $k_p = 5 m \Omega^2$, optimal damping $\xi_\text{opt}$ is shown |
 
-* Comparison of the Proposed Active Damping Techniques for Rotating Positioning Stages
+* Comparison of the Proposed Modification to Decentralized Integral Force Feedback for Rotating Positioning Stages
 <<sec:comparison>>
-** Physical Comparison
+** Introduction                                                      :ignore:
+# Comparison in terms of modification to the system
+The two proposed modification to the decentralized IFF for rotating positioning stages are now compared.
+Two modification to the decentralized IFF for rotating positioning stages have been proposed.
 
+The first modification concerns the controller.
+It consists of adding an high pass filter to $K_F$ eqref:eq:IFF_LHF.
+This allows the system to be stable for gains up to $g_\text{max}$ eqref:eq:gmax_iff_hpf.
 
+The second proposed modification concerns the mechanical system.
+If springs are added in parallel to the actuators and force sensors with a stiffness $k_p > m \Omega^2$, decentralized IFF can be applied with unconditional stability.
 
-** Attainable Damping
+These two methods are now compared in terms of added damping, closed-loop compliance and transmissibility.
+For the following comparisons, the high pass cut-off frequency is set to $\omega_i = 0.1 \omega_0$ and the parallel stiffness is $k_p = 5 m \Omega^2$.
 
-# Both techniques provides very good amount of damping
+** Comparison of the Attainable Damping
+Figure ref:fig:comp_root_locus shows to Root Locus plots for the two proposed IFF techniques.
+The maximum added damping is very similar for both techniques and are reached for $g_\text{opt} \approx 2$ in both cases.
 
 #+name: fig:comp_root_locus
-#+caption: Root Locus for the three proposed decentralized active damping techniques: IFF with HFP, IFF with parallel springs, and relative DVF, $\Omega = 0.1 \omega_0$
+#+caption: Root Locus for the two proposed modifications of decentralized IFF, $\Omega = 0.1 \omega_0$
 #+attr_latex: :scale 1
 [[file:figs/comp_root_locus.pdf]]
 
-** Transmissibility and Compliance
+** Comparison Transmissibility and Compliance
+The two proposed techniques are now compared in terms of closed-loop compliance and transmissibility.
+
+The compliance is defined as the transfer function from external forces applied to the payload to the displacement of the payload in an inertial frame.
+The transmissibility is the dynamics from the displacement of the rotating stage to the displacement of the payload.
+It is used to characterize how much vibration of the rotating stage is transmitted to the payload.
+
+The two techniques are also compared with passive damping (Figure ref:fig:system) with $c$ tuned to critically damp the resonance when $\Omega = 0$
+\begin{equation}
+  c_\text{crit} = 2 \sqrt{k m}
+\end{equation}
+
 # IFF with HPF and IFF with kp give very similar results!
+Very similar results are obtained for both techniques as shown in Figures ref:fig:comp_compliance and ref:fig:comp_transmissibility.
+It is also confirmed that these techniques can significantly damp the system's resonances.
 
 # IFF degrades the compliance at low frequency (add reference)
-
 # Passive Damping degrades the transmissibility at high frequency
-# The roll-off is -1 instead of -2
+Compared to passive damping, the two techniques degrades the compliance at low frequency (Figure ref:fig:comp_compliance).
+They however do not degrades the transmissibility as high frequency as its the case with passive damping (Figure ref:fig:comp_transmissibility)
 
 #+name: fig:comp_active_damping
 #+caption: Comparison of the two proposed Active Damping Techniques, $\Omega = 0.1 \omega_0$
 #+attr_latex: :environment subfigure :width 0.45\linewidth :align c
-| file:figs/comp_compliance.pdf            | file:figs/comp_transmissibility.pdf      |
-| <<fig:comp_compliance>> Transmissibility | <<fig:comp_transmissibility>> Compliance |
+| file:figs/comp_compliance.pdf      | file:figs/comp_transmissibility.pdf            |
+| <<fig:comp_compliance>> Compliance | <<fig:comp_transmissibility>> Transmissibility |
 
 * Conclusion
 <<sec:conclusion>>
 
-MIMO approach to study the coupling effects?
+# MIMO approach to study the coupling effects?
 
 * Acknowledgment
 :PROPERTIES:
 :UNNUMBERED: t
 :END:
+
+This research benefited from a FRIA grant from the French Community of Belgium.
 
 * Bibliography                                                        :ignore:
 \bibliography{ref.bib}
