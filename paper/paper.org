@@ -86,7 +86,7 @@ The Matlab code that was use to obtain the results are available in cite:dehaeze
 <<sec:dynamics>>
 ** Model of a Rotating Positioning Platform
 # Introduce the fact that we need a simple system representing the rotating aspect
-In order to study how the rotation of a positioning platforms does affect the use of force feedback, a simple model of an X-Y positioning stage on top of a rotating stage is developed.
+In order to study how the rotation of a positioning platforms does affect the use of integral force feedback, a model of an XY positioning stage on top of a rotating stage is developed.
 # Simplest system where gyroscopic forces can be studied
 The model is schematically represented in Figure ref:fig:system and forms the simplest system where gyroscopic forces can be studied.
 
@@ -94,20 +94,12 @@ The model is schematically represented in Figure ref:fig:system and forms the si
 The rotating stage is supposed to be ideal, meaning it induces a perfect rotation $\theta(t) = \Omega t$ where $\Omega$ is the rotational speed in $\si{\radian\per\second}$.
 
 # X-Y Stage
-The parallel X-Y positioning stage consists of two orthogonal actuators represented by three elements in parallel:
-- a spring with a stiffness $k$ in $\si{\newton\per\meter}$
-- a dashpot with a damping coefficient $c$ in $\si{\newton\per\meter\second}$
-- an ideal force source $F_u, F_v$
-
-# Payload
-A payload with a mass $m$ in $\si{\kilo\gram}$ is mounted on the rotating X-Y stage.
+The parallel XY positioning stage consists of two orthogonal actuators represented by three elements in parallel: a spring with a stiffness $k$ in $\si{\newton\per\meter}$, a dashpot with a damping coefficient $c$ in $\si{\newton\per\meter\second}$ and an ideal force source $F_u, F_v$.
+A payload with a mass $m$ in $\si{\kilo\gram}$ is mounted on the (rotating) XY stage.
 
 # Explain the frames (inertial frame x,y, rotating frame u,v)
-Two reference frames are used:
-- an inertial frame $(\vec{i}_x, \vec{i}_y, \vec{i}_z)$
-- a uniform rotating frame $(\vec{i}_u, \vec{i}_v, \vec{i}_w)$ rigidly fixed on top of the rotating stage. $\vec{i}_w$ is aligned with the rotation axis
-
-The position of the payload is represented by $(d_u, d_v)$ expressed in the rotating frame.
+Two reference frames are used: an inertial frame $(\vec{i}_x, \vec{i}_y, \vec{i}_z)$ and a uniform rotating frame $(\vec{i}_u, \vec{i}_v, \vec{i}_w)$ rigidly fixed on top of the rotating stage with $\vec{i}_w$ aligned with the rotation axis.
+The position of the payload is represented by $(d_u, d_v, 0)$ expressed in the rotating frame.
 
 #+name: fig:system
 #+caption: Schematic of the studied System
@@ -116,14 +108,14 @@ The position of the payload is represented by $(d_u, d_v)$ expressed in the rota
 
 ** Equations of Motion
 To obtain of equation of motion for the system represented in Figure ref:fig:system, the Lagrangian equations are used:
-#+name: eq:lagrangian_equations
+#+NAME: eq:lagrangian_equations
 \begin{equation}
   \frac{d}{dt} \left( \frac{\partial L}{\partial \dot{q}_i} \right) + \frac{\partial D}{\partial \dot{q}_i} - \frac{\partial L}{\partial q_i} = Q_i
 \end{equation}
 with $L = T - V$ the Lagrangian, $D$ the dissipation function, and $Q_i$ the generalized force associated with the generalized variable $\begin{bmatrix}q_1 & q_2\end{bmatrix} = \begin{bmatrix}d_u & d_v\end{bmatrix}$.
 
-The constant rotation in the $(\vec{i}_x, \vec{i}_y)$ plane is here disregarded as it is imposed by the rotating stage.
-#+name: eq:energy_functions_lagrange
+The constant rotation in the $(\vec{i}_x, \vec{i}_y)$ plane is here disregarded as it is imposed by the ideal rotating stage.
+#+NAME: eq:energy_functions_lagrange
 \begin{subequations}
   \begin{align}
     T & = \frac{1}{2} m \left( \left( \dot{d}_u - \Omega d_v \right)^2 + \left( \dot{d}_v + \Omega d_u \right)^2 \right) \\
@@ -133,8 +125,8 @@ The constant rotation in the $(\vec{i}_x, \vec{i}_y)$ plane is here disregarded 
   \end{align}
 \end{subequations}
 
-Substituting equations eqref:eq:energy_functions_lagrange into eqref:eq:lagrangian_equations gives the two coupled differential equations:
-#+name: eq:eom_coupled
+Substituting equations eqref:eq:energy_functions_lagrange into eqref:eq:lagrangian_equations gives two coupled differential equations
+#+NAME: eq:eom_coupled
 \begin{subequations}
   \begin{align}
     m \ddot{d}_u + c \dot{d}_u + ( k - m \Omega^2 ) d_u &= F_u + 2 m \Omega \dot{d}_v \\
@@ -143,12 +135,12 @@ Substituting equations eqref:eq:energy_functions_lagrange into eqref:eq:lagrangi
 \end{subequations}
 
 # Explain Gyroscopic effects
-The constant rotation of the system induces two Gyroscopic effects:
-- Centrifugal forces: that can been seen as added negative stiffness along $\vec{i}_u$ and $\vec{i}_v$
+The uniform rotation of the system induces two Gyroscopic effects as shown in Eq. eqref:eq:eom_coupled:
+- Centrifugal forces: that can been seen as added negative stiffness $- m \Omega^2$ along $\vec{i}_u$ and $\vec{i}_v$
 - Coriolis Forces: that couples the motion in the two orthogonal directions
 
 One can verify that without rotation ($\Omega = 0$) the system becomes equivalent as to two uncoupled one degree of freedom mass-spring-damper systems:
-#+name: eq:oem_no_rotation
+#+NAME: eq:oem_no_rotation
 \begin{subequations}
   \begin{align}
     m \ddot{d}_u + c \dot{d}_u + k d_u &= F_u \\
@@ -168,11 +160,15 @@ To study the dynamics of the system, the differential equations of motions eqref
 \end{align}
 
 # Change of variables
-To simply the analysis, the following change of variable is performed:
-- $\omega_0 = \sqrt{\frac{k}{m}}$: Undamped natural frequency of the mass-spring system in $\si{\radian/\s}$
-- $\xi = \frac{c}{2 \sqrt{k m}}$: Damping ratio
+To simplify the analysis, the undamped natural frequency $\omega_0$ and the damping ratio $\xi$ are used
+\begin{subequations}
+  \begin{align}
+    \omega_0 &= \sqrt{\frac{k}{m}} \text{ in } \si{\radian\per\second} \\
+    \xi &= \frac{c}{2 \sqrt{k m}}
+  \end{align}
+\end{subequations}
 
-The transfer function matrix eqref:eq:Gd_m_k_c becomes equal to
+The transfer function matrix $\bm{G}_d$ eqref:eq:Gd_m_k_c becomes equal to
 #+name: eq:Gd_w0_xi_k
 \begin{equation}
 \bm{G}_{d} =
@@ -210,7 +206,7 @@ As the rotational speed increases, $p_{+}$ goes to higher frequencies and $p_{-}
 The system becomes unstable for $\Omega > \omega_0$ as the real part of $p_{-}$ is positive.
 Physically, the negative stiffness term $-m\Omega^2$ induced by centrifugal forces exceeds the spring stiffness $k$.
 
-In the rest of this study, rotational speeds smaller than the undamped natural frequency of the system are used ($\Omega < \omega_0$).
+In the rest of this study, rotational speeds smaller than the undamped natural frequency of the system are assumed ($\Omega < \omega_0$).
 
 #+name: fig:campbell_diagram
 #+caption: Campbell Diagram : Evolution of the complex and real parts of the system's poles as a function of the rotational speed $\Omega$
