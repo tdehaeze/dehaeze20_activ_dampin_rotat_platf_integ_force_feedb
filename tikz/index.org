@@ -66,10 +66,6 @@ Configuration file is accessible [[file:config.org][here]].
       \draw[actuator={0.6}{0.2}] (actv) -- node[left, rotate=\thetau]{$F_v$} (actv|-0,-2.6);
       \draw[spring=0.2] (kv) -- node[left, rotate=\thetau]{$k$} (kv|-0,-2.6);
       \draw[damper={8}{8}] (cv) -- node[left=0.1, rotate=\thetau]{$c$} (cv|-0,-2.6);
-
-      % % Displacement measurement
-      % \draw[<->, dashed] (-2.6, -0.8) --node[midway, below, rotate=\thetau]{$d_u$} (-1  , -0.8);
-      % \draw[<->, dashed] ( 0.8, -2.6) --node[midway, right, rotate=\thetau]{$d_v$} ( 0.8, -1);
     \end{scope}
 
     % Inertial Frame
@@ -78,11 +74,12 @@ Configuration file is accessible [[file:config.org][here]].
     \draw[fill, color=black] (-4, -4) circle (0.06);
     \node[draw, circle, inner sep=0pt, minimum size=0.3cm, label=left:$\vec{i}_z$] at (-4, -4){};
 
-    \draw[->] (0, 0) -- ++(\thetau:2) node[above, rotate=\thetau]{$\vec{i}_u$};
+    \draw[->] (0, 0) node[above left, rotate=\thetau]{$\vec{i}_w$} -- ++(\thetau:2) node[above, rotate=\thetau]{$\vec{i}_u$};
     \draw[->] (0, 0) -- ++(\thetau+90:2) node[left, rotate=\thetau]{$\vec{i}_v$};
+    \draw[fill, color=black] (0,0) circle (0.06);
+    \node[draw, circle, inner sep=0pt, minimum size=0.3cm] at (0, 0){};
     \draw[dashed] (0, 0) -- ++(2, 0);
     \draw[] (1.5, 0) arc (0:\thetau:1.5) node[midway, right]{$\theta$};
-    \node[] at (0,0) {$\bullet$};
 
     \draw[->] (3.5, 0) arc (0:40:3.5) node[midway, left]{$\Omega$};
   \end{tikzpicture}
@@ -90,6 +87,58 @@ Configuration file is accessible [[file:config.org][here]].
 
 #+RESULTS:
 [[file:figs/system.png]]
+
+* X-Y Rotating Positioning Platform
+#+begin_src latex :file control_diagram_iff.pdf
+  \begin{tikzpicture}
+    % Blocs
+    \node[block={2.0cm}{2.0cm}] (P) {$\bm{G}_{f}$};
+    \node[above] at (P.north) {Plant};
+    \node[block={1.5cm}{1.5cm}, below=1.2 of P] (K) {$\begin{bmatrix}K_F & 0 \\ 0 & K_F\end{bmatrix}$};
+    \node[above, align=center] at (K.north) {Decentralized\\Controller};
+
+    % Connections and labels
+    \draw[<-] (P.west) node[above left]{ $\begin{bmatrix}F_u \\ F_v\end{bmatrix}$} node[below left]{$-$} -- ++(-1.2, 0) |- (K.west);
+    \draw[->] (P.east) node[above right]{$\begin{bmatrix}f_u \\ f_v\end{bmatrix}$} -- ++(1.2, 0) |- (K.east);
+  \end{tikzpicture}
+#+end_src
+
+#+begin_src latex :file control_diagram_iff.pdf
+  \tikzset{block/.default={0.8cm}{0.8cm}}
+  \tikzset{addb/.append style={scale=0.7}}
+  \tikzset{node distance=0.6}
+
+  \begin{tikzpicture}
+    \node[block={1.8cm}{2.2cm}] (G) {$\bm{G}_f$};
+
+    % Inputs of the controllers
+    \coordinate[] (output1) at ($(G.south east)!0.75!(G.north east)$);
+    \coordinate[] (output2) at ($(G.south east)!0.25!(G.north east)$);
+    \coordinate[] (input1)  at ($(G.south west)!0.75!(G.north west)$);
+    \coordinate[] (input2)  at ($(G.south west)!0.25!(G.north west)$);
+
+    \node[block, left=1.8 of input1] (K1) {$K_F$};
+    \node[block] (K2) at ($(K1.east|-input2)+(0.6, 0)$) {$K_F$};
+
+    % Connections and labels
+    \draw[->] (K1.east) -- (input1)node[above left]{$F_u$}node[below left]{$-$};
+    \draw[->] (K2.east) -- (input2)node[above left]{$F_v$}node[below left]{$-$};
+
+    \draw[->] (output1) -- ++(0.8, 0) node[above left]{$f_u$};
+    \draw[->] (output2) -- ++(0.8, 0) node[above left]{$f_v$};
+
+    \draw[->] ($(output1)+(0.2, 0)$)node[branch]{} -- ++(0,  1.2) -| ($(K1.west) + (-0.8, 0)$)coordinate(start) -- (K1.west);
+    \draw[->] ($(output2)+(0.2, 0)$)node[branch]{} -- ++(0, -1.2) -| (start|-K2) -- (K2.west);
+
+    \begin{scope}[on background layer]
+      \node[fit={(K1.north west) (K2.south east)}, inner sep=6pt, draw, dashed, fill=black!20!white] (K) {};
+      \node[below left] at (K.north east) {$\bm{K}_F$};
+    \end{scope}
+  \end{tikzpicture}
+#+end_src
+
+#+RESULTS:
+[[file:figs/control_diagram_iff.png]]
 
 * X-Y Rotating Positioning Platform with Force Sensors
 #+begin_src latex :file system_force_sensors.pdf
@@ -208,11 +257,11 @@ Configuration file is accessible [[file:config.org][here]].
 
       \node[block={0.8cm}{0.6cm}, rotate=\thetau] (Ku) at ($(actumid) + (0, -1.2)$) {$K_{F}$};
       \draw[->] ($(au) + (-0.1, -0.5)$) |- (Ku.east) node[below right, rotate=\thetau]{$f_{u}$};
-      \draw[->] (Ku.north) -- ($(actumid) + (0, -0.1)$) node[below left, rotate=\thetau]{$F_u$};
+      \draw[->] (Ku.north) -- ($(actumid) + (0, -0.1)$) node[below left, rotate=\thetau]{$F_u$} node[below right, rotate=\thetau]{$-$};
 
       \node[block={0.8cm}{0.6cm}, rotate=\thetau] (Kv) at ($(actvmid) + (1.2, 0)$) {$K_{F}$};
       \draw[->] ($(av) + (0.5, -0.1)$) -| (Kv.north) node[above right, rotate=\thetau]{$f_{v}$};
-      \draw[->] (Kv.west) -- ($(actvmid) + (0.1, 0)$) node[below right, rotate=\thetau]{$F_v$};
+      \draw[->] (Kv.west) -- ($(actvmid) + (0.1, 0)$) node[below right, rotate=\thetau]{$F_v$} node[above right, rotate=\thetau]{$-$};
     \end{scope}
 
     % Inertial Frame
