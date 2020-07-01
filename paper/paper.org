@@ -354,26 +354,36 @@ Either the control law can be change (Section ref:sec:iff_hpf) or the mechanical
 ** Modification of the Control Low
 # Reference to Preumont where its done
 
-
-# Equation with the new control law
-# Equivalent as to add a HFP or to slightly move the pole to the left
+In order to limit the low frequency loop gain, an high pass filter (HPF) can be added to the controller.
+The controller becomes
 #+NAME: eq:IFF_LHF
 \begin{equation}
-  K_{F}(s) = g \cdot \frac{1}{s} \cdot \underbrace{\frac{s/\omega_i}{1 + s/\omega_i}}_{\text{HPF}} = g \cdot \frac{1}{s + \omega_i}
+  \bm{K}_F(s) = \begin{bmatrix} K_F(s) & 0 \\ 0 & K_F(s) \end{bmatrix}, \quad K_{F}(s) = g \cdot \frac{1}{s} \cdot \underbrace{\frac{s/\omega_i}{1 + s/\omega_i}}_{\text{HPF}} = g \cdot \frac{1}{s + \omega_i}
 \end{equation}
-
-# Explain why it is usually done and why it is done here: the problem is the high gain at low frequency => high pass filter
-
+This is equivalent as to slightly shifting to pole to the left along the real axis.
+This modification of the IFF controller is typically done to avoid saturation associated with the pure integrator cite:preumont91_activ.
 
 ** Feedback Analysis
 # Explain what do we mean for Loop Gain (loop gain for the decentralized loop)
 
+#+attr_latex: :options [c]{0.45\linewidth}
+#+begin_minipage
+#+name: fig:loop_gain_modified_iff
+#+caption: Bode Plot of the loop gain for IFF with and without the HPF with, $g = 2$, $\omega_i = 0.1 \omega_0$ and $\Omega = 0.1 \omega_0$
+#+attr_latex: :scale 1 :float nil
+[[file:figs/loop_gain_modified_iff.pdf]]
+#+end_minipage
+\hfill
+#+attr_latex: :options [c]{0.5\linewidth}
+#+begin_minipage
+#+name: fig:root_locus_modified_iff
+#+caption: Root Locus for IFF with and without the HPF, $\omega_i = 0.1 \omega_0$ and $\Omega = 0.1 \omega_0$
+#+attr_latex: :scale 1 :float nil
+[[file:figs/root_locus_modified_iff.pdf]]
+#+end_minipage
+
 # Explain that now the low frequency loop gain does not reach a gain more than 1 (if g not so high)
 
-#+name: fig:loop_gain_modified_iff
-#+caption: Bode Plot of the Loop Gain for IFF with and without the HPF with $\omega_i = 0.1 \omega_0$, $g = 2$ and $\Omega = 0.1 \omega_0$
-#+attr_latex: :scale 1
-[[file:figs/loop_gain_modified_iff.pdf]]
 
 # Explain how the root locus changes (the pole corresponding to the controller is moved to the left)
 
@@ -388,12 +398,6 @@ As shown in Figure ref:fig:root_locus_modified_iff, the poles of the closed loop
 # Large wi allows more gain but less damping
 
 # Say that this corresponds as to have a low frequency gain of the loop gain less thank 1
-
-
-#+name: fig:root_locus_modified_iff
-#+caption: Root Locus for IFF with and without the HPF, $\Omega = 0.1 \omega_0$
-#+attr_latex: :scale 1
-[[file:figs/root_locus_modified_iff.pdf]]
 
 ** Optimal Control Parameters
 

@@ -1,4 +1,4 @@
-% Created 2020-07-01 mer. 10:02
+% Created 2020-07-01 mer. 10:48
 % Intended LaTeX compiler: pdflatex
 \documentclass{ISMA_USD2020}
 \usepackage[utf8]{inputenc}
@@ -53,7 +53,7 @@
 }
 
 \section{Introduction}
-\label{sec:org38db2d2}
+\label{sec:org6a18e43}
 \label{sec:introduction}
 Due to gyroscopic effects, the guaranteed robustness properties of Integral Force Feedback do not hold.
 Either the control architecture can be slightly modified or mechanical changes in the system can be performed.
@@ -61,10 +61,10 @@ This paper has been published
 The Matlab code that was use to obtain the results are available in \cite{dehaeze20_activ_dampin_rotat_posit_platf}.
 
 \section{Dynamics of Rotating Positioning Platforms}
-\label{sec:orgd0419a7}
+\label{sec:orgd72985f}
 \label{sec:dynamics}
 \subsection{Model of a Rotating Positioning Platform}
-\label{sec:org4c3a41a}
+\label{sec:org617200e}
 In order to study how the rotation of a positioning platforms does affect the use of force feedback, a simple model of an X-Y positioning stage on top of a rotating stage is developed.
 
 The model is schematically represented in Figure \ref{fig:system} and forms the simplest system where gyroscopic forces can be studied.
@@ -95,7 +95,7 @@ The position of the payload is represented by \((d_u, d_v)\) expressed in the ro
 \end{figure}
 
 \subsection{Equations of Motion}
-\label{sec:orga2d4956}
+\label{sec:orgb84906d}
 To obtain of equation of motion for the system represented in Figure \ref{fig:system}, the Lagrangian equations are used:
 \begin{equation}
 \label{eq:lagrangian_equations}
@@ -139,7 +139,7 @@ One can verify that without rotation (\(\Omega = 0\)) the system becomes equival
 \end{subequations}
 
 \subsection{Transfer Functions in the Laplace domain}
-\label{sec:org16be790}
+\label{sec:orgda6662b}
 To study the dynamics of the system, the differential equations of motions \eqref{eq:eom_coupled} are transformed in the Laplace domain and the transfer function matrix from \(\begin{bmatrix}F_u & F_v\end{bmatrix}\) to \(\begin{bmatrix}d_u & d_v\end{bmatrix}\) is obtained:
 \begin{equation}
 \label{eq:Gd_mimo_tf}
@@ -177,7 +177,7 @@ For all the numerical analysis in this study, \(\omega_0 = \SI{1}{\radian\per\se
 Even tough no system with such parameters will be encountered in practice, conclusions will be drawn relative to these parameters such that they can be generalized to any other parameter.
 
 \subsection{System Dynamics and Campbell Diagram}
-\label{sec:org0ed334c}
+\label{sec:org006f494}
 The poles of \(\bm{G}_d\) are the complex solutions \(p\) of
 \begin{equation}
   \left( \frac{p^2}{{\omega_0}^2} + 2 \xi \frac{p}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{p}{\omega_0} \right)^2 = 0
@@ -232,10 +232,10 @@ For \(\Omega > \omega_0\), the low frequency complex conjugate poles \(p_{-}\) b
 \end{figure}
 
 \section{Decentralized Integral Force Feedback}
-\label{sec:org284335d}
+\label{sec:org586ab0c}
 \label{sec:iff}
 \subsection{Force Sensors and Control Architecture}
-\label{sec:org5b8858f}
+\label{sec:org56ae682}
 In order to apply Decentralized Integral Force Feedback to the system, force sensors are added in series with the two actuators (Figure \ref{fig:system_iff}).
 Two identical controllers \(K_F\) are added to feedback each of the sensed forces to its collocated actuator.
 The control diagram is shown in Figure \ref{fig:control_diagram_iff}.
@@ -255,7 +255,7 @@ The control diagram is shown in Figure \ref{fig:control_diagram_iff}.
 \end{minipage}
 
 \subsection{Plant Dynamics}
-\label{sec:orge8dea8f}
+\label{sec:org6b43274}
 The forces measured by the force sensors are equal to:
 \begin{equation}
 \label{eq:measured_force}
@@ -310,7 +310,7 @@ This low frequency gain can be explained as follows: a constant force induces a 
 \end{figure}
 
 \subsection{Decentralized Integral Force Feedback with Pure Integrators}
-\label{sec:org8280bcd}
+\label{sec:orgaedf7bc}
 The two IFF controllers \(K_F\) are pure integrators
 \begin{equation}
   \bm{K}_F(s) = \begin{bmatrix} K_F(s) & 0 \\ 0 & K_F(s) \end{bmatrix}, \quad K_F(s) = g \cdot \frac{1}{s}
@@ -335,18 +335,37 @@ Two system modifications are proposed in the next sections to deal with this sta
 Either the control law can be change (Section \ref{sec:iff_hpf}) or the mechanical system slightly modified (Section \ref{sec:iff_kp}).
 
 \section{Integral Force Feedback with High Pass Filters}
-\label{sec:org6cc7c03}
+\label{sec:org34f8977}
 \label{sec:iff_hpf}
 \subsection{Modification of the Control Low}
-\label{sec:org9575a34}
+\label{sec:org809db54}
+In order to limit the low frequency loop gain, an high pass filter (HPF) can be added to the controller.
+The controller becomes
 \begin{equation}
 \label{eq:IFF_LHF}
-  K_{F}(s) = g \cdot \frac{1}{s} \cdot \underbrace{\frac{s/\omega_i}{1 + s/\omega_i}}_{\text{HPF}} = g \cdot \frac{1}{s + \omega_i}
+  \bm{K}_F(s) = \begin{bmatrix} K_F(s) & 0 \\ 0 & K_F(s) \end{bmatrix}, \quad K_{F}(s) = g \cdot \frac{1}{s} \cdot \underbrace{\frac{s/\omega_i}{1 + s/\omega_i}}_{\text{HPF}} = g \cdot \frac{1}{s + \omega_i}
 \end{equation}
-
+This is equivalent as to slightly shifting to pole to the left along the real axis.
+This modification of the IFF controller is typically done to avoid saturation associated with the pure integrator \cite{preumont91_activ}.
 
 \subsection{Feedback Analysis}
-\label{sec:orgbc7c7f2}
+\label{sec:orga2d434f}
+\begin{minipage}[c]{0.45\linewidth}
+\begin{center}
+\includegraphics[scale=1]{figs/loop_gain_modified_iff.pdf}
+\captionof{figure}{\label{fig:loop_gain_modified_iff}Bode Plot of the loop gain for IFF with and without the HPF with, \(g = 2\), \(\omega_i = 0.1 \omega_0\) and \(\Omega = 0.1 \omega_0\)}
+\end{center}
+\end{minipage}
+\hfill
+\begin{minipage}[c]{0.5\linewidth}
+\begin{center}
+\includegraphics[scale=1]{figs/root_locus_modified_iff.pdf}
+\captionof{figure}{\label{fig:root_locus_modified_iff}Root Locus for IFF with and without the HPF, \(\omega_i = 0.1 \omega_0\) and \(\Omega = 0.1 \omega_0\)}
+\end{center}
+\end{minipage}
+
+
+
 \begin{figure}[htbp]
 \centering
 \includegraphics[scale=1]{figs/loop_gain_modified_iff.pdf}
@@ -358,15 +377,14 @@ As shown in Figure \ref{fig:root_locus_modified_iff}, the poles of the closed lo
   g_{\text{max}} = \omega_i \left( \frac{{\omega_0}^2}{\Omega^2} - 1 \right)
 \end{equation}
 
-
 \begin{figure}[htbp]
 \centering
 \includegraphics[scale=1]{figs/root_locus_modified_iff.pdf}
-\caption{\label{fig:root_locus_modified_iff}Root Locus for IFF with and without the HPF, \(\Omega = 0.1 \omega_0\)}
+\label{fig:root_locus_modified_iff}
 \end{figure}
 
 \subsection{Optimal Control Parameters}
-\label{sec:org6e31c47}
+\label{sec:org7cc60ca}
 
 Two parameters can be tuned for the controller \eqref{eq:IFF_LHF}, the gain \(g\) and the frequency of the pole \(\omega_i\).
 
@@ -387,10 +405,10 @@ The optimal values of \(\omega_i\) and \(g\) may be considered as the values for
 \end{figure}
 
 \section{Integral Force Feedback with Parallel Springs}
-\label{sec:org8681b34}
+\label{sec:org8ffeef1}
 \label{sec:iff_kp}
 \subsection{Stiffness in Parallel with the Force Sensor}
-\label{sec:org0dff3a7}
+\label{sec:org831f255}
 Stiffness can be added in parallel to the force sensor to counteract the negative stiffness due to centrifugal forces.
 If the added stiffness is higher than the maximum negative stiffness, then the poles of the IFF damped system will stay in the (stable) right half-plane.
 
@@ -412,7 +430,7 @@ The forces measured by the force sensors are equal to:
 This could represent a system where
 
 \subsection{Plant Dynamics}
-\label{sec:orgc00a18e}
+\label{sec:org98721cc}
 
 We define an adimensional parameter \(\alpha\), \(0 \le \alpha < 1\), that describes the proportion of the stiffness in parallel with the actuator and force sensor:
 \begin{subequations}
@@ -444,7 +462,7 @@ The overall stiffness \(k\) stays constant:
 \end{equation}
 
 \subsection{Effect of the Parallel Stiffness on the Plant Dynamics}
-\label{sec:orgdbd366f}
+\label{sec:org0b03ba2}
 \begin{equation}
   \begin{aligned}
     \alpha > \frac{\Omega^2}{{\omega_0}^2} \\
@@ -465,7 +483,7 @@ The overall stiffness \(k\) stays constant:
 \end{figure}
 
 \subsection{Optimal Parallel Stiffness}
-\label{sec:org8a2fab9}
+\label{sec:org0aa60d8}
 \begin{figure}[htbp]
 \begin{subfigure}[c]{0.49\linewidth}
 \includegraphics[width=\linewidth]{figs/root_locus_iff_kps.pdf}
@@ -480,15 +498,15 @@ The overall stiffness \(k\) stays constant:
 \end{figure}
 
 \section{Comparison of the Proposed Active Damping Techniques for Rotating Positioning Stages}
-\label{sec:orgf0c901c}
+\label{sec:orgde2e2f0}
 \label{sec:comparison}
 \subsection{Physical Comparison}
-\label{sec:orgb81fedd}
+\label{sec:org661a4d0}
 
 
 
 \subsection{Attainable Damping}
-\label{sec:org9975e71}
+\label{sec:orgb54beda}
 
 \begin{figure}[htbp]
 \centering
@@ -497,7 +515,7 @@ The overall stiffness \(k\) stays constant:
 \end{figure}
 
 \subsection{Transmissibility and Compliance}
-\label{sec:org0a87dc5}
+\label{sec:org63e90d2}
 \begin{figure}[htbp]
 \begin{subfigure}[c]{0.45\linewidth}
 \includegraphics[width=\linewidth]{figs/comp_compliance.pdf}
@@ -512,11 +530,11 @@ The overall stiffness \(k\) stays constant:
 \end{figure}
 
 \section{Conclusion}
-\label{sec:orgcf2c965}
+\label{sec:org646f615}
 \label{sec:conclusion}
 
 \section*{Acknowledgment}
-\label{sec:orga6bcde3}
+\label{sec:org7bb2645}
 
 \bibliography{ref.bib}
 \end{document}
