@@ -494,19 +494,28 @@ Thus, if the added parallel stiffness $k_p$ is higher than the negative stiffnes
 This is confirmed by the Bode plot in Figure ref:fig:plant_iff_kp.
 #  while recovering the alternating poles and zeros near the imaginary axis.
 
-#+name: fig:plant_iff_kp
-#+caption: Bode Plot of $f_u/F_u$ without parallel spring, with parallel springs with stiffness $k_p < m \Omega^2$ and $k_p > m \Omega^2$, $\Omega = 0.1 \omega_0$
-#+attr_latex: :scale 1
-[[file:figs/plant_iff_kp.pdf]]
 
 # Root Locus plot
 Figure ref:fig:root_locus_iff_kp shows Root Loci plots for $k_p = 0$, $k_p < m \Omega^2$ and $k_p > m \Omega^2$ when $K_F$ is a pure integrator eqref:eq:Kf_pure_int.
 It is shown that if the added stiffness is higher than the maximum negative stiffness, the poles of the closed-loop system stay in the (stable) right half-plane, and hence the unconditional stability of IFF is recovered.
 
+#+attr_latex: :options [b]{0.42\linewidth}
+#+begin_minipage
+#+name: fig:plant_iff_kp
+#+caption: Bode Plot of $f_u/F_u$ without parallel spring, with parallel springs with stiffness $k_p < m \Omega^2$ and $k_p > m \Omega^2$, $\Omega = 0.1 \omega_0$
+#+attr_latex: :scale 1 :float nil
+[[file:figs/plant_iff_kp.pdf]]
+#+end_minipage
+\hfill
+#+attr_latex: :options [b]{0.52\linewidth}
+#+begin_minipage
 #+name: fig:root_locus_iff_kp
 #+caption: Root Locus for IFF without parallel spring, with parallel springs with stiffness $k_p < m \Omega^2$ and $k_p > m \Omega^2$, $\Omega = 0.1 \omega_0$
-#+attr_latex: :scale 1
+#+attr_latex: :scale 1 :float nil
 [[file:figs/root_locus_iff_kp.pdf]]
+#+end_minipage
+
+
 
 ** Optimal Parallel Stiffness
 # The zero is the poles of the system without the force sensors => w0 = sqrt(kp/m) +/- Omega ?? => seems not true
