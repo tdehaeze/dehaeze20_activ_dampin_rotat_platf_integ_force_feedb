@@ -270,7 +270,8 @@ Configuration file is accessible [[file:config.org][here]].
     \draw[fill, color=black] (-4, -4) circle (0.06);
     \node[draw, circle, inner sep=0pt, minimum size=0.3cm, label=left:$\vec{i}_z$] at (-4, -4){};
 
-    \draw[->] (0, 0) -- ++(\thetau:2) node[above, rotate=\thetau]{$\vec{i}_u$};
+    \node[draw, circle, inner sep=0pt, minimum size=0.3cm] at (0, 0){};
+    \draw[->] (0, 0) node[above left, rotate=\thetau]{$\vec{i}_w$} -- ++(\thetau:2) node[above, rotate=\thetau]{$\vec{i}_u$};
     \draw[->] (0, 0) -- ++(\thetau+90:2) node[left, rotate=\thetau]{$\vec{i}_v$};
     \draw[dashed] (0, 0) -- ++(2, 0);
     \draw[] (1.5, 0) arc (0:\thetau:1.5) node[midway, right]{$\theta$};
@@ -421,7 +422,8 @@ Configuration file is accessible [[file:config.org][here]].
     \draw[fill, color=black] (-4, -4) circle (0.06);
     \node[draw, circle, inner sep=0pt, minimum size=0.3cm, label=left:$\vec{i}_z$] at (-4, -4){};
 
-    \draw[->] (0, 0) -- ++(\thetau:2) node[above, rotate=\thetau]{$\vec{i}_u$};
+    \node[draw, circle, inner sep=0pt, minimum size=0.3cm] at (0, 0){};
+    \draw[->] (0, 0) node[above left, rotate=\thetau]{$\vec{i}_w$} -- ++(\thetau:2) node[above, rotate=\thetau]{$\vec{i}_u$};
     \draw[->] (0, 0) -- ++(\thetau+90:2) node[left, rotate=\thetau]{$\vec{i}_v$};
     \draw[dashed] (0, 0) -- ++(2, 0);
     \draw[] (1.5, 0) arc (0:\thetau:1.5) node[midway, right]{$\theta$};

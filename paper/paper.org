@@ -298,7 +298,7 @@ Similarly, the low frequency gain of $\bm{G}_f$ is no longer zero and increases 
 \end{equation}
 
 # Explain why do we have this low frequency gain
-This low frequency gain can be explained as follows: a constant force $F_u$ induces a small displacement of the mass $d_u = \frac{F_u}{k - m\Omega^2}$, which increases the centrifugal force $m\Omega^2d_u = \frac{\Omega^2}{{\omega_0}^2 - \Omega^2} F_u$ which is measured by the force sensors.
+This low frequency gain can be explained as follows: a constant force $F_u$ induces a small displacement of the mass $d_u = \frac{F_u}{k - m\Omega^2}$, which increases the centrifugal force $m\Omega^2d_u = \frac{\Omega^2}{{\omega_0}^2 - \Omega^2} F_u$ which is then measured by the force sensors.
 
 #+name: fig:plant_iff_compare_rotating_speed
 #+caption: Bode plot of the diagonal terms of $\bm{G}_f$ for several rotational speeds $\Omega$
@@ -327,11 +327,15 @@ The direction of increasing gain is indicated by arrows $\tikz[baseline=-0.6ex] 
 Whereas collocated IFF is usually associated with unconditional stability cite:preumont91_activ, this property is lost as soon as the rotational speed in non-null due to gyroscopic effects.
 This can be seen in the Root Locus (Figure ref:fig:root_locus_pure_iff) where the pole corresponding to the controller is bounded to the right half plane implying closed-loop system instability.
 
+# Physical explanation
+Physically, this can be explained by realizing that below some frequency, the loop gain being very large, the decentralized IFF effectively decouples the payload from the XY stage.
+Moreover, the payload experiences centrifugal forces, which can be modeled by negative stiffnesses pulling it away from the rotation axis rendering the system unstable, hence the poles in the right half plane.
+
 # Introduce next two sections
 In order to apply Decentralized IFF on rotating positioning stages, two solutions are proposed to deal with this instability problem.
 The first one consists of slightly modifying the control law (Section ref:sec:iff_hpf) while the second one consists of adding springs in parallel with the force sensors (Section ref:sec:iff_kp).
 
-* Integral Force Feedback with High Pass Filters
+* Integral Force Feedback with High Pass Filter
 <<sec:iff_hpf>>
 ** Modification of the Control Low
 # Reference to Preumont where its done
@@ -345,6 +349,8 @@ In order to limit the low frequency controller gain, an high pass filter (HPF) c
 This is equivalent as to slightly shifting to controller pole to the left along the real axis.
 This modification of the IFF controller is typically done to avoid saturation associated with the pure integrator cite:preumont91_activ.
 This is however not the case in this study as it will become in the next section.
+
+# Beta controller
 
 ** Feedback Analysis
 # Explain what do we mean for Loop Gain (loop gain for the decentralized loop)
