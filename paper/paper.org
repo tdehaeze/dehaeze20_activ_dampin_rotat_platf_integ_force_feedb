@@ -52,13 +52,11 @@
 #+begin_export latex
 \abstract{
 #+end_export
-
-# Get straight to the facts
-# Decentralized Integral Force Feedback for rotating => unstable
-# Two modifications are proposed
-# adding an high pass filter
-# adding stiffness in parallel with the force actuators
-
+This paper investigates the use of Integral Force Feedback (IFF) for the active damping of rotating mechanical systems.
+Guaranteed stability, typical benefit of IFF, is lost as soon as the system is rotating due to gyroscopic effects.
+To overcome this issue, two modifications of the classical IFF control are proposed.
+The first consists of slightly modifying the control law while the second consists of adding springs in parallel with the force sensor.
+Both proposed modifications are compared in terms of added damping, closed-loop compliance and transmissibility.
 #+begin_export latex
 }
 #+end_export
