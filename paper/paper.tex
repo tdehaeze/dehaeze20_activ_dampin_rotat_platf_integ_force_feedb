@@ -1,4 +1,4 @@
-% Created 2020-07-02 jeu. 16:30
+% Created 2020-07-02 jeu. 11:48
 % Intended LaTeX compiler: pdflatex
 \documentclass{ISMA_USD2020}
 \usepackage[utf8]{inputenc}
@@ -53,7 +53,7 @@
 }
 
 \section{Introduction}
-\label{sec:org7ce36f4}
+\label{sec:org2b4a2e8}
 \label{sec:introduction}
 Due to gyroscopic effects, the guaranteed robustness properties of Integral Force Feedback do not hold.
 Either the control architecture can be slightly modified or mechanical changes in the system can be performed.
@@ -61,10 +61,10 @@ This paper has been published
 The Matlab code that was use to obtain the results are available in \cite{dehaeze20_activ_dampin_rotat_posit_platf}.
 
 \section{Dynamics of Rotating Positioning Platforms}
-\label{sec:org1767f3e}
+\label{sec:org96ff785}
 \label{sec:dynamics}
 \subsection{Model of a Rotating Positioning Platform}
-\label{sec:org3d795b1}
+\label{sec:orgcceb66c}
 In order to study how the rotation of a positioning platforms does affect the use of integral force feedback, a model of an XY positioning stage on top of a rotating stage is developed.
 
 The model is schematically represented in Figure \ref{fig:system} and forms the simplest system where gyroscopic forces can be studied.
@@ -84,7 +84,7 @@ The position of the payload is represented by \((d_u, d_v, 0)\) expressed in the
 \end{figure}
 
 \subsection{Equations of Motion}
-\label{sec:orgeda87e3}
+\label{sec:org69c2427}
 To obtain of equation of motion for the system represented in Figure \ref{fig:system}, the Lagrangian equations are used:
 \begin{equation}
 \label{eq:lagrangian_equations}
@@ -128,7 +128,7 @@ One can verify that without rotation (\(\Omega = 0\)) the system becomes equival
 \end{subequations}
 
 \subsection{Transfer Functions in the Laplace domain}
-\label{sec:org133b2f9}
+\label{sec:orgb638120}
 To study the dynamics of the system, the differential equations of motions \eqref{eq:eom_coupled} are transformed in the Laplace domain and the \(2 \times 2\) transfer function matrix \(\bm{G}_d\) from \(\begin{bmatrix}F_u & F_v\end{bmatrix}\) to \(\begin{bmatrix}d_u & d_v\end{bmatrix}\) is obtained
 \begin{align}
   \begin{bmatrix} d_u \\ d_v \end{bmatrix} &= \bm{G}_d \begin{bmatrix} F_u \\ F_v \end{bmatrix} \label{eq:Gd_mimo_tf} \\
@@ -163,7 +163,7 @@ For all the numerical analysis in this study, \(\omega_0 = \SI{1}{\radian\per\se
 Even tough no system with such parameters will be encountered in practice, conclusions will be drawn relative to these parameters such that they can be generalized to any other parameter.
 
 \subsection{System Dynamics and Campbell Diagram}
-\label{sec:orgd6473a3}
+\label{sec:orge52a4e9}
 The poles of \(\bm{G}_d\) are the complex solutions \(p\) of
 \begin{equation}
   \left( \frac{p^2}{{\omega_0}^2} + 2 \xi \frac{p}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{p}{\omega_0} \right)^2 = 0
@@ -218,10 +218,10 @@ For \(\Omega > \omega_0\), the low frequency complex conjugate poles \(p_{-}\) b
 \end{figure}
 
 \section{Decentralized Integral Force Feedback}
-\label{sec:org9704fad}
+\label{sec:org96f0657}
 \label{sec:iff}
 \subsection{Force Sensors and Control Architecture}
-\label{sec:orgf2a5a4d}
+\label{sec:org5b40356}
 In order to apply IFF to the system, force sensors are added in series with the two actuators (Figure \ref{fig:system_iff}).
 As this study focuses on decentralized control, two identical controllers \(K_F\) are used to feedback each of the sensed force to its associated actuator and no attempt is made to counteract the interactions in the system.
 The control diagram is schematically shown in Figure \ref{fig:control_diagram_iff}.
@@ -241,7 +241,7 @@ The control diagram is schematically shown in Figure \ref{fig:control_diagram_if
 \end{minipage}
 
 \subsection{Plant Dynamics}
-\label{sec:org5e54ed9}
+\label{sec:org1a3334e}
 The forces measured by the two force sensors are equal to
 \begin{equation}
 \label{eq:measured_force}
@@ -295,7 +295,7 @@ This low frequency gain can be explained as follows: a constant force \(F_u\) in
 \end{figure}
 
 \subsection{Decentralized Integral Force Feedback with Pure Integrators}
-\label{sec:org8461ad2}
+\label{sec:org62e8d62}
 \label{sec:iff_pure_int}
 The two IFF controllers \(K_F\) consist of a pure integrator
 \begin{equation}
@@ -324,10 +324,10 @@ In order to apply Decentralized IFF on rotating positioning stages, two solution
 The first one consists of slightly modifying the control law (Section \ref{sec:iff_hpf}) while the second one consists of adding springs in parallel with the force sensors (Section \ref{sec:iff_kp}).
 
 \section{Integral Force Feedback with High Pass Filter}
-\label{sec:orgcd3018b}
+\label{sec:org0394efe}
 \label{sec:iff_hpf}
 \subsection{Modification of the Control Low}
-\label{sec:org256e76b}
+\label{sec:orgd5972ba}
 As was just explained, the instability when using IFF with pure integrators comes from the low frequency gain.
 
 In order to limit the low frequency controller gain, an high pass filter (HPF) can be added to the controller
@@ -342,7 +342,7 @@ This modification of the IFF controller is typically done to avoid saturation as
 This is however not the case in this study as it will become clear in the next section.
 
 \subsection{Feedback Analysis}
-\label{sec:org6765624}
+\label{sec:org51db5d4}
 The loop gains for the decentralized controllers \(K_F(s)\) with and without the added HPF are shown in Figure \ref{fig:loop_gain_modified_iff}.
 The effect of the added HPF clearly limits the low frequency gain.
 
@@ -369,7 +369,7 @@ It is interesting to note that this gain \(g_{\text{max}}\) also corresponds as 
 \end{minipage}
 
 \subsection{Optimal Control Parameters}
-\label{sec:org122256a}
+\label{sec:org77a266b}
 Two parameters can be tuned for the controller \eqref{eq:IFF_LHF}: the gain \(g\) and the pole's location \(\omega_i\).
 The optimal values of \(\omega_i\) and \(g\) are here considered as the values for which the damping of all the closed-loop poles are simultaneously maximized.
 
@@ -399,10 +399,10 @@ Three regions can be observed:
 \end{figure}
 
 \section{Integral Force Feedback with Parallel Springs}
-\label{sec:orgb9e95b0}
+\label{sec:orgfe69ffb}
 \label{sec:iff_kp}
 \subsection{Stiffness in Parallel with the Force Sensor}
-\label{sec:org3fd6edd}
+\label{sec:org02dc3a4}
 As was explained in section \ref{sec:iff_pure_int}, the instability when using decentralized IFF for rotating positioning platforms is due to Gyroscopic effects and more precisely to the negative stiffnesses induced by centrifugal forces.
 In this section additional springs in parallel with the force sensors are added to counteract this negative stiffness.
 Such springs are schematically shown in Figure \ref{fig:system_parallel_springs} where \(k_a\) is the stiffness of the actuator and \(k_p\) the stiffness in parallel with the actuator and force sensor.
@@ -426,7 +426,7 @@ An example of such system is shown in Figure \ref{fig:cedrat_xy25xs}.
 \end{minipage}
 
 \subsection{Effect of the Parallel Stiffness on the Plant Dynamics}
-\label{sec:org6d160ef}
+\label{sec:orgb29f2a0}
 The forces measured by the sensors are equal to
 \begin{equation}
 \label{eq:measured_force_kp}
@@ -491,16 +491,19 @@ It is shown that if the added stiffness is higher than the maximum negative stif
 \end{minipage}
 
 \subsection{Optimal Parallel Stiffness}
-\label{sec:org1c9ca29}
-Even though the parallel stiffness \(k_p\) has no impact on the open-loop poles (as the overall stiffness \(k\) stays constant), it has a large impact on the transmission zeros.
-Moreover, as the attainable damping is generally proportional to the distance between poles and zeros \cite{preumont18_vibrat_contr_activ_struc_fourt_edition}, the parallel stiffness \(k_p\) is foreseen to have a large impact on the attainable damping.
+\label{sec:orgbcc4bb0}
+The parallel stiffness \(k_p\)
 
-To study this effect, Root Locus plots for several parallel stiffnesses \(k_p > m \Omega^2\) are shown in Figure \ref{fig:root_locus_iff_kps}.
-The frequencies of the transmission zeros of the system are increasing with the parallel stiffness \(k_p\) and the associated attainable damping is reduced.
-Therefore the parallel stiffness \(k_p\) should not be taken too high while being larger than \(m \Omega^2\) for stability reasons.
+Figure \ref{fig:root_locus_iff_kps} shows Root Loci plots for several parallel stiffnesses \(k_p > m \Omega^2\).
+It is shown that large parallel stiffness \(k_p\) reduces the attainable damping.
+This can be explained by the fact that as the parallel stiffnesses increases, the transmission zeros gets closer to the poles.
+As explained in \cite{preumont18_vibrat_contr_activ_struc_fourt_edition}, the attainable damping is generally proportional to the distance between the poles and zeros.
+The frequency of the transmission zeros of the system are increasing with the fraction used as parallel stiffness \(k_p\).
 
-For any \(k_p > m \Omega^2\), the control gain \(g\) can be tuned such that the maximum simultaneous damping \(\xi_\text{opt}\) is added to the resonances of the system.
-An example is shown in Figure \ref{fig:root_locus_opt_gain_iff_kp} for \(k_p = 5 m \Omega^2\) where \(\xi_{\text{opt}} \approx 0.83\) is obtained for a control gain \(g_\text{opt} \approx 2 \omega_0\).
+For any \(k_p > m \Omega^2\), the control gain \(g\) can be tuned such that the maximum simultaneous damping is added to the resonances of the system as shown in Figure \ref{fig:root_locus_opt_gain_iff_kp} for \(k_p = 5 m \Omega^2\).
+
+\(g_{\text{opt}} \approx 2\)
+\(\xi_{\text{opt}} \approx 0.83\)
 
 \begin{figure}[htbp]
 \begin{subfigure}[c]{0.49\linewidth}
@@ -516,25 +519,23 @@ An example is shown in Figure \ref{fig:root_locus_opt_gain_iff_kp} for \(k_p = 5
 \end{figure}
 
 \section{Comparison of the Proposed Modification to Decentralized Integral Force Feedback for Rotating Positioning Stages}
-\label{sec:org3dedf99}
+\label{sec:org1e5f410}
 \label{sec:comparison}
-Two modifications to the decentralized IFF for rotating positioning stages have been proposed.
+Two modification to the decentralized IFF for rotating positioning stages have been proposed.
 
-The first modification concerns the controller and consists of adding an high pass filter to \(K_F\) \eqref{eq:IFF_LHF}.
-The system was shown to be stable for gains up to \(g_\text{max}\) \eqref{eq:gmax_iff_hpf}.
+The first modification concerns the controller.
+It consists of adding an high pass filter to \(K_F\) \eqref{eq:IFF_LHF}.
+This allows the system to be stable for gains up to \(g_\text{max}\) \eqref{eq:gmax_iff_hpf}.
 
 The second proposed modification concerns the mechanical system.
-It was shown that if springs with a stiffness \(k_p > m \Omega^2\) are added in parallel to the actuators and force sensors, decentralized IFF can be applied with unconditional stability.
+If springs are added in parallel to the actuators and force sensors with a stiffness \(k_p > m \Omega^2\), decentralized IFF can be applied with unconditional stability.
 
 These two methods are now compared in terms of added damping, closed-loop compliance and transmissibility.
-For the following comparisons, the cut-off frequency for the high pass filters is set to \(\omega_i = 0.1 \omega_0\) and the parallel springs have a stiffness \(k_p = 5 m \Omega^2\).
+For the following comparisons, the high pass cut-off frequency is set to \(\omega_i = 0.1 \omega_0\) and the parallel stiffness is \(k_p = 5 m \Omega^2\).
 \subsection{Comparison of the Attainable Damping}
-\label{sec:org173dfab}
+\label{sec:org29462c9}
 Figure \ref{fig:comp_root_locus} shows to Root Locus plots for the two proposed IFF techniques.
-While the two pairs of complex conjugate open-loop poles are identical for both techniques, the transmission zeros are not.
-This means that their closed-loop behavior will differ when large control gains are used.
-
-It is interesting to note that the maximum added damping is very similar for both techniques and are reached for the same value of the gain in both cases \(g_\text{opt} \approx 2 \omega_0\).
+The maximum added damping is very similar for both techniques and are reached for \(g_\text{opt} \approx 2\) in both cases.
 
 \begin{figure}[htbp]
 \centering
@@ -543,23 +544,23 @@ It is interesting to note that the maximum added damping is very similar for bot
 \end{figure}
 
 \subsection{Comparison Transmissibility and Compliance}
-\label{sec:org411478b}
+\label{sec:orgbff6e4e}
 The two proposed techniques are now compared in terms of closed-loop compliance and transmissibility.
 
 The compliance is defined as the transfer function from external forces applied to the payload to the displacement of the payload in an inertial frame.
 The transmissibility is the dynamics from the displacement of the rotating stage to the displacement of the payload.
 It is used to characterize how much vibration of the rotating stage is transmitted to the payload.
 
-The two techniques are also compared with passive damping (Figure \ref{fig:system}) where \(c = c_\text{crit}\) is tuned to critically damp the resonance when the rotating speed is null
+The two techniques are also compared with passive damping (Figure \ref{fig:system}) with \(c\) tuned to critically damp the resonance when \(\Omega = 0\)
 \begin{equation}
   c_\text{crit} = 2 \sqrt{k m}
 \end{equation}
 
-Very similar results are obtained for the two proposed decentralized IFF modifications in terms of compliance (Figure \ref{fig:comp_compliance}) and transmissibility (Figure \ref{fig:comp_transmissibility}).
-It is also confirmed that these two techniques can significantly damp the system's resonances.
+Very similar results are obtained for both techniques as shown in Figures \ref{fig:comp_compliance} and \ref{fig:comp_transmissibility}.
+It is also confirmed that these techniques can significantly damp the system's resonances.
 
 Compared to passive damping, the two techniques degrades the compliance at low frequency (Figure \ref{fig:comp_compliance}).
-They however do not degrades the transmissibility as high frequency as its the case with passive damping (Figure \ref{fig:comp_transmissibility}).
+They however do not degrades the transmissibility as high frequency as its the case with passive damping (Figure \ref{fig:comp_transmissibility})
 
 \begin{figure}[htbp]
 \begin{subfigure}[c]{0.45\linewidth}
@@ -575,11 +576,11 @@ They however do not degrades the transmissibility as high frequency as its the c
 \end{figure}
 
 \section{Conclusion}
-\label{sec:orgf8a3da6}
+\label{sec:orgb954137}
 \label{sec:conclusion}
 
 \section*{Acknowledgment}
-\label{sec:orgee9adb1}
+\label{sec:orge7698ad}
 This research benefited from a FRIA grant from the French Community of Belgium.
 
 \bibliography{ref.bib}
