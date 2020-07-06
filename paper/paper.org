@@ -72,8 +72,8 @@ Both proposed modifications are compared in terms of added damping, closed-loop 
 
 # Such as the Nano-Active-Stabilization-System currently in development at the ESRF cite:dehaeze18_sampl_stabil_for_tomog_exper.
 
-** Current active damping techniques                                 :ignore:
-# IFF, DVF
+** Description of IFF and associated properties
+# IFF => guaranteed stability
 
 ** Describe a gap in the research                                    :ignore:
 # No literature on rotating systems => gyroscopic effects
@@ -81,11 +81,11 @@ Both proposed modifications are compared in terms of added damping, closed-loop 
 ** Describe the paper itself / the problem which is addressed        :ignore:
 
 Due to gyroscopic effects, the guaranteed robustness properties of Integral Force Feedback do not hold.
+
 Either the control architecture can be slightly modified or mechanical changes in the system can be performed.
 
 ** Introduce Each part of the paper                                  :ignore:
 
-This paper has been published
 The Matlab code that was use to obtain the results are available in cite:dehaeze20_activ_dampin_rotat_posit_platf.
 
 * Dynamics of Rotating Positioning Platforms
@@ -234,7 +234,7 @@ The control diagram is schematically shown in Figure ref:fig:control_diagram_iff
 #+attr_latex: :scale 1 :float nil
 [[file:figs/system_iff.pdf]]
 #+end_minipage
-\hfill
+#+latex: \hfill
 #+attr_latex: :options [t]{0.40\linewidth}
 #+begin_minipage
 #+name: fig:control_diagram_iff
@@ -242,6 +242,7 @@ The control diagram is schematically shown in Figure ref:fig:control_diagram_iff
 #+attr_latex: :scale 1 :float nil
 [[file:figs/control_diagram_iff.pdf]]
 #+end_minipage
+#+latex: \newline
 
 ** Plant Dynamics                                                    :ignore:
 The forces measured by the two force sensors are equal to
@@ -274,6 +275,7 @@ The zeros of the diagonal terms of $\bm{G}_f$ are equal to (neglecting the dampi
   \end{align}
 \end{subequations}
 
+# TODO - Change that phrase: don't say it is easy
 It can be easily shown that the frequency of the two complex conjugate zeros $z_c$ eqref:eq:iff_zero_cc lies between the frequency of the two pairs of complex conjugate poles $p_{-}$ and $p_{+}$ eqref:eq:pole_values.
 
 For non-null rotational speeds, two real zeros $z_r$ eqref:eq:iff_zero_real appear in the diagonal terms inducing a non-minimum phase behavior.
@@ -365,6 +367,7 @@ It is interesting to note that this gain $g_{\text{max}}$ also corresponds as to
 #+attr_latex: :scale 1 :float nil
 [[file:figs/root_locus_modified_iff.pdf]]
 #+end_minipage
+#+latex: \newline
 
 ** Optimal Control Parameters                                        :ignore:
 Two parameters can be tuned for the controller eqref:eq:IFF_LHF: the gain $g$ and the pole's location $\omega_i$.
@@ -409,7 +412,7 @@ An example of such system is shown in Figure ref:fig:cedrat_xy25xs.
 #+attr_latex: :scale 1 :float nil
 [[file:figs/system_parallel_springs.pdf]]
 #+end_minipage
-\hfill
+#+latex: \hfill
 #+attr_latex: :options [t]{0.40\linewidth}
 #+begin_minipage
 #+name: fig:cedrat_xy25xs
@@ -417,6 +420,7 @@ An example of such system is shown in Figure ref:fig:cedrat_xy25xs.
 #+attr_latex: :width \linewidth :float nil
 [[file:figs/cedrat_xy25xs.png]]
 #+end_minipage
+#+latex: \newline
 
 ** Effect of the Parallel Stiffness on the Plant Dynamics            :ignore:
 The forces measured by the sensors are equal to
@@ -483,6 +487,7 @@ It is shown that if the added stiffness is higher than the maximum negative stif
 #+attr_latex: :scale 1 :float nil
 [[file:figs/root_locus_iff_kp.pdf]]
 #+end_minipage
+#+latex: \newline
 
 ** Optimal Parallel Stiffness                                        :ignore:
 Even though the parallel stiffness $k_p$ has no impact on the open-loop poles (as the overall stiffness $k$ stays constant), it has a large impact on the transmission zeros.
@@ -554,7 +559,9 @@ They however do not degrades the transmissibility as high frequency as its the c
 * Conclusion
 <<sec:conclusion>>
 
-# MIMO approach to study the coupling effects?
+# Shows the problem for IFF when rotating
+
+# Proposed two method
 
 * Acknowledgment
 :PROPERTIES:
