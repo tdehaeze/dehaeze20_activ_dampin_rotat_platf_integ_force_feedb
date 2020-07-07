@@ -107,16 +107,13 @@ To obtain the equations of motion for the system represented in Figure ref:fig:s
 \end{equation}
 with $L = T - V$ the Lagrangian, $T$ the kinetic coenergy, $V$ the potential energy, $D$ the dissipation function, and $Q_i$ the generalized force associated with the generalized variable $\begin{bmatrix}q_1 & q_2\end{bmatrix} = \begin{bmatrix}d_u & d_v\end{bmatrix}$.
 The equation of motion corresponding to the constant rotation in the $(\vec{i}_x, \vec{i}_y)$ is disregarded as the motion is considered to be imposed by the rotation stage.
-
 #+name: eq:energy_functions_lagrange
-\begin{subequations}
-  \begin{align}
-    T & = \frac{1}{2} m \left( \left( \dot{d}_u - \Omega d_v \right)^2 + \left( \dot{d}_v + \Omega d_u \right)^2 \right) \\
-    V & = \frac{1}{2} k \left( {d_u}^2 + {d_v}^2 \right) \\
-    D & = \frac{1}{2} c \left( \dot{d}_u{}^2 + \dot{d}_v{}^2 \right) \\
-    Q_1 &= F_u, \quad Q_2 = F_v
-  \end{align}
-\end{subequations}
+\begin{equation}
+  \begin{aligned}
+    T & = \frac{1}{2} m \left( \left( \dot{d}_u - \Omega d_v \right)^2 + \left( \dot{d}_v + \Omega d_u \right)^2 \right), \quad V = \frac{1}{2} k \left( {d_u}^2 + {d_v}^2 \right),\\
+    D &= \frac{1}{2} c \left( \dot{d}_u{}^2 + \dot{d}_v{}^2 \right), \quad Q_1 = F_u, \quad Q_2 = F_v
+  \end{aligned}
+\end{equation}
 
 Substituting equations eqref:eq:energy_functions_lagrange into eqref:eq:lagrangian_equations for both generalized coordinates gives two coupled differential equations
 #+name: eq:eom_coupled
@@ -154,12 +151,9 @@ To study the dynamics of the system, the differential equations of motions eqref
 \end{align}
 
 To simplify the analysis, the undamped natural frequency $\omega_0$ and the damping ratio $\xi$ are used
-\begin{subequations}
-  \begin{align}
-    \omega_0 &= \sqrt{\frac{k}{m}} \text{ in } \si{\radian\per\second} \\
-    \xi &= \frac{c}{2 \sqrt{k m}}
-  \end{align}
-\end{subequations}
+\begin{equation}
+  \omega_0 = \sqrt{\frac{k}{m}} \text{ in } \si{\radian\per\second}, \quad \xi = \frac{c}{2 \sqrt{k m}}
+\end{equation}
 
 The transfer function matrix $\bm{G}_d$ eqref:eq:Gd_m_k_c becomes equal to
 #+name: eq:Gd_w0_xi_k
@@ -223,19 +217,19 @@ In order to apply IFF to the system, force sensors are added in series with the 
 As this study focuses on decentralized control, two identical controllers $K_F$ are used to feedback each of the sensed force to its associated actuator and no attempt is made to counteract the interactions in the system.
 The control diagram is schematically shown in Figure ref:fig:control_diagram_iff.
 
-#+attr_latex: :options [t]{0.55\linewidth}
+#+attr_latex: :options [t]{0.50\linewidth}
 #+begin_minipage
 #+name: fig:system_iff
 #+caption: System with added Force Sensor in series with the actuators
-#+attr_latex: :scale 1 :float nil
+#+attr_latex: :width \linewidth :float nil
 [[file:figs/system_iff.pdf]]
 #+end_minipage
 #+latex: \hfill
-#+attr_latex: :options [t]{0.40\linewidth}
+#+attr_latex: :options [t]{0.45\linewidth}
 #+begin_minipage
 #+name: fig:control_diagram_iff
 #+caption: Control Diagram for decentralized IFF
-#+attr_latex: :scale 1 :float nil
+#+attr_latex: :width \linewidth :float nil
 [[file:figs/control_diagram_iff.pdf]]
 #+end_minipage
 
@@ -408,15 +402,15 @@ Amplified piezoelectric stack actuators can also be used for such purpose where 
 The parallel stiffness $k_p$ then corresponds to the amplification structure.
 An example of such system is shown in Figure ref:fig:cedrat_xy25xs.
 
-#+attr_latex: :options [t]{0.55\linewidth}
+#+attr_latex: :options [t]{0.48\linewidth}
 #+begin_minipage
 #+name: fig:system_parallel_springs
 #+caption: Studied system with additional springs in parallel with the actuators and force sensors
-#+attr_latex: :scale 1 :float nil
+#+attr_latex: :width \linewidth :float nil
 [[file:figs/system_parallel_springs.pdf]]
 #+end_minipage
 #+latex: \hfill
-#+attr_latex: :options [t]{0.40\linewidth}
+#+attr_latex: :options [t]{0.48\linewidth}
 #+begin_minipage
 #+name: fig:cedrat_xy25xs
 #+caption: XY Piezoelectric Stage (XY25XS from Cedrat Technology)
@@ -436,12 +430,9 @@ The forces $\begin{bmatrix}f_u, f_v\end{bmatrix}$ measured by the two force sens
 \end{equation}
 
 In order to keep the overall stiffness $k = k_a + k_p$ constant, a scalar parameter $\alpha$ ($0 \le \alpha < 1$) is defined to describe the fraction of the total stiffness in parallel with the actuator and force sensor
-\begin{subequations}
-  \begin{align}
-    k_p &= \alpha k \\
-    k_a &= (1 - \alpha) k
-  \end{align}
-\end{subequations}
+\begin{equation}
+  k_p = \alpha k, \quad k_a = (1 - \alpha) k
+\end{equation}
 
 The equations of motion are derived and transformed in the Laplace domain
 #+name: eq:Gk_mimo_tf
@@ -464,10 +455,7 @@ Comparing $\bm{G}_k$ eqref:eq:Gk with $\bm{G}_f$ eqref:eq:Gf shows that while th
 The two real zeros $z_r$ eqref:eq:iff_zero_real that were inducing non-minimum phase behavior are transformed into complex conjugate zeros if the following condition hold
 #+name: eq:kp_cond_cc_zeros
 \begin{equation}
-  \begin{aligned}
-    \alpha &> \frac{\Omega^2}{{\omega_0}^2} \\
-    \Leftrightarrow k_p &> m \Omega^2
-  \end{aligned}
+  \alpha > \frac{\Omega^2}{{\omega_0}^2} \quad \Leftrightarrow \quad k_p > m \Omega^2
 \end{equation}
 
 Thus, if the added parallel stiffness $k_p$ is higher than the negative stiffness induced by centrifugal forces $m \Omega^2$, the direct dynamics from actuator to force sensor will show minimum phase behavior.
@@ -507,7 +495,7 @@ An example is shown in Figure ref:fig:root_locus_opt_gain_iff_kp for $k_p = 5 m 
 
 #+name: fig:root_locus_iff_kps_opt
 #+caption: Root Locus for IFF when parallel stiffness $k_p$ is added, $\Omega = 0.1 \omega_0$
-#+attr_latex: :environment subfigure :width 0.49\linewidth :align c
+#+attr_latex: :environment subfigure :width 0.45\linewidth :align c
 | file:figs/root_locus_iff_kps.pdf                                          | file:figs/root_locus_opt_gain_iff_kp.pdf                                                           |
 | <<fig:root_locus_iff_kps>> Comparison of three parallel stiffnesses $k_p$ | <<fig:root_locus_opt_gain_iff_kp>> $k_p = 5 m \Omega^2$, optimal damping $\xi_\text{opt}$ is shown |
 
@@ -570,11 +558,8 @@ They however do not degrade the transmissibility at high frequency as it is the 
 * Conclusion
 <<sec:conclusion>>
 
-# Shows the problem for IFF when rotating
 
-# Proposed two method
 
-The Matlab code that was used to obtain the results is available in cite:dehaeze20_activ_dampin_rotat_posit_platf.
 
 * Acknowledgment
 :PROPERTIES:
