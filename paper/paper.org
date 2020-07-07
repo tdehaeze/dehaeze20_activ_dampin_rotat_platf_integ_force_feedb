@@ -491,13 +491,29 @@ The frequencies of the transmission zeros of the system are increasing with the 
 Therefore, even though the parallel stiffness $k_p$ should be larger than $m \Omega^2$ for stability reasons, it should not be taken too high as this would limit the attainable bandwidth.
 
 For any $k_p > m \Omega^2$, the control gain $g$ can be tuned such that the maximum simultaneous damping $\xi_\text{opt}$ is added to the resonances of the system.
-An example is shown in Figure ref:fig:root_locus_opt_gain_iff_kp for $k_p = 5 m \Omega^2$ where the damping $\xi_{\text{opt}} \approx 0.83$ is obtained for a control gain $g_\text{opt} \approx 2 \omega_0$.
+# An example is shown in Figure ref:fig:root_locus_opt_gain_iff_kp for $k_p = 5 m \Omega^2$ where the damping $\xi_{\text{opt}} \approx 0.83$ is obtained for a control gain $g_\text{opt} \approx 2 \omega_0$.
 
-#+name: fig:root_locus_iff_kps_opt
-#+caption: Root Locus for IFF when parallel stiffness $k_p$ is added, $\Omega = 0.1 \omega_0$
-#+attr_latex: :environment subfigure :width 0.45\linewidth :align c
-| file:figs/root_locus_iff_kps.pdf                                          | file:figs/root_locus_opt_gain_iff_kp.pdf                                                           |
-| <<fig:root_locus_iff_kps>> Comparison of three parallel stiffnesses $k_p$ | <<fig:root_locus_opt_gain_iff_kp>> $k_p = 5 m \Omega^2$, optimal damping $\xi_\text{opt}$ is shown |
+#+attr_latex: :options [t]{0.48\linewidth}
+#+begin_minipage
+#+name: fig:root_locus_iff_kps
+#+caption: Comparison the Root Locus for three parallel stiffnessses $k_p$
+#+attr_latex: :width \linewidth :float nil
+[[file:figs/root_locus_iff_kps.pdf]]
+#+end_minipage
+\hfill
+#+attr_latex: :options [t]{0.48\linewidth}
+#+begin_minipage
+#+name: fig:mod_iff_damping_kp
+#+caption: Optimal Damping Ratio $\xi_\text{opt}$ and the corresponding optimal gain $g_\text{opt}$ as a function of $\alpha$
+#+attr_latex: :width \linewidth :float nil
+[[file:figs/mod_iff_damping_kp.pdf]]
+#+end_minipage
+
+# #+name: fig:root_locus_iff_kps_opt
+# #+caption: Root Locus for IFF when parallel stiffness $k_p$ is added, $\Omega = 0.1 \omega_0$
+# #+attr_latex: :environment subfigure :width 0.45\linewidth :align c
+# | file:figs/root_locus_iff_kps.pdf                                          | file:figs/mod_iff_damping_kp.pdf                                                                   |
+# | <<fig:root_locus_iff_kps>> Comparison of three parallel stiffnesses $k_p$ | <<fig:root_locus_opt_gain_iff_kp>> $k_p = 5 m \Omega^2$, optimal damping $\xi_\text{opt}$ is shown |
 
 * Comparison and Discussion
 <<sec:comparison>>
@@ -533,7 +549,7 @@ It is interesting to note that the maximum added damping is very similar for bot
 The two proposed techniques are now compared in terms of closed-loop compliance and transmissibility.
 
 The compliance is defined as the transfer function from external forces applied to the payload to the displacement of the payload in an inertial frame.
-The transmissibility describes the dynamic behaviour between the displacement of the rotating stage and the displacement of the payload.
+The transmissibility describes the dynamic behavior between the displacement of the rotating stage and the displacement of the payload.
 It is used to characterize how much vibration of the rotating stage is transmitted to the payload.
 
 The two techniques are also compared with passive damping (Figure ref:fig:system) where $c = c_\text{crit}$ is tuned to critically damp the resonance when the rotating speed is null.
