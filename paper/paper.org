@@ -1,4 +1,4 @@
-#+TITLE: Active Damping of Rotating Isolation Systems using Integral Force Feedback
+#+TITLE: Active Damping of Rotating Platforms using Integral Force Feedback
 :DRAWER:
 #+LATEX_CLASS: ISMA_USD2020
 #+OPTIONS: toc:nil
@@ -49,37 +49,31 @@
 #+END_SRC
 
 * Abstract                                                            :ignore:
-#+begin_export latex
-\abstract{
-#+end_export
+#+latex: \abstract{
 This paper investigates the use of Integral Force Feedback (IFF) for the active damping of rotating mechanical systems.
 Guaranteed stability, typical benefit of IFF, is lost as soon as the system is rotating due to gyroscopic effects.
 To overcome this issue, two modifications of the classical IFF control are proposed.
-The first consists of slightly modifying the control law while the second consists of adding springs in parallel with the force sensor.
+The first consists of slightly modifying the control law while the second consists of adding springs in parallel with the force sensors.
 Conditions for stability and optimal parameters are derived.
-The results reveal that, despite their different implementations, both modified IFF control have almost identical damping authority on suspension resonances.
-#+begin_export latex
-}
-#+end_export
+The results reveal that, despite their different implementations, both modified IFF control have almost identical damping authority on suspension modes.
+#+latex: }
 
 * Introduction
 <<sec:introduction>>
 There is an increasing need to reduce the undesirable vibration of many sensitive equipment.
-A common method is to insert an isolation system between the vibration source and the vibration-sensitive equipment, which attenuates the vibrations transmission above the resonance frequency of the isolation system.
-Active damping can be used to artificially increase the viscous damping in the isolation system in order not to amplify the vibrations at the suspension modes.
+A common method to reduce vibration is to mount the sensitive equipment on a suspended platform which attenuates the vibrations above the frequency of the suspension modes.
+In order to further decrease the residual vibrations, active damping can be used for reducing the magnification of the response in the vicinity of the resonances.
 
+In cite:preumont92_activ_dampin_by_local_force, the Integral Force Feedback (IFF) control scheme has been proposed, where a force sensor, a force actuator and an integral controller are used to directly augment the damping of a mechanical system.
+When the force sensor is collocated with the actuator, the open-loop transfer function has alternating poles and zeros which facilitate to guarantee the stability of the closed loop system cite:preumont02_force_feedb_versus_accel_feedb.
 
-In cite:preumont92_activ_dampin_by_local_force, the Integral Force Feedback (IFF) has been proposed, where a force sensor, a force actuator and an integral controller are used to directly augment the damping of a mechanical system.
-When the force sensor is collocated with the actuator, the open-loop transfer function has alternating poles and zeros which guarantees the stability of the closed loop system cite:preumont02_force_feedb_versus_accel_feedb.
-IFF has also been shown to be very effect when applied to multi inputs multi outputs (MIMO) system in a decentralized manner cite:preumont08_trans_zeros_struc_contr_with.
-
-To the best of our knowledge there are no results in the literature regarding how IFF can be applied to rotating isolation systems.
-The purpose of this study is therefore to describe the limitation imposed by gyroscopic effects on the use of IFF for the active damping, and to propose two ways to overcome the limitations to apply IFF on rotating isolation systems.
+However, when the platform is rotating, the system dynamics is altered and IFF cannot be applied as is.
+The purpose of this paper is to study how the IFF strategy can be adapted to deal with these Gyroscopic effects.
 
 The paper is structured as follows.
-Section ref:sec:dynamics presents the simple model of a rotating isolation system that will be used throughout this study.
+Section ref:sec:dynamics presents a simple model of a rotating suspended platform that will be used throughout this study.
 Section ref:sec:iff explains how the unconditional stability of IFF is lost due to Gyroscopic effects induced by the rotation.
-Section ref:sec:iff_hpf suggests to lightly modify the control law such that damping can be added to the suspension modes in a robust way.
+Section ref:sec:iff_hpf suggests a simple modification of the control law such that damping can be added to the suspension modes in a robust way.
 Section ref:sec:iff_kp proposes to add springs in parallel with the force sensors to regain the unconditional stability of IFF.
 Section ref:sec:comparison compares both proposed modifications to the classical IFF in terms of damping authority and closed-loop system behavior.
 
