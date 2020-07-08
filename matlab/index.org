@@ -137,7 +137,7 @@ It is shown in Figure [[fig:campbell_diagram]], and one can see that the system 
   end
   plot(Ws, zeros(size(Ws)), 'k--')
   hold off;
-  xlabel('Rotation Frequency [rad/s]'); ylabel('Real Part');
+  xlabel('Rotational Speed [rad/s]'); ylabel('Real Part');
 
   ax2 = subplot(1,2,2);
   hold on;
@@ -145,7 +145,7 @@ It is shown in Figure [[fig:campbell_diagram]], and one can see that the system 
       plot(Ws, imag(p_ws(p_i, :)), 'k-')
   end
   hold off;
-  xlabel('Rotation Frequency [rad/s]'); ylabel('Imaginary Part');
+  xlabel('Rotational Speed [rad/s]'); ylabel('Imaginary Part');
 #+end_src
 
 #+begin_src matlab :tangle no :exports results :results file replace
@@ -172,7 +172,7 @@ It is shown in Figure [[fig:campbell_diagram]], and one can see that the system 
   plot(Ws, real(p_ws(3, :)), '-', 'HandleVisibility', 'off')
   plot(Ws, zeros(size(Ws)), 'k--', 'HandleVisibility', 'off')
   hold off;
-  xlabel('Rotation Frequency $\Omega$'); ylabel('Real Part');
+  xlabel('Rotational Speed $\Omega$'); ylabel('Real Part');
   xlim([0, 2*w0]);
   xticks([0,w0/2,w0,3/2*w0,2*w0])
   xticklabels({'$0$', '', '$\omega_0$', '', '$2 \omega_0$'})
@@ -193,7 +193,7 @@ It is shown in Figure [[fig:campbell_diagram]], and one can see that the system 
   plot(Ws, imag(p_ws(3, :)), '-')
   plot(Ws, zeros(size(Ws)), 'k--')
   hold off;
-  xlabel('Rotation Frequency $\Omega$'); ylabel('Imaginary Part');
+  xlabel('Rotational Speed $\Omega$'); ylabel('Imaginary Part');
   xlim([0, 2*w0]);
   xticks([0,w0/2,w0,3/2*w0,2*w0])
   xticklabels({'$0$', '', '$\omega_0$', '', '$2 \omega_0$'})
@@ -482,7 +482,7 @@ Which then gives:
 \end{align}
 #+end_important
 
-** Simscape Model
+** Comparison of the Analytical Model and the Simscape Model
 The rotation speed is set to $\Omega = 0.1 \omega_0$.
 #+begin_src matlab
   W = 0.1*w0; % [rad/s]
@@ -515,7 +515,6 @@ And the transfer function from $[F_u, F_v]$ to $[f_u, f_v]$ is identified using 
   Giff.OutputName = {'fu', 'fv'};
 #+end_src
 
-** Comparison of the Analytical Model and the Simscape Model
 The same transfer function from $[F_u, F_v]$ to $[f_u, f_v]$ is written down from the analytical model.
 #+begin_src matlab
   Giff_th = 1/(((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))^2 + (2*W*s/(w0^2))^2) * ...
@@ -524,7 +523,6 @@ The same transfer function from $[F_u, F_v]$ to $[f_u, f_v]$ is written down fro
 #+end_src
 
 The two are compared in Figure [[fig:plant_iff_comp_simscape_analytical]] and found to perfectly match.
-
 #+begin_src matlab :exports none
   freqs = logspace(-1, 1, 1000);
 
@@ -1123,40 +1121,36 @@ While it seems that small $\omega_i$ do allow more damping to be added to the sy
 
 There must be an optimum for $\omega_i$.
 To find the optimum, the gain that maximize the simultaneous damping of the mode is identified for a wide range of $\omega_i$ (Figure [[fig:mod_iff_damping_wi]]).
-#+begin_src matlab
-  wis = logspace(-2, 1, 31)*w0; % [rad/s]
 
-  opt_zeta = zeros(1, length(wis)); % Optimal simultaneous damping
+#+begin_src matlab
+  wis = logspace(-2, 1, 100)*w0; % [rad/s]
+
+  opt_xi = zeros(1, length(wis)); % Optimal simultaneous damping
   opt_gain = zeros(1, length(wis)); % Corresponding optimal gain
 
   for wi_i = 1:length(wis)
       wi = wis(wi_i);
-      gains = linspace(0, (w0^2/W^2 - 1)*wi, 100);
+      Kiff = 1/(s + wi)*eye(2);
 
-      for g = gains
-          Kiff = (g/(wi+s))*eye(2);
+      fun = @(g)computeSimultaneousDamping(g, Giff, Kiff);
 
-          [w, zeta] = damp(minreal(feedback(Giff, Kiff)));
-
-          if min(zeta) > opt_zeta(wi_i) && all(zeta > 0)
-              opt_zeta(wi_i) = min(zeta);
-              opt_gain(wi_i) = g;
-          end
-      end
+      [g_opt, xi_opt] = fminsearch(fun, 0.5*wi*((w0/W)^2 - 1));
+      opt_xi(wi_i) = 1/xi_opt;
+      opt_gain(wi_i) = g_opt;
   end
 #+end_src
 
 #+begin_src matlab :exports none
   figure;
   yyaxis left
-  plot(wis, opt_zeta, '-o', 'DisplayName', '$\xi_{cl}$');
+  plot(wis, opt_xi, '-', 'DisplayName', '$\xi_{cl}$');
   set(gca, 'YScale', 'lin');
   ylim([0,1]);
   ylabel('Attainable Damping Ratio $\xi$');
 
   yyaxis right
   hold on;
-  plot(wis, opt_gain, '-x', 'DisplayName', '$g_{opt}$');
+  plot(wis, opt_gain, '-', 'DisplayName', '$g_{opt}$');
   plot(wis, wis*((w0/W)^2 - 1), '--', 'DisplayName', '$g_{max}$');
   set(gca, 'YScale', 'lin');
   ylim([0,10]);
@@ -1792,7 +1786,63 @@ It is shown that large values of $k_p$ decreases the attainable damping.
   exportFig('figs-inkscape/root_locus_iff_kps.pdf', 'width', 'wide', 'height', 'tall', 'png', false, 'pdf', false, 'svg', true);
 #+end_src
 
-** Optimal Gain
+#+begin_src matlab
+  alphas = logspace(-2, 0, 100);
+
+  opt_xi = zeros(1, length(alphas)); % Optimal simultaneous damping
+  opt_gain = zeros(1, length(alphas)); % Corresponding optimal gain
+
+  Kiff = 1/s*eye(2);
+
+  for alpha_i = 1:length(alphas)
+      kp = alphas(alpha_i);
+      k = 1 - alphas(alpha_i);
+
+      w0p = sqrt((k + kp)/m);
+      xip = c/(2*sqrt((k+kp)*m));
+
+      Giff = 1/( (s^2/w0p^2 + 2*xip*s/w0p + 1 - W^2/w0p^2)^2 + (2*(s/w0p)*(W/w0p))^2 ) * [ ...
+          (s^2/w0p^2 + kp/(k + kp) - W^2/w0p^2)*(s^2/w0p^2 + 2*xip*s/w0p + 1 - W^2/w0p^2) + (2*(s/w0p)*(W/w0p))^2, -(2*xip*s/w0p + k/(k + kp))*(2*(s/w0p)*(W/w0p));
+          (2*xip*s/w0p + k/(k + kp))*(2*(s/w0p)*(W/w0p)), (s^2/w0p^2 + kp/(k + kp) - W^2/w0p^2)*(s^2/w0p^2 + 2*xip*s/w0p + 1 - W^2/w0p^2) + (2*(s/w0p)*(W/w0p))^2];
+
+      fun = @(g)computeSimultaneousDamping(g, Giff, Kiff);
+
+      [g_opt, xi_opt] = fminsearch(fun, 2);
+      opt_xi(alpha_i) = 1/xi_opt;
+      opt_gain(alpha_i) = g_opt;
+  end
+#+end_src
+
+#+begin_src matlab :exports none
+  figure;
+  yyaxis left
+  plot(alphas, opt_xi, '-', 'DisplayName', '$\xi_{cl}$');
+  set(gca, 'YScale', 'lin');
+  ylim([0,1]);
+  ylabel('Attainable Damping Ratio $\xi$');
+
+  yyaxis right
+  hold on;
+  plot(alphas, opt_gain, '-', 'DisplayName', '$g_{opt}$');
+  set(gca, 'YScale', 'lin');
+  ylim([0,2.5]);
+  ylabel('Controller gain $g$');
+
+  xlabel('$\alpha$');
+  set(gca, 'XScale', 'log');
+  legend('location', 'northeast');
+#+end_src
+
+#+begin_src matlab :tangle no :exports results :results file replace
+  exportFig('figs/opt_damp_alpha.pdf', 'width', 'wide', 'height', 'normal');
+#+end_src
+
+#+name: fig:opt_damp_alpha
+#+caption:
+#+RESULTS:
+[[file:figs/opt_damp_alpha.png]]
+
+** TODO Optimal Gain
 Let's take $k_p = 5 m \Omega^2$ and find the optimal IFF control gain $g$ such that maximum damping are added to the poles of the closed loop system.
 
 #+begin_src matlab
@@ -1808,7 +1858,7 @@ Let's take $k_p = 5 m \Omega^2$ and find the optimal IFF control gain $g$ such t
 #+end_src
 
 #+begin_src matlab
-  opt_zeta = 0;
+  opt_xi = 0;
   opt_gain = 0;
 
   gains = logspace(-2, 4, 1000);
@@ -1816,10 +1866,10 @@ Let's take $k_p = 5 m \Omega^2$ and find the optimal IFF control gain $g$ such t
   for g = gains
       Kiff = (g/s)*eye(2);
 
-      [w, zeta] = damp(minreal(feedback(Giff, Kiff)));
+      [w, xi] = damp(minreal(feedback(Giff, Kiff)));
 
-      if min(zeta) > opt_zeta && all(zeta > 0)
-          opt_zeta = min(zeta);
+      if min(xi) > opt_xi && all(xi > 0)
+          opt_xi = min(xi);
           opt_gain = min(g);
       end
   end
@@ -2061,54 +2111,41 @@ IFF With parallel Stiffness
 In order to compare to three considered Active Damping techniques, gains that yield maximum damping of all the modes are computed for each case.
 
 #+begin_src matlab :exports none
-  %% IFF with pseudo integrators
-  gains = linspace(0, (w0^2/W^2 - 1)*wi, 100);
-  opt_zeta_iff = 0;
-  opt_gain_iff = 0;
+  fun = @(g)computeSimultaneousDamping(g, Giff, (1/(wi+s))*eye(2));
 
-  for g = gains
-      Kiff = (g/(wi+s))*eye(2);
-
-      [w, zeta] = damp(minreal(feedback(Giff, Kiff)));
-
-      if min(zeta) > opt_zeta_iff && all(zeta > 0)
-        opt_zeta_iff = min(zeta);
-        opt_gain_iff = g;
-      end
-  end
+  [opt_gain_iff, opt_xi_iff] = fminsearch(fun, 0.5*(w0^2/W^2 - 1)*wi);
+  opt_xi_iff = 1/opt_xi_iff;
 #+end_src
 
 #+begin_src matlab :exports none
-  %% IFF with Parallel Stiffness
-  gains = logspace(-2, 4, 100);
-  opt_zeta_kp = 0;
-  opt_gain_kp = 0;
+  fun = @(g)computeSimultaneousDamping(g, Giff_kp, 1/s*eye(2));
 
-  for g = gains
-      Kiff = g/s*eye(2);
-
-      [w, zeta] = damp(minreal(feedback(Giff_kp, Kiff)));
-
-      if min(zeta) > opt_zeta_kp && all(zeta > 0)
-        opt_zeta_kp = min(zeta);
-        opt_gain_kp = g;
-      end
-  end
+  [opt_gain_kp, opt_xi_kp] = fminsearch(fun, 2);
+  opt_xi_kp = 1/opt_xi_kp;
 #+end_src
 
 The obtained damping ratio and control are shown below.
 
 #+begin_src matlab :exports results :results value table replace :tangle no :post addhdr(*this*)
-  data2orgtable([opt_zeta_iff, opt_zeta_kp; opt_gain_iff, opt_gain_kp]', {'Modified IFF', 'IFF with $k_p$'}, {'Obtained $\xi$', 'Control Gain'}, ' %.2f ');
+  data2orgtable([opt_xi_iff, opt_xi_kp; opt_gain_iff, opt_gain_kp]', {'Modified IFF', 'IFF with $k_p$'}, {'Obtained $\xi$', 'Control Gain'}, ' %.2f ');
 #+end_src
 
 #+RESULTS:
 |                | Obtained $\xi$ | Control Gain |
 |----------------+----------------+--------------|
-| Modified IFF   |           0.83 |          2.0 |
-| IFF with $k_p$ |           0.83 |         2.01 |
+| Modified IFF   |           0.83 |         1.99 |
+| IFF with $k_p$ |           0.83 |         2.02 |
 
 ** Passive Damping - Critical Damping
+\begin{equation}
+  \xi = \frac{c}{2 \sqrt{km}}
+\end{equation}
+
+Critical Damping corresponds to to $\xi = 1$, and thus:
+\begin{equation}
+  c_{\text{crit}} = 2 \sqrt{km}
+\end{equation}
+
 #+begin_src matlab
   c_opt = 2*sqrt(k*m);
 #+end_src
@@ -2226,12 +2263,13 @@ The obtained damping ratio and control are shown below.
        'DisplayName', 'Open-Loop')
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  ylim([1e-2, 3e1]);
   xlabel('Frequency [rad/s]'); ylabel('Transmissibility [m/m]');
   legend('location', 'southwest');
 #+end_src
 
 #+begin_src matlab :tangle no :exports results :results file replace
-  exportFig('figs/comp_transmissibility.pdf', 'width', 'wide', 'height', 'tall');
+  exportFig('figs/comp_transmissibility.pdf', 'width', 'wide', 'height', 'normal');
 #+end_src
 
 #+name: fig:comp_transmissibility
@@ -2240,7 +2278,7 @@ The obtained damping ratio and control are shown below.
 [[file:figs/comp_transmissibility.png]]
 
 #+begin_src matlab :tangle no :exports none :results none
-  exportFig('figs-inkscape/comp_transmissibility.pdf', 'width', 'half', 'height', 'tall', 'png', false, 'pdf', false, 'svg', true);
+  exportFig('figs-inkscape/comp_transmissibility.pdf', 'width', 'half', 'height', 'normal', 'png', false, 'pdf', false, 'svg', true);
 #+end_src
 
 *** Compliance                                                      :ignore:
@@ -2259,12 +2297,13 @@ The obtained damping ratio and control are shown below.
        'DisplayName', 'Open-Loop')
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  ylim([1e-2, 3e1]);
   xlabel('Frequency [rad/s]'); ylabel('Compliance [m/N]');
   legend('location', 'southwest');
 #+end_src
 
 #+begin_src matlab :tangle no :exports results :results file replace
-  exportFig('figs/comp_compliance.pdf', 'width', 'wide', 'height', 'tall');
+  exportFig('figs/comp_compliance.pdf', 'width', 'wide', 'height', 'normal');
 #+end_src
 
 #+name: fig:comp_compliance
@@ -2273,7 +2312,263 @@ The obtained damping ratio and control are shown below.
 [[file:figs/comp_compliance.png]]
 
 #+begin_src matlab :tangle no :exports none :results none
-  exportFig('figs-inkscape/comp_compliance.pdf', 'width', 'half', 'height', 'tall', 'png', false, 'pdf', false, 'svg', true);
+  exportFig('figs-inkscape/comp_compliance.pdf', 'width', 'half', 'height', 'normal', 'png', false, 'pdf', false, 'svg', true);
+#+end_src
+
+** DC Compliance
+*** Pseudo Integrator IFF                                           :ignore:
+#+begin_src matlab :exports none
+  k = 1;
+  m = 1;
+  w0 = sqrt(k/m);
+#+end_src
+
+#+begin_src matlab :exports none
+  Gwi = tf(zeros(4,4));
+  Gwi.InputName  = {'Fx', 'Fy', 'Fu', 'Fv'};
+  Gwi.OutputName = {'dx', 'dy', 'fu', 'fv'};
+
+  Gp = ((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))^2 + (2*W*s/(w0^2))^2;
+
+  Gwi('dx', 'Fu') = (1/k)*((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))/Gp;
+  Gwi('dy', 'Fv') = (1/k)*((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))/Gp;
+
+  Gwi('dx', 'Fx') = (1/k)*((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))/Gp;
+  Gwi('dy', 'Fy') = (1/k)*((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))/Gp;
+
+  Gwi('dx', 'Fv') =  (1/k)*(2*W*s/(w0^2))/Gp;
+  Gwi('dy', 'Fu') = -(1/k)*(2*W*s/(w0^2))/Gp;
+
+  Gwi('dx', 'Fy') =  (1/k)*(2*W*s/(w0^2))/Gp;
+  Gwi('dy', 'Fx') = -(1/k)*(2*W*s/(w0^2))/Gp;
+
+  Gwi('fu', 'Fu') = ((s^2/w0^2 - W^2/w0^2)*(s^2/w0^2 + 2*xi*s/w0 + 1 - W^2/w0^2) + (2*(s/w0)*(W/w0))^2)/Gp;
+  Gwi('fv', 'Fv') = ((s^2/w0^2 - W^2/w0^2)*(s^2/w0^2 + 2*xi*s/w0 + 1 - W^2/w0^2) + (2*(s/w0)*(W/w0))^2)/Gp;
+
+  Gwi('fu', 'Fv') = -(2*xi*s/w0 + 1)*(2*(s/w0)*(W/w0))/Gp;
+  Gwi('fv', 'Fu') =  (2*xi*s/w0 + 1)*(2*(s/w0)*(W/w0))/Gp;
+
+  Gwi('fu', 'Fx') = -(c*s + k)*(1/k)*((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))/Gp;
+  Gwi('fv', 'Fy') = -(c*s + k)*(1/k)*((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))/Gp;
+
+  Gwi('fu', 'Fy') = -(c*s + k)*(1/k)*(2*W*s/(w0^2))/Gp;
+  Gwi('fv', 'Fx') =  (c*s + k)*(1/k)*(2*W*s/(w0^2))/Gp;
+#+end_src
+
+#+begin_src matlab
+  wis = logspace(-2, 1, 100)*w0; % [rad/s]
+
+  opt_xi_wi  = zeros(1, length(wis)); % Optimal simultaneous damping
+  opt_gain_wi  = zeros(1, length(wis)); % Corresponding optimal gain
+  C_dc_gain_wi = zeros(1, length(wis)); % Compliance DC value
+
+  for wi_i = 1:length(wis)
+      wi = wis(wi_i);
+      Kiff = 1/(s + wi)*eye(2);
+
+      fun = @(g)computeSimultaneousDamping(g, Gwi({'fu', 'fv'}, {'Fu', 'Fv'}), Kiff);
+
+      [g_opt, xi_opt] = fminsearch(fun, 0.5*wi*((w0/W)^2 - 1));
+      opt_xi_wi(wi_i) = 1/xi_opt;
+      opt_gain_wi(wi_i) = g_opt;
+
+      G_dc_gain = dcgain(lft(Gwi, -g_opt/(s + wi)*eye(2), 2, 2));
+      C_dc_gain_wi(wi_i) = G_dc_gain(1,1);
+  end
+#+end_src
+
+*** IFF With parallel Stiffness                                     :ignore:
+#+begin_src matlab
+  alphas = logspace(-2, 0, 100);
+
+  opt_xi_kp = zeros(1, length(alphas)); % Optimal simultaneous damping
+  opt_gain_kp = zeros(1, length(alphas)); % Corresponding optimal gain
+  C_dc_gain_kp = zeros(1, length(alphas)); % DC gain of the compliance
+
+  Kiff = 1/s*eye(2);
+
+  for alpha_i = 1:length(alphas)
+      kp = alphas(alpha_i);
+      k = 1 - alphas(alpha_i);
+
+      w0p = sqrt((k + kp)/m);
+      xip = c/(2*sqrt((k+kp)*m));
+
+      Gkp = tf(zeros(4,4));
+      Gkp.InputName  = {'Fx', 'Fy', 'Fu', 'Fv'};
+      Gkp.OutputName = {'dx', 'dy', 'fu', 'fv'};
+
+      Gp = ((s^2)/(w0p^2) + 2*xip*s/w0p + 1 - (W^2)/(w0p^2))^2 + (2*W*s/(w0p^2))^2;
+
+      Gkp('dx', 'Fu') = (1/(k + kp))*((s^2)/(w0p^2) + 2*xip*s/w0p + 1 - (W^2)/(w0p^2))/Gp;
+      Gkp('dy', 'Fv') = (1/(k + kp))*((s^2)/(w0p^2) + 2*xip*s/w0p + 1 - (W^2)/(w0p^2))/Gp;
+
+      Gkp('dx', 'Fx') = (1/(k + kp))*((s^2)/(w0p^2) + 2*xip*s/w0p + 1 - (W^2)/(w0p^2))/Gp;
+      Gkp('dy', 'Fy') = (1/(k + kp))*((s^2)/(w0p^2) + 2*xip*s/w0p + 1 - (W^2)/(w0p^2))/Gp;
+
+      Gkp('dx', 'Fv') =  (1/(k + kp))*(2*W*s/(w0p^2))/Gp;
+      Gkp('dy', 'Fu') = -(1/(k + kp))*(2*W*s/(w0p^2))/Gp;
+
+      Gkp('dx', 'Fy') =  (1/(k + kp))*(2*W*s/(w0p^2))/Gp;
+      Gkp('dy', 'Fx') = -(1/(k + kp))*(2*W*s/(w0p^2))/Gp;
+
+      Gkp('fu', 'Fu') = ((s^2/w0p^2 + kp/(k + kp) - W^2/w0p^2)*(s^2/w0p^2 + 2*xip*s/w0p + 1 - W^2/w0p^2) + (2*(s/w0p)*(W/w0p))^2)/Gp;
+      Gkp('fv', 'Fv') = ((s^2/w0p^2 + kp/(k + kp) - W^2/w0p^2)*(s^2/w0p^2 + 2*xip*s/w0p + 1 - W^2/w0p^2) + (2*(s/w0p)*(W/w0p))^2)/Gp;
+
+      Gkp('fu', 'Fv') = -(2*xip*s/w0p + k/(k + kp))*(2*(s/w0p)*(W/w0p))/Gp;
+      Gkp('fv', 'Fu') =  (2*xip*s/w0p + k/(k + kp))*(2*(s/w0p)*(W/w0p))/Gp;
+
+      Gkp('fu', 'Fx') = -(c*s + k)*(1/(k + kp))*((s^2)/(w0p^2) + 2*xip*s/w0p + 1 - (W^2)/(w0p^2))/Gp;
+      Gkp('fv', 'Fy') = -(c*s + k)*(1/(k + kp))*((s^2)/(w0p^2) + 2*xip*s/w0p + 1 - (W^2)/(w0p^2))/Gp;
+
+      Gkp('fu', 'Fy') = -(c*s + k)*(1/(k + kp))*(2*W*s/(w0p^2))/Gp;
+      Gkp('fv', 'Fx') =  (c*s + k)*(1/(k + kp))*(2*W*s/(w0p^2))/Gp;
+
+      fun = @(g)computeSimultaneousDamping(g, Gkp({'fu', 'fv'}, {'Fu', 'Fv'}), Kiff);
+
+      [g_opt, xi_opt] = fminsearch(fun, 2);
+      opt_xi_kp(alpha_i) = 1/xi_opt;
+      opt_gain_kp(alpha_i) = g_opt;
+
+      G_dc_gain = dcgain(lft(Gkp, -g_opt/s*eye(2), 2, 2));
+      C_dc_gain_kp(alpha_i) = G_dc_gain(1,1);
+  end
+#+end_src
+
+*** Comparison                                                      :ignore:
+#+begin_src matlab :exports none
+  figure;
+  yyaxis left
+  plot(alphas, C_dc_gain_kp, '-', 'DisplayName', '$|T(0)|$');
+  set(gca, 'YScale', 'log');
+  ylim([0, 1e3]);
+  ylabel('DC value of the Compliance');
+
+  yyaxis right
+  hold on;
+  plot(alphas, opt_xi_kp, '-', 'DisplayName', '$\xi_{opt}$');
+  set(gca, 'YScale', 'lin');
+  ylim([0,1]);
+  ylabel('Optimal Damping Ratio');
+
+  xlabel('$\alpha$');
+  set(gca, 'XScale', 'log');
+  legend('location', 'northeast');
+#+end_src
+
+#+begin_src matlab :tangle no :exports results :results file replace
+exportFig('figs/compliance_dc_gain_wi.pdf', 'width', 'wide', 'height', 'normal');
+#+end_src
+
+#+name: fig:compliance_dc_gain_wi
+#+caption:
+#+RESULTS:
+[[file:figs/compliance_dc_gain_wi.png]]
+
+#+begin_src matlab :exports none
+  figure;
+  yyaxis left
+  plot(wis, abs(C_dc_gain_wi), '-', 'DisplayName', '$|T(0)|$');
+  set(gca, 'YScale', 'log');
+  ylim([0, 1e3]);
+  ylabel('DC value of the Compliance');
+
+  yyaxis right
+  hold on;
+  plot(wis, opt_xi_wi, '-', 'DisplayName', '$\xi_{opt}$');
+  set(gca, 'YScale', 'lin');
+  ylim([0,1]);
+  ylabel('Optimal Damping Ratio');
+
+  xlabel('$\omega_i$');
+  set(gca, 'XScale', 'log');
+  legend('location', 'northeast');
+#+end_src
+
+#+begin_src matlab :tangle no :exports results :results file replace
+exportFig('figs/compliance_dc_gain_kp.pdf', 'width', 'wide', 'height', 'normal');
+#+end_src
+
+#+name: fig:compliance_dc_gain_kp
+#+caption:
+#+RESULTS:
+[[file:figs/compliance_dc_gain_kp.png]]
+
+#+begin_src matlab :exports none
+  figure;
+  hold on;
+  plot(opt_xi_wi, C_dc_gain_wi, '-', 'DisplayName', '$\omega_i$');
+  plot(opt_xi_kp, C_dc_gain_kp, '-', 'DisplayName', '$k_p$');
+  hold off
+  set(gca, 'YScale', 'log');
+  ylim([0, 1e3]);
+  ylabel('DC value of the Compliance');
+  xlabel('Optimal Damping Ratio');
+  legend('location', 'northwest');
+#+end_src
+
+#+begin_src matlab :tangle no :exports results :results file replace
+exportFig('figs/opt_damp_vs_dc_comp.pdf', 'width', 'wide', 'height', 'normal');
+#+end_src
+
+#+name: fig:opt_damp_vs_dc_comp
+#+caption:
+#+RESULTS:
+[[file:figs/opt_damp_vs_dc_comp.png]]
+
+*** Comparison :ignore:
+#+begin_src matlab :exports none
+  figure;
+  yyaxis left
+  plot(wis, opt_xi_wi, '-', 'DisplayName', '$\xi_{cl}$');
+  set(gca, 'YScale', 'lin');
+  ylim([0,1]);
+  ylabel('Attainable Damping Ratio $\xi$');
+
+  yyaxis right
+  hold on;
+  plot(wis, opt_gain_wi, '-', 'DisplayName', '$g_{opt}$');
+  plot(wis, wis*((w0/W)^2 - 1), '--', 'DisplayName', '$g_{max}$');
+  set(gca, 'YScale', 'lin');
+  ylim([0,10]);
+  ylabel('Controller gain $g$');
+
+  xlabel('$\omega_i/\omega_0$');
+  set(gca, 'XScale', 'log');
+  legend('location', 'northeast');
+#+end_src
+
+#+begin_src matlab :exports none
+  figure;
+  yyaxis left
+  plot(alphas, opt_xi_kp, '-', 'DisplayName', '$\xi_{cl}$');
+  set(gca, 'YScale', 'lin');
+  ylim([0,1]);
+  ylabel('Attainable Damping Ratio $\xi$');
+
+  yyaxis right
+  hold on;
+  plot(alphas, opt_gain_kp, '-', 'DisplayName', '$g_{opt}$');
+  set(gca, 'YScale', 'lin');
+  ylim([0,2.5]);
+  ylabel('Controller gain $g$');
+
+  xlabel('$\alpha$');
+  set(gca, 'XScale', 'log');
+  legend('location', 'northeast');
+#+end_src
+
+#+begin_src matlab :tangle no :exports results :results file replace
+   exportFig('figs/mod_iff_damping_kp.pdf', 'width', 'normal', 'height', 'normal');
+#+end_src
+
+#+name: fig:mod_iff_damping_kp
+#+caption:
+#+RESULTS:
+[[file:figs/mod_iff_damping_kp.png]]
+
+#+begin_src matlab :tangle no :exports none :results none
+  exportFig('figs-inkscape/mod_iff_damping_kp.pdf', 'width', 'half', 'height', '650', 'png', false, 'pdf', false, 'svg', true);
 #+end_src
 
 * Notations
@@ -2451,4 +2746,16 @@ This Matlab function is accessible [[file:src/rootLocusPolesSorted.m][here]].
 
 #+begin_src matlab
   poles = poles.';
+#+end_src
+
+** =computeSimultaneousDamping=
+#+begin_src matlab :tangle src/computeSimultaneousDamping.m
+  function [xi_min] = computeSimultaneousDamping(g, G, K)
+      [w, xi] = damp(minreal(feedback(G, g*K)));
+      xi_min = 1/min(xi);
+     
+      if xi_min < 0
+        xi_min = 1e8;
+      end
+  end
 #+end_src
