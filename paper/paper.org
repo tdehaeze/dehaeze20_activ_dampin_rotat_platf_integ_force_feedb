@@ -566,6 +566,8 @@ While having very different implementations, both proposed modifications are ver
 
 Future work will focus on the experimental validation of the proposed active damping techniques.
 
+The Matlab code that was used for this study is available under a MIT License and archived in Zenodo cite:dehaeze20_activ_dampin_rotat_posit_platf.
+
 * Acknowledgment
 :PROPERTIES:
 :UNNUMBERED: t
