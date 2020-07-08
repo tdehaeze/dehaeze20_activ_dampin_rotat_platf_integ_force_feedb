@@ -194,7 +194,7 @@ In the rest of this study, rotational speeds smaller than the undamped natural f
 
 #+name: fig:campbell_diagram
 #+caption: Campbell Diagram : Evolution of the complex and real parts of the system's poles as a function of the rotational speed $\Omega$
-#+attr_latex: :environment subfigure :width 0.4\linewidth :align c
+#+attr_latex: :environment subfigure :width 0.45\linewidth :align c
 | file:figs/campbell_diagram_real.pdf     | file:figs/campbell_diagram_imag.pdf          |
 | <<fig:campbell_diagram_real>> Real Part | <<fig:campbell_diagram_imag>> Imaginary Part |
 
@@ -374,7 +374,7 @@ In order to study this trade off, the attainable closed-loop damping ratio $\xi_
 The gain $g_{\text{opt}}$ at which this maximum damping is obtained is also displayed and compared with the gain $g_{\text{max}}$ at which the system becomes unstable (Figure ref:fig:mod_iff_damping_wi).
 
 #+name: fig:mod_iff_damping_wi
-#+caption: Attainable damping ratio $\xi_\text{cl}$ as a function of the ratio $\omega_i/\omega_0$. Corresponding control gain $g_\text{opt}$ and $g_\text{max}$ are also shown
+#+caption: Attainable damping ratio $\xi_\text{cl}$ as a function of $\omega_i/\omega_0$. Corresponding control gain $g_\text{opt}$ and $g_\text{max}$ are also shown
 #+attr_latex: :scale 1
 [[file:figs/mod_iff_damping_wi.pdf]]
 
@@ -450,7 +450,7 @@ This is confirmed by the Bode plot of the direct dynamics in Figure ref:fig:plan
 Figure ref:fig:root_locus_iff_kp shows Root Loci plots for $k_p = 0$, $k_p < m \Omega^2$ and $k_p > m \Omega^2$ when $K_F$ is a pure integrator eqref:eq:Kf_pure_int.
 It is shown that if the added stiffness is higher than the maximum negative stiffness, the poles of the closed-loop system stay in the (stable) right half-plane, and hence the unconditional stability of IFF is recovered.
 
-#+attr_latex: :options [b]{0.42\linewidth}
+#+attr_latex: :options [b]{0.43\linewidth}
 #+begin_minipage
 #+name: fig:plant_iff_kp
 #+caption: Bode Plot of $f_u/F_u$ without parallel spring, with parallel springs with stiffness $k_p < m \Omega^2$ and $k_p > m \Omega^2$, $\Omega = 0.1 \omega_0$
@@ -458,7 +458,7 @@ It is shown that if the added stiffness is higher than the maximum negative stif
 [[file:figs/plant_iff_kp.pdf]]
 #+end_minipage
 \hfill
-#+attr_latex: :options [b]{0.52\linewidth}
+#+attr_latex: :options [b]{0.53\linewidth}
 #+begin_minipage
 #+name: fig:root_locus_iff_kp
 #+caption: Root Locus for IFF without parallel spring, with parallel springs with stiffness $k_p < m \Omega^2$ and $k_p > m \Omega^2$, $\Omega = 0.1 \omega_0$
@@ -497,25 +497,22 @@ This is confirmed in Figure ref:fig:mod_iff_damping_kp where the attainable clos
 * Comparison and Discussion
 <<sec:comparison>>
 ** Introduction                                                      :ignore:
-Two modifications to the decentralized IFF for rotating platforms have been proposed.
-
-The first modification concerns the controller and consists of adding an high pass filter to $K_F$ eqref:eq:IFF_LHF.
-The system was shown to be stable for gains up to $g_\text{max}$ eqref:eq:gmax_iff_hpf.
-
-The second proposed modification concerns the mechanical system.
-It was shown that if springs with a stiffness $k_p > m \Omega^2$ are added in parallel to the actuators and force sensors, decentralized IFF can be applied with unconditional stability.
-
+Two modifications to adapt the IFF control strategy to rotating platforms have been proposed in Sections ref:sec:iff_hpf and ref:sec:iff_kp.
 These two methods are now compared in terms of added damping, closed-loop compliance and transmissibility.
-For the following comparisons, the cut-off frequency for the high pass filters is set to $\omega_i = 0.1 \omega_0$ and the parallel springs have a stiffness $k_p = 5 m \Omega^2$.
+
+For the following comparisons, the cut-off frequency for the HPF is set to $\omega_i = 0.1 \omega_0$ and the stiffness of the parallel springs is set to $k_p = 5 m \Omega^2$.
 
 #+latex: \par
 
 ** Comparison of the Attainable Damping                              :ignore:
-Figure ref:fig:comp_root_locus shows two Root Locus plots for the two proposed IFF techniques.
+Figure ref:fig:comp_root_locus shows the Root Loci for the two proposed IFF modifications.
 While the two pairs of complex conjugate open-loop poles are identical for both techniques, the transmission zeros are not.
-This means that their closed-loop behavior will differ when large control gains are used.
+This means that the closed-loop behavior of both systems will differ when large control gains are used.
 
-It is interesting to note that the maximum added damping is very similar for both techniques and is reached for the same control gain in both cases $g_\text{opt} \approx 2 \omega_0$.
+One can observe that the closed loop poles of the system with added springs (in red) are bounded to the left half plane implying unconditional stability.
+This is not the case for the system where the controller is augmented with an HPF (in blue).
+
+It is interesting to note that the maximum added damping is very similar for both techniques and is reached for the same control gain $g_\text{opt} \approx 2 \omega_0$.
 
 #+name: fig:comp_root_locus
 #+caption: Root Locus for the two proposed modifications of decentralized IFF, $\Omega = 0.1 \omega_0$
@@ -525,36 +522,49 @@ It is interesting to note that the maximum added damping is very similar for bot
 #+latex: \par
 
 ** Comparison Transmissibility and Compliance                        :ignore:
-The two proposed techniques are now compared in terms of closed-loop compliance and transmissibility.
+The two proposed techniques are now compared in terms of closed-loop transmissibility and compliance.
 
-The compliance is defined as the transfer function from external forces applied to the payload to the displacement of the payload in an inertial frame.
-The transmissibility describes the dynamic behavior between the displacement of the rotating stage and the displacement of the payload.
-It is used to characterize how much vibration of the rotating stage is transmitted to the payload.
+The transmissibility is defined as the transfer function from the displacement of the rotating stage to the displacement of the payload.
+It is used to characterize how much vibration is transmitted through the suspended platform to the payload.
 
-The two techniques are also compared with passive damping (Figure ref:fig:system) where $c = c_\text{crit}$ is tuned to critically damp the resonance when the rotating speed is null.
+The compliance describes the displacement response of the payload to external forces applied to it.
+This is a useful metric when disturbances are directly applied to the payload.
 
+The two techniques are also compared with passive damping (Figure ref:fig:system) where the damping coefficient $c$ is tuned to critically damp the resonance when the rotating speed is null.
 \begin{equation}
   c_\text{crit} = 2 \sqrt{k m}
 \end{equation}
 
-Very similar results are obtained for the two proposed decentralized IFF modifications in terms of compliance (Figure ref:fig:comp_compliance) and transmissibility (Figure ref:fig:comp_transmissibility).
+Very similar results are obtained for the two proposed IFF modifications in terms of transmissibility (Figure ref:fig:comp_transmissibility) and compliance (Figure ref:fig:comp_compliance).
 It is also confirmed that these two techniques can significantly damp the system's resonances.
-
-# TODO - Rework. It degrades the compliance as usual with IFF. (it is even better than classical IFF)
-Compared to passive damping, the two techniques degrade the compliance at low frequency (Figure ref:fig:comp_compliance).
-They however do not degrade the transmissibility at high frequency as it is the case with passive damping (Figure ref:fig:comp_transmissibility).
 
 #+name: fig:comp_active_damping
 #+caption: Comparison of the two proposed Active Damping Techniques, $\Omega = 0.1 \omega_0$
-#+attr_latex: :environment subfigure :width 0.45\linewidth :align c
-| file:figs/comp_compliance.pdf      | file:figs/comp_transmissibility.pdf            |
-| <<fig:comp_compliance>> Compliance | <<fig:comp_transmissibility>> Transmissibility |
+#+attr_latex: :environment subfigure :width 0.49\linewidth :align c
+| file:figs/comp_transmissibility.pdf            | file:figs/comp_compliance.pdf      |
+| <<fig:comp_transmissibility>> Transmissibility | <<fig:comp_compliance>> Compliance |
+
+On can see in Figure ref:fig:comp_transmissibility that the problem of the degradation of the transmissibility at high frequency when using passive damping techniques is overcome by the use of IFF.
+
+The addition of the HPF or the use of the parallel stiffness permit to limit the degradation of the compliance as compared with classical IFF (Figure ref:fig:comp_compliance).
 
 * Conclusion
 <<sec:conclusion>>
 
+Due to gyroscopic effects, decentralized IFF with pure integrators was shown not to be stable when applied to rotating platforms.
+Two modifications of the classical IFF control have been proposed to overcome this issue.
 
+The first modification concerns the controller and consists of adding an high pass filter to the pure integrators.
+This is equivalent as to moving the controller pole to the left along the real axis.
+This renders the closed loop system stable up to some value of the controller gain $g_\text{max}$.
 
+The second proposed modification concerns the mechanical system.
+Additional springs are added in parallel with the actuators and force sensors.
+It was shown that if the stiffness $k_p$ of the addition springs is larger than the negative stiffness $m \Omega^2$ induced by centrifugal forces, the classical decentralized IFF regains its unconditional stability property.
+
+While having very different implementations, both proposed modifications are very similar when it comes to the attainable damping and the obtained closed loop system behavior.
+
+Future work will focus on the experimental validation of the proposed active damping techniques.
 
 * Acknowledgment
 :PROPERTIES:
