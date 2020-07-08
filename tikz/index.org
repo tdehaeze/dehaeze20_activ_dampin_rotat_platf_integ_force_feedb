@@ -43,7 +43,7 @@ Configuration file is accessible [[file:config.org][here]].
       % Rotating Frame
       \draw[fill=black!20!white] (-2.6, -2.6) rectangle (2.6, 2.6);
       % Label
-      \node[anchor=north west, rotate=\thetau] at (-2.6, 2.6) {\small X-Y Stage};
+      \node[anchor=north west, rotate=\thetau] at (-2.6, 2.6) {\small Suspended Platform};
 
       % Mass
       \draw[fill=white] (-1, -1) rectangle (1, 1);
@@ -225,7 +225,7 @@ Configuration file is accessible [[file:config.org][here]].
       % Rotating Frame
       \draw[fill=black!20!white] (-2.6, -2.6) rectangle (2.6, 2.6);
       % Label
-      \node[anchor=north west, rotate=\thetau] at (-2.6, 2.6) {\small X-Y Stage};
+      \node[anchor=north west, rotate=\thetau] at (-2.6, 2.6) {\small Suspended Platform};
 
       % Mass
       \draw[fill=white] (-1, -1) rectangle (1, 1);
@@ -384,7 +384,7 @@ Configuration file is accessible [[file:config.org][here]].
       % Rotating Frame
       \draw[fill=black!20!white] (-2.6, -2.6) rectangle (2.6, 2.6);
       % Label
-      \node[anchor=north west, rotate=\thetau] at (-2.6, 2.6) {\small X-Y Stage};
+      \node[anchor=north west, rotate=\thetau] at (-2.6, 2.6) {\small Suspended Platform};
 
       % Mass
       \draw[fill=white] (-1, -1) rectangle (1, 1);
