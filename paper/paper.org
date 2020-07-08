@@ -67,7 +67,7 @@ In order to further decrease the residual vibrations, active damping can be used
 In cite:preumont92_activ_dampin_by_local_force, the Integral Force Feedback (IFF) control scheme has been proposed, where a force sensor, a force actuator and an integral controller are used to directly augment the damping of a mechanical system.
 When the force sensor is collocated with the actuator, the open-loop transfer function has alternating poles and zeros which facilitate to guarantee the stability of the closed loop system cite:preumont02_force_feedb_versus_accel_feedb.
 
-However, when the platform is rotating, the system dynamics is altered and IFF cannot be applied as is.
+However, when the platform is rotating, gyroscopic effects alter the system dynamics and IFF cannot be applied as is.
 The purpose of this paper is to study how the IFF strategy can be adapted to deal with these Gyroscopic effects.
 
 The paper is structured as follows.
@@ -77,12 +77,11 @@ Section ref:sec:iff_hpf suggests a simple modification of the control law such t
 Section ref:sec:iff_kp proposes to add springs in parallel with the force sensors to regain the unconditional stability of IFF.
 Section ref:sec:comparison compares both proposed modifications to the classical IFF in terms of damping authority and closed-loop system behavior.
 
-* Dynamics of Rotating Positioning Platforms
+* Dynamics of Rotating Platforms
 <<sec:dynamics>>
-** Model of a Rotating Positioning Platform                          :ignore:
-In order to study how the rotation of a positioning platforms does affect the use of integral force feedback, a model of an XY positioning stage on top of a rotating stage is used.
-Figure ref:fig:system represents the model schematically.
-This model is the simplest in which gyroscopic forces can be studied.
+** Model of a Rotating Platform                                      :ignore:
+In order to study how the rotation does affect the use of IFF, a model of a suspended platform on top of a rotating stage is used.
+Figure ref:fig:system represents the model schematically which is the simplest in which gyroscopic forces can be studied.
 
 #+name: fig:system
 #+caption: Schematic of the studied System
@@ -91,8 +90,8 @@ This model is the simplest in which gyroscopic forces can be studied.
 
 The rotating stage is supposed to be ideal, meaning it induces a perfect rotation $\theta(t) = \Omega t$ where $\Omega$ is the rotational speed in $\si{\radian\per\second}$.
 
-The parallel XY positioning stage consists of two orthogonal actuators represented by three elements in parallel: a spring with a stiffness $k$ in $\si{\newton\per\meter}$, a dashpot with a damping coefficient $c$ in $\si{\newton\per\meter\second}$ and an ideal force source $F_u, F_v$.
-A payload with a mass $m$ in $\si{\kilo\gram}$ is mounted on the (rotating) XY stage.
+The suspended platform consists of two orthogonal actuators represented by three elements in parallel: a spring with a stiffness $k$ in $\si{\newton\per\meter}$, a dashpot with a damping coefficient $c$ in $\si{\newton\per\meter\second}$ and an ideal force source $F_u, F_v$.
+A payload with a mass $m$ in $\si{\kilo\gram}$, representing the sensitive equipment, is mounted on the (rotating) suspended platform.
 
 Two reference frames are used: an inertial frame $(\vec{i}_x, \vec{i}_y, \vec{i}_z)$ and a uniform rotating frame $(\vec{i}_u, \vec{i}_v, \vec{i}_w)$ rigidly fixed on top of the rotating stage with $\vec{i}_w$ aligned with the rotation axis.
 The position of the payload is represented by $(d_u, d_v, 0)$ expressed in the rotating frame.
@@ -155,7 +154,7 @@ To simplify the analysis, the undamped natural frequency $\omega_0$ and the damp
   \omega_0 = \sqrt{\frac{k}{m}} \text{ in } \si{\radian\per\second}, \quad \xi = \frac{c}{2 \sqrt{k m}}
 \end{equation}
 
-The transfer function matrix $\bm{G}_d$ eqref:eq:Gd_m_k_c becomes equal to
+The transfer function matrix $\bm{G}_d$ becomes equal to
 #+name: eq:Gd_w0_xi_k
 \begin{equation}
 \bm{G}_{d} =
