@@ -235,7 +235,7 @@ The control diagram is schematically shown in Figure ref:fig:control_diagram_iff
 #+latex: \par
 
 ** Plant Dynamics                                                    :ignore:
-The forces $\begin{bmatrix}f_u, f_v\end{bmatrix}$ measured by the two force sensors represented in Figure ref:fig:system_iff are equal to
+The forces $\begin{bmatrix}f_u & f_v\end{bmatrix}$ measured by the two force sensors represented in Figure ref:fig:system_iff are equal to
 #+name: eq:measured_force
 \begin{equation}
   \begin{bmatrix} f_{u} \\ f_{v} \end{bmatrix} =
@@ -244,18 +244,13 @@ The forces $\begin{bmatrix}f_u, f_v\end{bmatrix}$ measured by the two force sens
 \end{equation}
 
 Inserting eqref:eq:Gd_w0_xi_k into eqref:eq:measured_force yields
-#+name: eq:Gf_mimo_tf
-\begin{equation}
-  \begin{bmatrix} f_{u} \\ f_{v} \end{bmatrix} = \bm{G}_{f} \begin{bmatrix} F_u \\ F_v \end{bmatrix}
-\end{equation}
-with $\bm{G}_f$ a $2 \times 2$ transfer function matrix
-#+name: eq:Gf
-\begin{equation}
-  \bm{G}_{f} = \begin{bmatrix}
+\begin{align}
+  \begin{bmatrix} f_{u} \\ f_{v} \end{bmatrix} &= \bm{G}_{f} \begin{bmatrix} F_u \\ F_v \end{bmatrix} \label{eq:Gf_mimo_tf} \\
+  \bm{G}_{f} &= \begin{bmatrix}
   \frac{\left( \frac{s^2}{{\omega_0}^2} - \frac{\Omega^2}{{\omega_0}^2} \right) \left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right) + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2} & \frac{- \left( 2 \xi \frac{s}{\omega_0} + 1 \right) \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2} \\
   \frac{\left( 2 \xi \frac{s}{\omega_0} + 1 \right) \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2} & \frac{\left( \frac{s^2}{{\omega_0}^2} - \frac{\Omega^2}{{\omega_0}^2} \right) \left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right) + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2}
-\end{bmatrix}
-\end{equation}
+\end{bmatrix} \label{eq:Gf}
+\end{align}
 
 The zeros of the diagonal terms of $\bm{G}_f$ are equal to (neglecting the damping for simplicity)
 \begin{subequations}
@@ -265,14 +260,13 @@ The zeros of the diagonal terms of $\bm{G}_f$ are equal to (neglecting the dampi
   \end{align}
 \end{subequations}
 
-# TODO - Change that phrase: don't say it is easy
-It can be easily shown that the frequency of the two complex conjugate zeros $z_c$ eqref:eq:iff_zero_cc always lies between the frequency of the two pairs of complex conjugate poles $p_{-}$ and $p_{+}$ eqref:eq:pole_values.
+The frequency of the pair of complex conjugate zeros $z_c$ eqref:eq:iff_zero_cc always lies between the frequency of the two pairs of complex conjugate poles $p_{-}$ and $p_{+}$ eqref:eq:pole_values.
 
 For non-null rotational speeds, two real zeros $z_r$ eqref:eq:iff_zero_real appear in the diagonal terms inducing a non-minimum phase behavior.
-This can be seen in the Bode plot of the diagonal terms (Figure ref:fig:plant_iff_compare_rotating_speed) where the magnitude experiences an increase of its slope without any change of phase.
+This can be seen in the Bode plot of the diagonal terms (Figure ref:fig:plant_iff_compare_rotating_speed) where the low frequency gain is no longer zero while the phase stays at $\SI{180}{\degree}$.
 
-Similarly, the low frequency gain of $\bm{G}_f$ is no longer zero and increases with the rotational speed $\Omega$
-#+name: low_freq_gain_iff_plan
+The low frequency gain of $\bm{G}_f$ increases with the rotational speed $\Omega$
+#+name: eq:low_freq_gain_iff_plan
 \begin{equation}
   \lim_{\omega \to 0} \left| \bm{G}_f (j\omega) \right| = \begin{bmatrix}
   \frac{\Omega^2}{{\omega_0}^2 - \Omega^2} & 0 \\
@@ -280,7 +274,7 @@ Similarly, the low frequency gain of $\bm{G}_f$ is no longer zero and increases 
 \end{bmatrix}
 \end{equation}
 
-This low frequency gain can be explained as follows: a constant force $F_u$ induces a small displacement of the mass $d_u = \frac{F_u}{k - m\Omega^2}$, which increases the centrifugal force $m\Omega^2d_u = \frac{\Omega^2}{{\omega_0}^2 - \Omega^2} F_u$ which is then measured by the force sensors.
+This can be explained as follows: a constant force $F_u$ induces a small displacement of the mass $d_u = \frac{F_u}{k - m\Omega^2}$, which increases the centrifugal force $m\Omega^2d_u = \frac{\Omega^2}{{\omega_0}^2 - \Omega^2} F_u$ which is then measured by the force sensors.
 
 #+name: fig:plant_iff_compare_rotating_speed
 #+caption: Bode plot of the dynamics from a force actuator to its collocated force sensor ($f_u/F_u$, $f_v/F_v$) for several rotational speeds $\Omega$
@@ -298,21 +292,20 @@ The two IFF controllers $K_F$ consist of a pure integrator
 \end{equation}
 where $g$ is a scalar representing the gain of the controller.
 
-In order to see how the IFF affects the poles of the closed loop system, a Root Locus (Figure ref:fig:root_locus_pure_iff) is constructed as follows: the poles of the closed-loop system are drawn in the complex plane as the gain $g$ varies from $0$ to $\infty$ for the two controllers simultaneously.
+In order to see how the IFF affects the poles of the closed loop system, a Root Locus plot (Figure ref:fig:root_locus_pure_iff) is constructed as follows: the poles of the closed-loop system are drawn in the complex plane as the controller gain $g$ varies from $0$ to $\infty$ for the two controllers simultaneously.
 As explained in cite:preumont08_trans_zeros_struc_contr_with,skogestad07_multiv_feedb_contr, the closed-loop poles start at the open-loop poles (shown by $\tikz[baseline=-0.6ex] \node[cross out, draw=black, minimum size=1ex, line width=2pt, inner sep=0pt, outer sep=0pt] at (0, 0){};$) for $g = 0$ and coincide with the transmission zeros (shown by $\tikz[baseline=-0.6ex] \draw[line width=2pt, inner sep=0pt, outer sep=0pt] (0,0) circle[radius=3pt];$) as $g \to \infty$.
 The direction of increasing gain is indicated by arrows $\tikz[baseline=-0.6ex] \draw[-{Stealth[round]},line width=2pt] (0,0) -- (0.3,0);$.
 
 #+name: fig:root_locus_pure_iff
-#+caption: Root Locus for the decentralized IFF: evolution of the closed-loop poles with increasing gains. This is done for several rotating speeds $\Omega$
+#+caption: Root Locus: evolution of the closed-loop poles with increasing controller gains $g$
 #+attr_latex: :scale 1
 [[file:figs/root_locus_pure_iff.pdf]]
 
 Whereas collocated IFF is usually associated with unconditional stability cite:preumont91_activ, this property is lost as soon as the rotational speed in non-null due to gyroscopic effects.
-This can be seen in the Root Locus (Figure ref:fig:root_locus_pure_iff) where the pole corresponding to the controller is bound to the right half plane implying closed-loop system instability.
+This can be seen in the Root Locus plot (Figure ref:fig:root_locus_pure_iff) where the poles corresponding to the controller are bound to the right half plane implying closed-loop system instability.
 
-# TODO - Rework
-Physically, this can be explained by realizing that below some frequency, the loop gain being very large, the decentralized IFF effectively decouples the payload from the XY stage.
-Moreover, the payload experiences centrifugal forces, which can be modeled by negative stiffnesses pulling it away from the rotation axis rendering the system unstable, hence the poles in the right half plane.
+Physically, this can be explain like so: at low frequency, the loop gain is very large due to the pure integrators in $K_F$.
+The control system is thus canceling the spring forces which makes the suspended platform no able to hold the payload against centrifugal forces, hence the instability.
 
 In order to apply Decentralized IFF on rotating positioning stages, two solutions are proposed to deal with this instability problem.
 The first one consists of slightly modifying the control law (Section ref:sec:iff_hpf) while the second one consists of adding springs in parallel with the force sensors (Section ref:sec:iff_kp).
