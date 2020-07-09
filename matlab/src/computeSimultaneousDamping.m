@@ -1,4 +1,4 @@
-% Compute Damping
+% =computeSimultaneousDamping=
 
 function [xi_min] = computeSimultaneousDamping(g, G, K)
     [w, xi] = damp(minreal(feedback(G, g*K)));

@@ -17,13 +17,12 @@ w0 = sqrt(k/m); % [rad/s]
 kp = 0; % [N/m]
 cp = 0; % [N/(m/s)]
 
-% Simscape Model
+% Comparison of the Analytical Model and the Simscape Model
 % The rotation speed is set to $\Omega = 0.1 \omega_0$.
 
 W = 0.1*w0; % [rad/s]
 
 Kiff = tf(zeros(2));
-Kdvf = tf(zeros(2));
 
 open('rotating_frame.slx');
 
@@ -45,7 +44,8 @@ Giff = linearize(mdl, io, 0);
 Giff.InputName  = {'Fu', 'Fv'};
 Giff.OutputName = {'fu', 'fv'};
 
-% Comparison of the Analytical Model and the Simscape Model
+
+
 % The same transfer function from $[F_u, F_v]$ to $[f_u, f_v]$ is written down from the analytical model.
 
 Giff_th = 1/(((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))^2 + (2*W*s/(w0^2))^2) * ...
@@ -55,7 +55,6 @@ Giff_th = 1/(((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))^2 + (2*W*s/(w0^2))^2)
 
 
 % The two are compared in Figure [[fig:plant_iff_comp_simscape_analytical]] and found to perfectly match.
-
 
 freqs = logspace(-1, 1, 1000);
 

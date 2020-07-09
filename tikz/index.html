@@ -3,9 +3,9 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-06-22 lun. 14:45 -->
+<!-- 2020-07-09 jeu. 09:31 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<title>Tikz Figures</title>
+<title>Active Damping of Rotating Platforms using Integral Force Feedback - Tikz Figures</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="Thomas Dehaeze" />
 <link rel="stylesheet" type="text/css" href="../css/htmlize.css"/>
@@ -21,16 +21,15 @@
  |
  <a accesskey="H" href="../index.html"> HOME </a>
 </div><div id="content">
-<h1 class="title">Tikz Figures</h1>
+<h1 class="title">Active Damping of Rotating Platforms using Integral Force Feedback - Tikz Figures</h1>
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgfc691a5">1. X-Y Rotating Positioning Platform</a></li>
-<li><a href="#org221a454">2. X-Y Rotating Positioning Platform with Force Sensors</a></li>
-<li><a href="#org7cc7ccb">3. Decentralized Integral Force Feedback</a></li>
-<li><a href="#orgbd891cf">4. Decentralized Direct Velocity Feedback</a></li>
-<li><a href="#orgedc1f23">5. Springs in parallel</a></li>
+<li><a href="#orgb9c9150">1. X-Y Rotating Positioning Platform</a></li>
+<li><a href="#org0c90cdd">2. X-Y Rotating Positioning Platform</a></li>
+<li><a href="#orgef77a1d">3. Decentralized Integral Force Feedback</a></li>
+<li><a href="#org5339b95">4. Springs in parallel</a></li>
 </ul>
 </div>
 </div>
@@ -38,8 +37,8 @@
 Configuration file is accessible <a href="config.html">here</a>.
 </p>
 
-<div id="outline-container-orgfc691a5" class="outline-2">
-<h2 id="orgfc691a5"><span class="section-number-2">1</span> X-Y Rotating Positioning Platform</h2>
+<div id="outline-container-orgb9c9150" class="outline-2">
+<h2 id="orgb9c9150"><span class="section-number-2">1</span> X-Y Rotating Positioning Platform</h2>
 <div class="outline-text-2" id="text-1">
 <div class="org-src-container">
 <pre class="src src-latex">\begin{tikzpicture}
@@ -58,7 +57,7 @@ Configuration file is accessible <a href="config.html">here</a>.
     % Rotating Frame
     \draw[fill=black!20!white] (-2.6, -2.6) rectangle (2.6, 2.6);
     % Label
-    \node[anchor=north west, rotate=\thetau] at (-2.6, 2.6) {\small X-Y Stage};
+    \node[anchor=north west, rotate=\thetau] at (-2.6, 2.6) {\small Suspended Platform};
 
     % Mass
     \draw[fill=white] (-1, -1) rectangle (1, 1);
@@ -81,10 +80,6 @@ Configuration file is accessible <a href="config.html">here</a>.
     \draw[actuator={0.6}{0.2}] (actv) -- node[left, rotate=\thetau]{$F_v$} (actv|-0,-2.6);
     \draw[spring=0.2] (kv) -- node[left, rotate=\thetau]{$k$} (kv|-0,-2.6);
     \draw[damper={8}{8}] (cv) -- node[left=0.1, rotate=\thetau]{$c$} (cv|-0,-2.6);
-
-    % % Displacement measurement
-    % \draw[&lt;-&gt;, dashed] (-2.6, -0.8) --node[midway, below, rotate=\thetau]{$d_u$} (-1  , -0.8);
-    % \draw[&lt;-&gt;, dashed] ( 0.8, -2.6) --node[midway, right, rotate=\thetau]{$d_v$} ( 0.8, -1);
   \end{scope}
 
   % Inertial Frame
@@ -93,12 +88,12 @@ Configuration file is accessible <a href="config.html">here</a>.
   \draw[fill, color=black] (-4, -4) circle (0.06);
   \node[draw, circle, inner sep=0pt, minimum size=0.3cm, label=left:$\vec{i}_z$] at (-4, -4){};
 
-  \draw[-&gt;] (0, 0) -- ++(\thetau:2) node[above, rotate=\thetau]{$\vec{i}_u$};
+  \draw[-&gt;] (0, 0) node[above left, rotate=\thetau]{$\vec{i}_w$} -- ++(\thetau:2) node[above, rotate=\thetau]{$\vec{i}_u$};
   \draw[-&gt;] (0, 0) -- ++(\thetau+90:2) node[left, rotate=\thetau]{$\vec{i}_v$};
+  \draw[fill, color=black] (0,0) circle (0.06);
+  \node[draw, circle, inner sep=0pt, minimum size=0.3cm] at (0, 0){};
   \draw[dashed] (0, 0) -- ++(2, 0);
   \draw[] (1.5, 0) arc (0:\thetau:1.5) node[midway, right]{$\theta$};
-  \node[] at (0,0) {$\bullet$};
-  \node[left] at (0,0) {$(x, y)$};
 
   \draw[-&gt;] (3.5, 0) arc (0:40:3.5) node[midway, left]{$\Omega$};
 \end{tikzpicture}
@@ -113,84 +108,54 @@ Configuration file is accessible <a href="config.html">here</a>.
 </div>
 </div>
 
-<div id="outline-container-org221a454" class="outline-2">
-<h2 id="org221a454"><span class="section-number-2">2</span> X-Y Rotating Positioning Platform with Force Sensors</h2>
+<div id="outline-container-org0c90cdd" class="outline-2">
+<h2 id="org0c90cdd"><span class="section-number-2">2</span> X-Y Rotating Positioning Platform</h2>
 <div class="outline-text-2" id="text-2">
 <div class="org-src-container">
-<pre class="src src-latex">\begin{tikzpicture}
-  % Angle
-  \def\thetau{25}
+<pre class="src src-latex">\tikzset{block/.default={0.8cm}{0.8cm}}
+\tikzset{addb/.append style={scale=0.7}}
+\tikzset{node distance=0.6}
 
-  % Rotational Stage
-  \draw[fill=black!60!white] (0, 0) circle (4.3);
-  \draw[fill=black!40!white] (0, 0) circle (3.8);
+\begin{tikzpicture}
+  \node[block={1.8cm}{2.2cm}] (G) {$\bm{G}_f$};
 
-  % Label
-  \node[anchor=north west, rotate=\thetau] at (-2.5, 2.5) {\small Rotating Stage};
+  % Inputs of the controllers
+  \coordinate[] (output1) at ($(G.south east)!0.75!(G.north east)$);
+  \coordinate[] (output2) at ($(G.south east)!0.25!(G.north east)$);
+  \coordinate[] (input1)  at ($(G.south west)!0.75!(G.north west)$);
+  \coordinate[] (input2)  at ($(G.south west)!0.25!(G.north west)$);
 
-  % Rotating Scope
-  \begin{scope}[rotate=\thetau]
-    % Rotating Frame
-    \draw[fill=black!20!white] (-2.6, -2.6) rectangle (2.6, 2.6);
-    % Label
-    \node[anchor=north west, rotate=\thetau] at (-2.6, 2.6) {\small X-Y Stage};
+  \node[block, left=1.8 of input1] (K1) {$K_F$};
+  \node[block] (K2) at ($(K1.east|-input2)+(0.6, 0)$) {$K_F$};
 
-    % Mass
-    \draw[fill=white] (-1, -1) rectangle (1, 1);
-    % Label
-    \node[anchor=south west, rotate=\thetau] at (-1, -1) {\small Payload};
+  % Connections and labels
+  \draw[-&gt;] (K1.east) -- (input1)node[above left]{$F_u$}node[below left]{$-$};
+  \draw[-&gt;] (K2.east) -- (input2)node[above left]{$F_v$}node[below left]{$-$};
 
-    % Attached Points
-    \node[] at (-1, 0){$\bullet$};
-    \draw[] (-1, 0) -- ++(-0.2, 0) coordinate(au);
-    \node[] at (0, -1){$\bullet$};
-    \draw[] (0, -1) -- ++(0, -0.2) coordinate(av);
+  \draw[-&gt;] (output1) -- ++(0.8, 0) node[above left]{$f_u$};
+  \draw[-&gt;] (output2) -- ++(0.8, 0) node[above left]{$f_v$};
 
-    % Force Sensors
-    \draw[fill=white] ($(au) + (-0.2, -0.5)$) rectangle ($(au) + (0, 0.5)$);
-    \draw[] ($(au) + (-0.2, -0.5)$)coordinate(actu) -- ($(au) + (0,  0.5)$);
-    \draw[] ($(au) + (-0.2,  0.5)$)coordinate(ku) node[above=0.1, rotate=\thetau]{$f_{u}$}   -- ($(au) + (0, -0.5)$);
+  \draw[-&gt;] ($(output1)+(0.2, 0)$)node[branch]{} -- ++(0,  1.2) -| ($(K1.west) + (-0.8, 0)$)coordinate(start) -- (K1.west);
+  \draw[-&gt;] ($(output2)+(0.2, 0)$)node[branch]{} -- ++(0, -1.2) -| (start|-K2) -- (K2.west);
 
-    \draw[fill=white] ($(av) + (-0.5, -0.2)$) rectangle ($(av) + (0.5, 0)$);
-    \draw[] ($(av) + ( 0.5, -0.2)$)coordinate(actv)   -- ($(av) + (-0.5,  0)$);
-    \draw[] ($(av) + (-0.5, -0.2)$)coordinate(kv) node[left=0.1, rotate=\thetau]{$f_{v}$} -- ($(av) + ( 0.5,  0)$);
-
-    % Spring and Actuator for U
-    \draw[actuator={0.6}{0.2}] (actu) -- node[above=0.1, rotate=\thetau]{$F_u$} (actu-|-2.6,0);
-    \draw[spring=0.2] (ku) -- node[above=0.1, rotate=\thetau]{$k$} (ku-|-2.6,0);
-
-    \draw[actuator={0.6}{0.2}] (actv) -- node[left, rotate=\thetau]{$F_v$} (actv|-0,-2.6);
-    \draw[spring=0.2] (kv) -- node[left, rotate=\thetau]{$k$} (kv|-0,-2.6);
+  \begin{scope}[on background layer]
+    \node[fit={(K1.north west) (K2.south east)}, inner sep=6pt, draw, dashed, fill=black!20!white] (K) {};
+    \node[below left] at (K.north east) {$\bm{K}_F$};
   \end{scope}
-
-  % Inertial Frame
-  \draw[-&gt;] (-4, -4) -- ++(2, 0) node[below]{$\vec{i}_x$};
-  \draw[-&gt;] (-4, -4) -- ++(0, 2) node[left]{$\vec{i}_y$};
-  \draw[fill, color=black] (-4, -4) circle (0.06);
-  \node[draw, circle, inner sep=0pt, minimum size=0.3cm, label=left:$\vec{i}_z$] at (-4, -4){};
-
-  \draw[-&gt;] (0, 0) -- ++(\thetau:2) node[above, rotate=\thetau]{$\vec{i}_u$};
-  \draw[-&gt;] (0, 0) -- ++(\thetau+90:2) node[left, rotate=\thetau]{$\vec{i}_v$};
-  \draw[dashed] (0, 0) -- ++(2, 0);
-  \draw[] (1.5, 0) arc (0:\thetau:1.5) node[midway, right]{$\theta$};
-  \node[] at (0,0) {$\bullet$};
-  \node[left] at (0,0) {$(x, y)$};
-
-  \draw[-&gt;] (3.5, 0) arc (0:40:3.5) node[midway, left]{$\Omega$};
 \end{tikzpicture}
 </pre>
 </div>
 
 
 <div class="figure">
-<p><img src="figs/system_force_sensors.png" alt="system_force_sensors.png" />
+<p><img src="figs/control_diagram_iff.png" alt="control_diagram_iff.png" />
 </p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org7cc7ccb" class="outline-2">
-<h2 id="org7cc7ccb"><span class="section-number-2">3</span> Decentralized Integral Force Feedback</h2>
+<div id="outline-container-orgef77a1d" class="outline-2">
+<h2 id="orgef77a1d"><span class="section-number-2">3</span> Decentralized Integral Force Feedback</h2>
 <div class="outline-text-2" id="text-3">
 <div class="org-src-container">
 <pre class="src src-latex">\begin{tikzpicture}
@@ -209,7 +174,7 @@ Configuration file is accessible <a href="config.html">here</a>.
     % Rotating Frame
     \draw[fill=black!20!white] (-2.6, -2.6) rectangle (2.6, 2.6);
     % Label
-    \node[anchor=north west, rotate=\thetau] at (-2.6, 2.6) {\small X-Y Stage};
+    \node[anchor=north west, rotate=\thetau] at (-2.6, 2.6) {\small Suspended Platform};
 
     % Mass
     \draw[fill=white] (-1, -1) rectangle (1, 1);
@@ -225,13 +190,11 @@ Configuration file is accessible <a href="config.html">here</a>.
     % Force Sensors
     \draw[fill=white] ($(au) + (-0.2, -0.5)$) rectangle ($(au) + (0, 0.5)$);
     \draw[] ($(au) + (-0.2, -0.5)$)coordinate(actu) -- ($(au) + (0,  0.5)$);
-    \draw[] ($(au) + (-0.2,  0.5)$)coordinate(ku) node[above=0.1, rotate=\thetau]{$f_{u}$}   -- ($(au) + (0, -0.5)$);
-    \node[above, rotate=\thetau] at ($(av) + (-0.1, 0.5)$) {$f_{u}$};
+    \draw[] ($(au) + (-0.2,  0.5)$)coordinate(ku)   -- ($(au) + (0, -0.5)$);
 
     \draw[fill=white] ($(av) + (-0.5, -0.2)$) rectangle ($(av) + (0.5, 0)$);
-    \draw[] ($(av) + ( 0.5, -0.2)$)coordinate(actv)   -- ($(av) + (-0.5,  0)$);
-    \draw[] ($(av) + (-0.5, -0.2)$)coordinate(kv) -- ($(av) + ( 0.5,  0)$);
-    \node[left, rotate=\thetau] at ($(av) + (-0.5, -0.1)$) {$f_{v}$};
+    \draw[] ($(av) + ( 0.5, -0.2)$)coordinate(actv) -- ($(av) + (-0.5,  0)$);
+    \draw[] ($(av) + (-0.5, -0.2)$)coordinate(kv)   -- ($(av) + ( 0.5,  0)$);
 
     % Spring and Actuator for U
     \draw[actuator={0.6}{0.2}] (actu) -- coordinate[midway](actumid) (actu-|-2.6,0);
@@ -242,12 +205,12 @@ Configuration file is accessible <a href="config.html">here</a>.
     \draw[spring=0.2] (kv) -- node[left, rotate=\thetau]{$k$} (kv|-0,-2.6);
 
     \node[block={0.8cm}{0.6cm}, rotate=\thetau] (Ku) at ($(actumid) + (0, -1.2)$) {$K_{F}$};
-    \draw[-&gt;] ($(au) + (-0.1, -0.5)$) |- (Ku.east);
-    \draw[-&gt;] (Ku.north) -- ($(actumid) + (0, -0.1)$) node[below left, rotate=\thetau]{$F_u$};
+    \draw[-&gt;] ($(au) + (-0.1, -0.5)$) |- (Ku.east) node[below right, rotate=\thetau]{$f_{u}$};
+    \draw[-&gt;] (Ku.north) -- ($(actumid) + (0, -0.1)$) node[below left, rotate=\thetau]{$F_u$} node[below right, rotate=\thetau]{$-$};
 
     \node[block={0.8cm}{0.6cm}, rotate=\thetau] (Kv) at ($(actvmid) + (1.2, 0)$) {$K_{F}$};
-    \draw[-&gt;] ($(av) + (0.5, -0.1)$) -| (Kv.north);
-    \draw[-&gt;] (Kv.west) -- ($(actvmid) + (0.1, 0)$) node[below right, rotate=\thetau]{$F_v$};
+    \draw[-&gt;] ($(av) + (0.5, -0.1)$) -| (Kv.north) node[above right, rotate=\thetau]{$f_{v}$};
+    \draw[-&gt;] (Kv.west) -- ($(actvmid) + (0.1, 0)$) node[below right, rotate=\thetau]{$F_v$} node[above right, rotate=\thetau]{$-$};
   \end{scope}
 
   % Inertial Frame
@@ -256,12 +219,12 @@ Configuration file is accessible <a href="config.html">here</a>.
   \draw[fill, color=black] (-4, -4) circle (0.06);
   \node[draw, circle, inner sep=0pt, minimum size=0.3cm, label=left:$\vec{i}_z$] at (-4, -4){};
 
-  \draw[-&gt;] (0, 0) -- ++(\thetau:2) node[above, rotate=\thetau]{$\vec{i}_u$};
+  \node[draw, circle, inner sep=0pt, minimum size=0.3cm] at (0, 0){};
+  \draw[-&gt;] (0, 0) node[above left, rotate=\thetau]{$\vec{i}_w$} -- ++(\thetau:2) node[above, rotate=\thetau]{$\vec{i}_u$};
   \draw[-&gt;] (0, 0) -- ++(\thetau+90:2) node[left, rotate=\thetau]{$\vec{i}_v$};
   \draw[dashed] (0, 0) -- ++(2, 0);
   \draw[] (1.5, 0) arc (0:\thetau:1.5) node[midway, right]{$\theta$};
   \node[] at (0,0) {$\bullet$};
-  \node[left] at (0,0) {$(x, y)$};
 
   \draw[-&gt;] (3.5, 0) arc (0:40:3.5) node[midway, left]{$\Omega$};
 \end{tikzpicture}
@@ -276,8 +239,8 @@ Configuration file is accessible <a href="config.html">here</a>.
 </div>
 </div>
 
-<div id="outline-container-orgbd891cf" class="outline-2">
-<h2 id="orgbd891cf"><span class="section-number-2">4</span> Decentralized Direct Velocity Feedback</h2>
+<div id="outline-container-org5339b95" class="outline-2">
+<h2 id="org5339b95"><span class="section-number-2">4</span> Springs in parallel</h2>
 <div class="outline-text-2" id="text-4">
 <div class="org-src-container">
 <pre class="src src-latex">\begin{tikzpicture}
@@ -296,98 +259,7 @@ Configuration file is accessible <a href="config.html">here</a>.
     % Rotating Frame
     \draw[fill=black!20!white] (-2.6, -2.6) rectangle (2.6, 2.6);
     % Label
-    \node[anchor=north west, rotate=\thetau] at (-2.6, 2.6) {\small X-Y Stage};
-
-    % Mass
-    \draw[fill=white] (-1, -1) rectangle (1, 1);
-    % Label
-    \node[anchor=south west, rotate=\thetau] at (-1, -1) {\small Payload};
-
-    % Attached Points
-    \node[] at (-1, 0){$\bullet$};
-    \draw[] (-1, 0) -- ++(-0.2, 0) coordinate(au);
-    \node[] at (0, -1){$\bullet$};
-    \draw[] (0, -1) -- ++(0, -0.2) coordinate(av);
-
-    % Attached Points
-    \node[] at (-1, 0){$\bullet$};
-    \draw[] (-1, 0) -- ++(-0.2, 0) coordinate(cu);
-    \draw[] ($(cu) + (0, -0.5)$) coordinate(actu) -- ($(cu) + (0, 0.5)$) coordinate(ku);
-    \node[] at (0, -1){$\bullet$};
-    \draw[] (0, -1) -- ++(0, -0.2) coordinate(cv);
-    \draw[] ($(cv) + (-0.5, 0)$)coordinate(kv) -- ($(cv) + (0.5, 0)$) coordinate(actv);
-
-    % Spring and Actuator for U
-    \draw[actuator={0.6}{0.2}] (actu) -- coordinate[midway](actumid) (actu-|-2.6,0);
-    \draw[spring=0.2] (ku) -- node[above=0.1, rotate=\thetau]{$k$} (ku-|-2.6,0);
-
-    \draw[actuator={0.6}{0.2}] (actv) -- coordinate[midway](actvmid) (actv|-0,-2.6);
-    \draw[spring=0.2] (kv) -- node[left, rotate=\thetau]{$k$} (kv|-0,-2.6);
-
-    % Displacement measurement
-    \draw[&lt;-&gt;, dashed] (-2.6, -0.8) -- (-1  , -0.8) coordinate(dutop);
-    \draw[&lt;-&gt;, dashed] ( 0.8, -2.6) -- ( 0.8, -1) coordinate(dvtop);
-
-    % Controllers
-    \node[block={0.6cm}{0.6cm}, rotate=\thetau] (Ku) at ($(actumid) + (0, -1.2)$) {$K_{V}$};
-    \draw[-&gt;] ($(dutop) + (-0.1, 0)$) node[below left, rotate=\thetau]{$v_u$} |- (Ku.east);
-    \draw[-&gt;] (Ku.north) -- ($(actumid) + (0, -0.1)$);
-
-    \node[block={0.6cm}{0.6cm}, rotate=\thetau] (Kv) at ($(actvmid) + (1.2, 0)$) {$K_{V}$};
-    \draw[-&gt;] ($(dvtop) + (0, -0.1)$) node[below right, rotate=\thetau]{$v_v$} -| (Kv.north);
-    \draw[-&gt;] (Kv.west) -- ($(actvmid) + (0.1, 0)$);
-
-    \node[above=0.1, rotate=\thetau] at (actumid) {$F_u$};
-    \node[left=0.1, rotate=\thetau] at (actvmid) {$F_v$};
-  \end{scope}
-
-  % Inertial Frame
-  \draw[-&gt;] (-4, -4) -- ++(2, 0) node[below]{$\vec{i}_x$};
-  \draw[-&gt;] (-4, -4) -- ++(0, 2) node[left]{$\vec{i}_y$};
-  \draw[fill, color=black] (-4, -4) circle (0.06);
-  \node[draw, circle, inner sep=0pt, minimum size=0.3cm, label=left:$\vec{i}_z$] at (-4, -4){};
-
-  \draw[-&gt;] (0, 0) -- ++(\thetau:2) node[above, rotate=\thetau]{$\vec{i}_u$};
-  \draw[-&gt;] (0, 0) -- ++(\thetau+90:2) node[left, rotate=\thetau]{$\vec{i}_v$};
-  \draw[dashed] (0, 0) -- ++(2, 0);
-  \draw[] (1.5, 0) arc (0:\thetau:1.5) node[midway, right]{$\theta$};
-  \node[] at (0,0) {$\bullet$};
-  \node[left] at (0,0) {$(x, y)$};
-
-  \draw[-&gt;] (3.5, 0) arc (0:40:3.5) node[midway, left]{$\Omega$};
-\end{tikzpicture}
-</pre>
-</div>
-
-
-<div class="figure">
-<p><img src="figs/system_dvf.png" alt="system_dvf.png" />
-</p>
-</div>
-</div>
-</div>
-
-<div id="outline-container-orgedc1f23" class="outline-2">
-<h2 id="orgedc1f23"><span class="section-number-2">5</span> Springs in parallel</h2>
-<div class="outline-text-2" id="text-5">
-<div class="org-src-container">
-<pre class="src src-latex">\begin{tikzpicture}
-  % Angle
-  \def\thetau{25}
-
-  % Rotational Stage
-  \draw[fill=black!60!white] (0, 0) circle (4.3);
-  \draw[fill=black!40!white] (0, 0) circle (3.8);
-
-  % Label
-  \node[anchor=north west, rotate=\thetau] at (-2.5, 2.5) {\small Rotating Stage};
-
-  % Rotating Scope
-  \begin{scope}[rotate=\thetau]
-    % Rotating Frame
-    \draw[fill=black!20!white] (-2.6, -2.6) rectangle (2.6, 2.6);
-    % Label
-    \node[anchor=north west, rotate=\thetau] at (-2.6, 2.6) {\small X-Y Stage};
+    \node[anchor=north west, rotate=\thetau] at (-2.6, 2.6) {\small Suspended Platform};
 
     % Mass
     \draw[fill=white] (-1, -1) rectangle (1, 1);
@@ -411,12 +283,12 @@ Configuration file is accessible <a href="config.html">here</a>.
 
     % Spring and Actuator for U
     \draw[actuator={0.6}{0.2}] (actu) -- node[below=0.1, rotate=\thetau]{$F_u$} (actu-|-2.6,0);
-    \draw[spring=0.2] (ku) -- node[below=0.1, rotate=\thetau]{$k$} (ku-|-2.6,0);
-    \draw[spring=0.2] (-1, 0.8) -- node[above=0.1, rotate=\thetau]{$k_{p}$} (-1, 0.8-|-2.6,0);
+    \draw[spring=0.2] (ku) -- node[below=0.1, rotate=\thetau]{$k_a$} (ku-|-2.6,0);
+    \draw[spring=0.2] (-1, 0.8) -- node[above=0.1, rotate=\thetau]{$k_p$} (-1, 0.8-|-2.6,0);
 
     \draw[actuator={0.6}{0.2}] (actv) -- node[right=0.1, rotate=\thetau]{$F_v$} (actv|-0,-2.6);
-    \draw[spring=0.2] (kv) -- node[right=0.1, rotate=\thetau]{$k$} (kv|-0,-2.6);
-    \draw[spring=0.2] (-0.8, -1) -- node[left=0.1, rotate=\thetau]{$k_{p}$} (-0.8, -1|-0,-2.6);
+    \draw[spring=0.2] (kv) -- node[right=0.1, rotate=\thetau]{$k_a$} (kv|-0,-2.6);
+    \draw[spring=0.2] (-0.8, -1) -- node[left=0.1, rotate=\thetau]{$k_p$} (-0.8, -1|-0,-2.6);
   \end{scope}
 
   % Inertial Frame
@@ -425,12 +297,12 @@ Configuration file is accessible <a href="config.html">here</a>.
   \draw[fill, color=black] (-4, -4) circle (0.06);
   \node[draw, circle, inner sep=0pt, minimum size=0.3cm, label=left:$\vec{i}_z$] at (-4, -4){};
 
-  \draw[-&gt;] (0, 0) -- ++(\thetau:2) node[above, rotate=\thetau]{$\vec{i}_u$};
+  \node[draw, circle, inner sep=0pt, minimum size=0.3cm] at (0, 0){};
+  \draw[-&gt;] (0, 0) node[above left, rotate=\thetau]{$\vec{i}_w$} -- ++(\thetau:2) node[above, rotate=\thetau]{$\vec{i}_u$};
   \draw[-&gt;] (0, 0) -- ++(\thetau+90:2) node[left, rotate=\thetau]{$\vec{i}_v$};
   \draw[dashed] (0, 0) -- ++(2, 0);
   \draw[] (1.5, 0) arc (0:\thetau:1.5) node[midway, right]{$\theta$};
   \node[] at (0,0) {$\bullet$};
-  \node[left] at (0,0) {$(x, y)$};
 
   \draw[-&gt;] (3.5, 0) arc (0:40:3.5) node[midway, left]{$\Omega$};
 \end{tikzpicture}
@@ -447,7 +319,7 @@ Configuration file is accessible <a href="config.html">here</a>.
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Thomas Dehaeze</p>
-<p class="date">Created: 2020-06-22 lun. 14:45</p>
+<p class="date">Created: 2020-07-09 jeu. 09:31</p>
 </div>
 </body>
 </html>

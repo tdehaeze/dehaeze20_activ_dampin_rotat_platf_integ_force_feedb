@@ -43,24 +43,25 @@ for p_i = 1:size(p_ws, 1)
 end
 plot(Ws, zeros(size(Ws)), 'k--')
 hold off;
-xlabel('Rotation Frequency [rad/s]'); ylabel('Real Part');
+xlabel('Rotational Speed [rad/s]'); ylabel('Real Part');
 
 ax2 = subplot(1,2,2);
 hold on;
 for p_i = 1:size(p_ws, 1)
-    plot(Ws,  imag(p_ws(p_i, :)), 'k-')
-    plot(Ws, -imag(p_ws(p_i, :)), 'k-')
+    plot(Ws, imag(p_ws(p_i, :)), 'k-')
 end
 hold off;
-xlabel('Rotation Frequency [rad/s]'); ylabel('Imaginary Part');
+xlabel('Rotational Speed [rad/s]'); ylabel('Imaginary Part');
 
 % Simscape Model
-% Define the rotating speed for the Simscape Model.
+% In order to validate all the equations of motion, a Simscape model of the same system has been developed.
+% The dynamics of the system can be identified from the Simscape model and compare with the analytical model.
+
+% The rotating speed for the Simscape Model is defined.
 
 W = 0.1; % Rotation Speed [rad/s]
 
 Kiff = tf(zeros(2));
-Kdvf = tf(zeros(2));
 
 kp = 0; % Parallel Stiffness [N/m]
 cp = 0; % Parallel Damping [N/(m/s)]
@@ -206,7 +207,7 @@ title('$d_u/F_v$, $d_v/F_u$');
 ax4 = subplot(2, 2, 4);
 hold on;
 for W_i = 1:length(Ws)
-    plot(freqs, 180/pi*angle(squeeze(freqresp(Gs{W_i}(1,1), freqs))))
+    plot(freqs, 180/pi*angle(squeeze(freqresp(Gs{W_i}(2,1), freqs))))
 end
 set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
 xlabel('Frequency [rad/s]'); ylabel('Phase [deg]');

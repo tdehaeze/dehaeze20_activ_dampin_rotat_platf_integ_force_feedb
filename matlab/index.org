@@ -1,4 +1,4 @@
-#+TITLE: Matlab Computation
+#+TITLE: Active Damping of Rotating Platforms using Integral Force Feedback - Matlab Computation
 :DRAWER:
 #+HTML_LINK_HOME: ../index.html
 #+HTML_LINK_UP: ../index.html
@@ -24,13 +24,15 @@
 :END:
 
 * Introduction                                                        :ignore:
+This document gathers the Matlab code used to for the paper cite:dehaeze20_activ_dampin_rotat_platf_integ_force_feedb.
 
-- Section [[sec:system_description]]
-- Section [[sec:iff_pure_int]]
-- Section [[sec:iff_pseudo_int]]
-- Section [[sec:iff_parallel_stiffness]]
-- Section [[sec:comparison]]
-- Section [[sec:notations]]
+It is structured in several sections:
+- Section [[sec:system_description]]: presents a simple model of a rotating suspended platform that will be used throughout this study.
+- Section [[sec:iff_pure_int]]: explains how the unconditional stability of IFF is lost due to Gyroscopic effects induced by the rotation.
+- Section [[sec:iff_pseudo_int]]: suggests a simple modification of the control law such that damping can be added to the suspension modes in a robust way.
+- Section [[sec:iff_parallel_stiffness]]: proposes to add springs in parallel with the force sensors to regain the unconditional stability of IFF.
+- Section [[sec:comparison]]: compares both proposed modifications to the classical IFF in terms of damping authority and closed-loop system behavior.
+- Section [[sec:notations]]: contains the notations used for both the Matlab code and the paper
 
 * System Description and Analysis
 :PROPERTIES:
@@ -38,7 +40,6 @@
 :END:
 <<sec:system_description>>
 
-** Introduction                                                      :ignore:
 ** Matlab Init                                              :noexport:ignore:
 #+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
   <<matlab-dir>>
@@ -62,8 +63,6 @@ The system consists of one 2 degree of freedom translation stage on top of a spi
 
 The control inputs are the forces applied by the actuators of the translation stage ($F_u$ and $F_v$).
 As the translation stage is rotating around the Z axis due to the spindle, the forces are applied along $\vec{i}_u$ and $\vec{i}_v$.
-
-The measurement is either the $x-y$ displacement of the object located on top of the translation stage or the $u-v$ displacement of the sample with respect to a fixed reference frame.
 
 ** Equations
 Based on the Figure [[fig:system]], the equations of motions are:
@@ -89,9 +88,6 @@ With:
   G_{dc} &= 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0}
 \end{align}
 #+end_important
-
-Explain Coriolis and Centrifugal Forces (negative Stiffness)
-=> First write the equations in terms of $k$, $m$ and $c$ and explain the terms.
 
 ** Numerical Values
 Let's define initial values for the model.
@@ -207,7 +203,10 @@ It is shown in Figure [[fig:campbell_diagram]], and one can see that the system 
 #+end_src
 
 ** Simscape Model
-Define the rotating speed for the Simscape Model.
+In order to validate all the equations of motion, a Simscape model of the same system has been developed.
+The dynamics of the system can be identified from the Simscape model and compare with the analytical model.
+
+The rotating speed for the Simscape Model is defined.
 #+begin_src matlab
   W = 0.1; % Rotation Speed [rad/s]
 #+end_src
@@ -404,8 +403,13 @@ They are compared in Figure [[fig:plant_compare_rotating_speed]].
 <<sec:iff_pure_int>>
 
 ** Introduction                                                      :ignore:
-- Diagram with the controller
-- Basic idea of IFF
+Force sensors are added in series with the two actuators (Figure [[fig:system_iff]]).
+
+Two identical controllers $K_F$ are used to feedback each of the sensed force to its associated actuator.
+
+#+name: fig:system_iff
+#+caption: System with added Force Sensor in series with the actuators
+[[file:figs-paper/system_iff.png]]
 
 ** Matlab Init                                              :noexport:ignore:
 #+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
@@ -420,12 +424,6 @@ They are compared in Figure [[fig:plant_compare_rotating_speed]].
   addpath('./matlab/');
   addpath('./src/');
 #+end_src
-
-** Schematic
-
-#+name: fig:system_iff
-#+caption: Figure caption
-[[file:figs-paper/system_iff.pdf]]
 
 ** Plant Parameters
 Let's define initial values for the model.
@@ -731,9 +729,6 @@ It is shown that for non-null rotating speed, one pole is bound to the right-hal
 :header-args:matlab+: :tangle matlab/s3_iff_hpf.m
 :END:
 <<sec:iff_pseudo_int>>
-
-** Introduction                                                      :ignore:
-- Classical modification of the IFF
 
 ** Matlab Init                                              :noexport:ignore:
 #+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
@@ -1118,7 +1113,6 @@ The gain at which the system becomes unstable is
 
 While it seems that small $\omega_i$ do allow more damping to be added to the system (Figure [[fig:root_locus_wi_modified_iff]]), the control gains may be limited to small values due to eqref:eq:iff_gmax thus reducing the attainable damping.
 
-
 There must be an optimum for $\omega_i$.
 To find the optimum, the gain that maximize the simultaneous damping of the mode is identified for a wide range of $\omega_i$ (Figure [[fig:mod_iff_damping_wi]]).
 
@@ -1180,7 +1174,6 @@ To find the optimum, the gain that maximize the simultaneous damping of the mode
 :END:
 <<sec:iff_parallel_stiffness>>
 
-** Introduction                                                      :ignore:
 ** Matlab Init                                              :noexport:ignore:
 #+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
   <<matlab-dir>>
@@ -1196,10 +1189,16 @@ To find the optimum, the gain that maximize the simultaneous damping of the mode
 #+end_src
 
 ** Schematic
+In this section additional springs in parallel with the force sensors are added to counteract the negative stiffness induced by the rotation.
 
 #+name: fig:system_parallel_springs
-#+caption: Figure caption
+#+caption: Studied system with additional springs in parallel with the actuators and force sensors
 [[file:figs-paper/system_parallel_springs.png]]
+
+In order to keep the overall stiffness $k = k_a + k_p$ constant, a scalar parameter $\alpha$ ($0 \le \alpha < 1$) is defined to describe the fraction of the total stiffness in parallel with the actuator and force sensor
+\begin{equation}
+  k_p = \alpha k, \quad k_a = (1 - \alpha) k
+\end{equation}
 
 ** Equations
 #+begin_important
@@ -1220,40 +1219,16 @@ To find the optimum, the gain that maximize the simultaneous damping of the mode
 \end{equation}
 With:
 \begin{align}
-  G_{kp} &= \left( \frac{s^2}{{\omega_0^\prime}^2} + 2\xi^\prime \frac{s}{{\omega_0^\prime}^2} + 1 - \frac{\Omega^2}{{\omega_0^\prime}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0^\prime}\frac{s}{\omega_0^\prime} \right)^2 \\
-  G_{kz} &= \left( \frac{s^2}{{\omega_0^\prime}^2} + \frac{k_p}{k + k_p} - \frac{\Omega^2}{{\omega_0^\prime}^2} \right) \left( \frac{s^2}{{\omega_0^\prime}^2} + 2\xi^\prime \frac{s}{{\omega_0^\prime}^2} + 1 - \frac{\Omega^2}{{\omega_0^\prime}^2} \right) + \left( 2 \frac{\Omega}{\omega_0^\prime}\frac{s}{\omega_0^\prime} \right)^2 \\
-  G_{kc} &= \left( 2 \xi^\prime \frac{s}{\omega_0^\prime} + \frac{k}{k + k_p} \right) \left( 2 \frac{\Omega}{\omega_0^\prime}\frac{s}{\omega_0^\prime} \right)
+  G_{kp} &= \left( \frac{s^2}{{\omega_0}^2} + 2\xi \frac{s}{{\omega_0}^2} + 1 - \frac{\Omega^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0}\frac{s}{\omega_0} \right)^2 \\
+  G_{kz} &= \left( \frac{s^2}{{\omega_0}^2} - \frac{\Omega^2}{{\omega_0}^2} + \alpha \right) \left( \frac{s^2}{{\omega_0}^2} + 2\xi \frac{s}{{\omega_0}^2} + 1 - \frac{\Omega^2}{{\omega_0}^2} \right) + \left( 2 \frac{\Omega}{\omega_0}\frac{s}{\omega_0} \right)^2 \\
+  G_{kc} &= \left( 2 \xi \frac{s}{\omega_0} + 1 - \alpha \right) \left( 2 \frac{\Omega}{\omega_0}\frac{s}{\omega_0} \right)
 \end{align}
-where:
-- $\omega_0^\prime = \frac{k + k_p}{m}$
-- $\xi^\prime = \frac{c}{2 \sqrt{(k + k_p) m}}$
 #+end_important
 
-If we compare $G_{kz}$ and $G_{fz}$, we see that the spring in parallel adds a term $\frac{k_p}{k + k_p}$.
+If we compare $G_{kz}$ and $G_{fz}$, we see that the spring in parallel adds a term $\alpha$.
 In order to have two complex conjugate zeros (instead of real zeros):
 \begin{equation}
-  \frac{k_p}{k + k_p} - \frac{\Omega^2}{{\omega_0^\prime}^2} > 0
-\end{equation}
-Which is equivalent to
-\begin{equation}
-  k_p > m \Omega^2
-\end{equation}
-
-** Physical Explanation
-- Negative stiffness induced by gyroscopic effects
-- Zeros of the open-loop <=> Poles of the subsystem with the force sensors removes
-- As the zeros are the poles of the closed loop system for high gains, we want them to be in the left-half plane
-- Thus we want the zeros to be in the left half plant and thus the system with the force sensors stable
-- This can be done by adding springs in parallel with the force sensors with a stiffness larger than the virtual negative stiffness added by the gyroscopic effects
-
-The negative stiffness induced by the rotation is:
-\begin{equation}
-  k_{n} = - m \Omega^2
-\end{equation}
-
-And thus, the stiffness in parallel should be such that:
-\begin{equation}
-  k_{p} > m \Omega^2
+  \alpha > \frac{\Omega^2}{{\omega_0}^2} \quad \Leftrightarrow \quad k_p > m \Omega^2
 \end{equation}
 
 ** Plant Parameters
@@ -1684,9 +1659,7 @@ Thus, decentralized IFF controller with pure integrators can be used if:
 #+end_src
 
 ** Effect of $k_p$ on the attainable damping
-However, having large values of $k_p$ may:
-- decrease the actuator force authority
-- decrease the attainable damping
+However, having large values of $k_p$ may decrease the attainable damping.
 
 To study the second point, Root Locus plots for the following values of $k_p$ are shown in Figure [[fig:root_locus_iff_kps]].
 #+begin_src matlab
@@ -1694,7 +1667,6 @@ To study the second point, Root Locus plots for the following values of $k_p$ ar
 #+end_src
 
 It is shown that large values of $k_p$ decreases the attainable damping.
-
 #+begin_src matlab :exports none
   figure;
 
@@ -1842,114 +1814,15 @@ It is shown that large values of $k_p$ decreases the attainable damping.
 #+RESULTS:
 [[file:figs/opt_damp_alpha.png]]
 
-** TODO Optimal Gain
-Let's take $k_p = 5 m \Omega^2$ and find the optimal IFF control gain $g$ such that maximum damping are added to the poles of the closed loop system.
-
-#+begin_src matlab
-  kp = 5*m*W^2;
-  k = 1 - kp;
-
-  w0p = sqrt((k + kp)/m);
-  xip = c/(2*sqrt((k+kp)*m));
-
-  Giff = 1/( (s^2/w0p^2 + 2*xip*s/w0p + 1 - W^2/w0p^2)^2 + (2*(s/w0p)*(W/w0p))^2 ) * [ ...
-      (s^2/w0p^2 + kp/(k + kp) - W^2/w0p^2)*(s^2/w0p^2 + 2*xip*s/w0p + 1 - W^2/w0p^2) + (2*(s/w0p)*(W/w0p))^2, -(2*xip*s/w0p + k/(k + kp))*(2*(s/w0p)*(W/w0p));
-      (2*xip*s/w0p + k/(k + kp))*(2*(s/w0p)*(W/w0p)), (s^2/w0p^2 + kp/(k + kp) - W^2/w0p^2)*(s^2/w0p^2 + 2*xip*s/w0p + 1 - W^2/w0p^2) + (2*(s/w0p)*(W/w0p))^2 ];
-#+end_src
-
-#+begin_src matlab
-  opt_xi = 0;
-  opt_gain = 0;
-
-  gains = logspace(-2, 4, 1000);
-
-  for g = gains
-      Kiff = (g/s)*eye(2);
-
-      [w, xi] = damp(minreal(feedback(Giff, Kiff)));
-
-      if min(xi) > opt_xi && all(xi > 0)
-          opt_xi = min(xi);
-          opt_gain = min(g);
-      end
-  end
-#+end_src
-
-#+begin_src matlab :exports none
-  figure;
-
-  gains = logspace(-2, 4, 1000);
-
-  hold on;
-  plot(real(pole(Giff)),  imag(pole(Giff)), 'kx');
-  plot(real(tzero(Giff)),  imag(tzero(Giff)), 'ko');
-  for g = gains
-      clpoles = pole(minreal(feedback(Giff, (g/s)*eye(2))));
-      plot(real(clpoles), imag(clpoles), 'k.');
-  end
-  % Optimal Gain
-  clpoles = pole(minreal(feedback(Giff, (opt_gain/s)*eye(2))));
-  set(gca,'ColorOrderIndex',1);
-  plot(real(clpoles), imag(clpoles), 'x');
-  for clpole = clpoles'
-    set(gca,'ColorOrderIndex',1);
-    plot([0, real(clpole)], [0, imag(clpole)], '-', 'LineWidth', 1);
-  end
-  hold off;
-  axis square;
-  xlim([-1.2, 0.2]); ylim([0, 1.4]);
-  xlabel('Real Part'); ylabel('Imaginary Part');
-#+end_src
-
-#+begin_src matlab :tangle no :exports results :results file replace
-  exportFig('figs/root_locus_opt_gain_iff_kp.pdf', 'width', 'wide', 'height', 'normal');
-#+end_src
-
-#+name: fig:root_locus_opt_gain_iff_kp
-#+caption: Root Locus for $k_p = 5 m \Omega^2$ and the poles corresponding to the identified optimal gain
-#+RESULTS:
-[[file:figs/root_locus_opt_gain_iff_kp.png]]
-
-#+begin_src matlab :exports none :tangle no
-  gains = logspace(-2, 4, 1000);
-
-  poles_iff = rootLocusPolesSorted(Giff, 1/s*eye(2), gains, 'd_max', 1e-4);
-
-  figure;
-
-  hold on;
-  plot(real(pole(Giff)),  imag(pole(Giff)), 'kx');
-  plot(real(tzero(Giff)),  imag(tzero(Giff)), 'ko');
-  for p_i = 1:size(poles_iff, 2)
-      plot(real(poles_iff(:, p_i)), imag(poles_iff(:, p_i)), 'k-', ...
-           'HandleVisibility', 'off');
-  end
-  % Optimal Gain
-  clpoles = pole(minreal(feedback(Giff, (opt_gain/s)*eye(2))));
-  set(gca,'ColorOrderIndex',1);
-  plot(real(clpoles), imag(clpoles), 'x');
-  for clpole = clpoles'
-    set(gca,'ColorOrderIndex',1);
-    plot([0, real(clpole)], [0, imag(clpole)], '-', 'LineWidth', 1);
-  end
-  hold off;
-  axis square;
-  xlim([-1.2, 0.2]); ylim([0, 1.4]);
-
-  xlabel('Real Part'); ylabel('Imaginary Part');
-#+end_src
-
-#+begin_src matlab :tangle no :exports none :results none
-  exportFig('figs-paper/root_locus_opt_gain_iff_kp.pdf', 'width', 'wide', 'height', 'tall', 'png', false, 'pdf', false, 'svg', true);
-#+end_src
-
 * Comparison
 :PROPERTIES:
-:header-args:matlab+: :tangle matlab/s6_act_damp_comparison.m
+:header-args:matlab+: :tangle matlab/s5_act_damp_comparison.m
 :END:
 <<sec:comparison>>
 
 ** Introduction                                                      :ignore:
+Two modifications to adapt the IFF control strategy to rotating platforms have been proposed.
+These two methods are now compared in terms of added damping, closed-loop compliance and transmissibility.
 
 ** Matlab Init                                             :noexport:ignore:
 #+begin_src matlab :tangle no :exports none :results silent :noweb yes :var current_dir=(file-name-directory buffer-file-name)
@@ -2315,262 +2188,6 @@ Critical Damping corresponds to to $\xi = 1$, and thus:
   exportFig('figs-paper/comp_compliance.pdf', 'width', 'half', 'height', 'normal', 'png', false, 'pdf', false, 'svg', true);
 #+end_src
 
-** DC Compliance
-*** Pseudo Integrator IFF                                           :ignore:
-#+begin_src matlab :exports none
-  k = 1;
-  m = 1;
-  w0 = sqrt(k/m);
-#+end_src
-
-#+begin_src matlab :exports none
-  Gwi = tf(zeros(4,4));
-  Gwi.InputName  = {'Fx', 'Fy', 'Fu', 'Fv'};
-  Gwi.OutputName = {'dx', 'dy', 'fu', 'fv'};
-
-  Gp = ((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))^2 + (2*W*s/(w0^2))^2;
-
-  Gwi('dx', 'Fu') = (1/k)*((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))/Gp;
-  Gwi('dy', 'Fv') = (1/k)*((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))/Gp;
-
-  Gwi('dx', 'Fx') = (1/k)*((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))/Gp;
-  Gwi('dy', 'Fy') = (1/k)*((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))/Gp;
-
-  Gwi('dx', 'Fv') =  (1/k)*(2*W*s/(w0^2))/Gp;
-  Gwi('dy', 'Fu') = -(1/k)*(2*W*s/(w0^2))/Gp;
-
-  Gwi('dx', 'Fy') =  (1/k)*(2*W*s/(w0^2))/Gp;
-  Gwi('dy', 'Fx') = -(1/k)*(2*W*s/(w0^2))/Gp;
-
-  Gwi('fu', 'Fu') = ((s^2/w0^2 - W^2/w0^2)*(s^2/w0^2 + 2*xi*s/w0 + 1 - W^2/w0^2) + (2*(s/w0)*(W/w0))^2)/Gp;
-  Gwi('fv', 'Fv') = ((s^2/w0^2 - W^2/w0^2)*(s^2/w0^2 + 2*xi*s/w0 + 1 - W^2/w0^2) + (2*(s/w0)*(W/w0))^2)/Gp;
-
-  Gwi('fu', 'Fv') = -(2*xi*s/w0 + 1)*(2*(s/w0)*(W/w0))/Gp;
-  Gwi('fv', 'Fu') =  (2*xi*s/w0 + 1)*(2*(s/w0)*(W/w0))/Gp;
-
-  Gwi('fu', 'Fx') = -(c*s + k)*(1/k)*((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))/Gp;
-  Gwi('fv', 'Fy') = -(c*s + k)*(1/k)*((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))/Gp;
-
-  Gwi('fu', 'Fy') = -(c*s + k)*(1/k)*(2*W*s/(w0^2))/Gp;
-  Gwi('fv', 'Fx') =  (c*s + k)*(1/k)*(2*W*s/(w0^2))/Gp;
-#+end_src
-
-#+begin_src matlab
-  wis = logspace(-2, 1, 100)*w0; % [rad/s]
-
-  opt_xi_wi  = zeros(1, length(wis)); % Optimal simultaneous damping
-  opt_gain_wi  = zeros(1, length(wis)); % Corresponding optimal gain
-  C_dc_gain_wi = zeros(1, length(wis)); % Compliance DC value
-
-  for wi_i = 1:length(wis)
-      wi = wis(wi_i);
-      Kiff = 1/(s + wi)*eye(2);
-
-      fun = @(g)computeSimultaneousDamping(g, Gwi({'fu', 'fv'}, {'Fu', 'Fv'}), Kiff);
-
-      [g_opt, xi_opt] = fminsearch(fun, 0.5*wi*((w0/W)^2 - 1));
-      opt_xi_wi(wi_i) = 1/xi_opt;
-      opt_gain_wi(wi_i) = g_opt;
-
-      G_dc_gain = dcgain(lft(Gwi, -g_opt/(s + wi)*eye(2), 2, 2));
-      C_dc_gain_wi(wi_i) = G_dc_gain(1,1);
-  end
-#+end_src
-
-*** IFF With parallel Stiffness                                     :ignore:
-#+begin_src matlab
-  alphas = logspace(-2, 0, 100);
-
-  opt_xi_kp = zeros(1, length(alphas)); % Optimal simultaneous damping
-  opt_gain_kp = zeros(1, length(alphas)); % Corresponding optimal gain
-  C_dc_gain_kp = zeros(1, length(alphas)); % DC gain of the compliance
-
-  Kiff = 1/s*eye(2);
-
-  for alpha_i = 1:length(alphas)
-      kp = alphas(alpha_i);
-      k = 1 - alphas(alpha_i);
-
-      w0p = sqrt((k + kp)/m);
-      xip = c/(2*sqrt((k+kp)*m));
-
-      Gkp = tf(zeros(4,4));
-      Gkp.InputName  = {'Fx', 'Fy', 'Fu', 'Fv'};
-      Gkp.OutputName = {'dx', 'dy', 'fu', 'fv'};
-
-      Gp = ((s^2)/(w0p^2) + 2*xip*s/w0p + 1 - (W^2)/(w0p^2))^2 + (2*W*s/(w0p^2))^2;
-
-      Gkp('dx', 'Fu') = (1/(k + kp))*((s^2)/(w0p^2) + 2*xip*s/w0p + 1 - (W^2)/(w0p^2))/Gp;
-      Gkp('dy', 'Fv') = (1/(k + kp))*((s^2)/(w0p^2) + 2*xip*s/w0p + 1 - (W^2)/(w0p^2))/Gp;
-
-      Gkp('dx', 'Fx') = (1/(k + kp))*((s^2)/(w0p^2) + 2*xip*s/w0p + 1 - (W^2)/(w0p^2))/Gp;
-      Gkp('dy', 'Fy') = (1/(k + kp))*((s^2)/(w0p^2) + 2*xip*s/w0p + 1 - (W^2)/(w0p^2))/Gp;
-
-      Gkp('dx', 'Fv') =  (1/(k + kp))*(2*W*s/(w0p^2))/Gp;
-      Gkp('dy', 'Fu') = -(1/(k + kp))*(2*W*s/(w0p^2))/Gp;
-
-      Gkp('dx', 'Fy') =  (1/(k + kp))*(2*W*s/(w0p^2))/Gp;
-      Gkp('dy', 'Fx') = -(1/(k + kp))*(2*W*s/(w0p^2))/Gp;
-
-      Gkp('fu', 'Fu') = ((s^2/w0p^2 + kp/(k + kp) - W^2/w0p^2)*(s^2/w0p^2 + 2*xip*s/w0p + 1 - W^2/w0p^2) + (2*(s/w0p)*(W/w0p))^2)/Gp;
-      Gkp('fv', 'Fv') = ((s^2/w0p^2 + kp/(k + kp) - W^2/w0p^2)*(s^2/w0p^2 + 2*xip*s/w0p + 1 - W^2/w0p^2) + (2*(s/w0p)*(W/w0p))^2)/Gp;
-
-      Gkp('fu', 'Fv') = -(2*xip*s/w0p + k/(k + kp))*(2*(s/w0p)*(W/w0p))/Gp;
-      Gkp('fv', 'Fu') =  (2*xip*s/w0p + k/(k + kp))*(2*(s/w0p)*(W/w0p))/Gp;
-
-      Gkp('fu', 'Fx') = -(c*s + k)*(1/(k + kp))*((s^2)/(w0p^2) + 2*xip*s/w0p + 1 - (W^2)/(w0p^2))/Gp;
-      Gkp('fv', 'Fy') = -(c*s + k)*(1/(k + kp))*((s^2)/(w0p^2) + 2*xip*s/w0p + 1 - (W^2)/(w0p^2))/Gp;
-
-      Gkp('fu', 'Fy') = -(c*s + k)*(1/(k + kp))*(2*W*s/(w0p^2))/Gp;
-      Gkp('fv', 'Fx') =  (c*s + k)*(1/(k + kp))*(2*W*s/(w0p^2))/Gp;
-
-      fun = @(g)computeSimultaneousDamping(g, Gkp({'fu', 'fv'}, {'Fu', 'Fv'}), Kiff);
-
-      [g_opt, xi_opt] = fminsearch(fun, 2);
-      opt_xi_kp(alpha_i) = 1/xi_opt;
-      opt_gain_kp(alpha_i) = g_opt;
-
-      G_dc_gain = dcgain(lft(Gkp, -g_opt/s*eye(2), 2, 2));
-      C_dc_gain_kp(alpha_i) = G_dc_gain(1,1);
-  end
-#+end_src
-
-*** Comparison                                                      :ignore:
-#+begin_src matlab :exports none
-  figure;
-  yyaxis left
-  plot(alphas, C_dc_gain_kp, '-', 'DisplayName', '$|T(0)|$');
-  set(gca, 'YScale', 'log');
-  ylim([0, 1e3]);
-  ylabel('DC value of the Compliance');
-
-  yyaxis right
-  hold on;
-  plot(alphas, opt_xi_kp, '-', 'DisplayName', '$\xi_{opt}$');
-  set(gca, 'YScale', 'lin');
-  ylim([0,1]);
-  ylabel('Optimal Damping Ratio');
-
-  xlabel('$\alpha$');
-  set(gca, 'XScale', 'log');
-  legend('location', 'northeast');
-#+end_src
-
-#+begin_src matlab :tangle no :exports results :results file replace
-exportFig('figs/compliance_dc_gain_wi.pdf', 'width', 'wide', 'height', 'normal');
-#+end_src
-
-#+name: fig:compliance_dc_gain_wi
-#+caption:
-#+RESULTS:
-[[file:figs/compliance_dc_gain_wi.png]]
-
-#+begin_src matlab :exports none
-  figure;
-  yyaxis left
-  plot(wis, abs(C_dc_gain_wi), '-', 'DisplayName', '$|T(0)|$');
-  set(gca, 'YScale', 'log');
-  ylim([0, 1e3]);
-  ylabel('DC value of the Compliance');
-
-  yyaxis right
-  hold on;
-  plot(wis, opt_xi_wi, '-', 'DisplayName', '$\xi_{opt}$');
-  set(gca, 'YScale', 'lin');
-  ylim([0,1]);
-  ylabel('Optimal Damping Ratio');
-
-  xlabel('$\omega_i$');
-  set(gca, 'XScale', 'log');
-  legend('location', 'northeast');
-#+end_src
-
-#+begin_src matlab :tangle no :exports results :results file replace
-exportFig('figs/compliance_dc_gain_kp.pdf', 'width', 'wide', 'height', 'normal');
-#+end_src
-
-#+name: fig:compliance_dc_gain_kp
-#+caption:
-#+RESULTS:
-[[file:figs/compliance_dc_gain_kp.png]]
-
-#+begin_src matlab :exports none
-  figure;
-  hold on;
-  plot(opt_xi_wi, C_dc_gain_wi, '-', 'DisplayName', '$\omega_i$');
-  plot(opt_xi_kp, C_dc_gain_kp, '-', 'DisplayName', '$k_p$');
-  hold off
-  set(gca, 'YScale', 'log');
-  ylim([0, 1e3]);
-  ylabel('DC value of the Compliance');
-  xlabel('Optimal Damping Ratio');
-  legend('location', 'northwest');
-#+end_src
-
-#+begin_src matlab :tangle no :exports results :results file replace
-exportFig('figs/opt_damp_vs_dc_comp.pdf', 'width', 'wide', 'height', 'normal');
-#+end_src
-
-#+name: fig:opt_damp_vs_dc_comp
-#+caption:
-#+RESULTS:
-[[file:figs/opt_damp_vs_dc_comp.png]]
-
-*** Comparison :ignore:
-#+begin_src matlab :exports none
-  figure;
-  yyaxis left
-  plot(wis, opt_xi_wi, '-', 'DisplayName', '$\xi_{cl}$');
-  set(gca, 'YScale', 'lin');
-  ylim([0,1]);
-  ylabel('Attainable Damping Ratio $\xi$');
-
-  yyaxis right
-  hold on;
-  plot(wis, opt_gain_wi, '-', 'DisplayName', '$g_{opt}$');
-  plot(wis, wis*((w0/W)^2 - 1), '--', 'DisplayName', '$g_{max}$');
-  set(gca, 'YScale', 'lin');
-  ylim([0,10]);
-  ylabel('Controller gain $g$');
-
-  xlabel('$\omega_i/\omega_0$');
-  set(gca, 'XScale', 'log');
-  legend('location', 'northeast');
-#+end_src
-
-#+begin_src matlab :exports none
-  figure;
-  yyaxis left
-  plot(alphas, opt_xi_kp, '-', 'DisplayName', '$\xi_{cl}$');
-  set(gca, 'YScale', 'lin');
-  ylim([0,1]);
-  ylabel('Attainable Damping Ratio $\xi$');
-
-  yyaxis right
-  hold on;
-  plot(alphas, opt_gain_kp, '-', 'DisplayName', '$g_{opt}$');
-  set(gca, 'YScale', 'lin');
-  ylim([0,2.5]);
-  ylabel('Controller gain $g$');
-
-  xlabel('$\alpha$');
-  set(gca, 'XScale', 'log');
-  legend('location', 'northeast');
-#+end_src
-
-#+begin_src matlab :tangle no :exports results :results file replace
-   exportFig('figs/mod_iff_damping_kp.pdf', 'width', 'normal', 'height', 'normal');
-#+end_src
-
-#+name: fig:mod_iff_damping_kp
-#+caption:
-#+RESULTS:
-[[file:figs/mod_iff_damping_kp.png]]
-
-#+begin_src matlab :tangle no :exports none :results none
-  exportFig('figs-paper/mod_iff_damping_kp.pdf', 'width', 'half', 'height', '650', 'png', false, 'pdf', false, 'svg', true);
-#+end_src
-
 * Notations
 <<sec:notations>>
 
@@ -2583,7 +2200,6 @@ exportFig('figs/opt_damp_vs_dc_comp.pdf', 'width', 'wide', 'height', 'normal');
 | Actuator Force                    | $\bm{F}, F_u, F_v$           | =F= =Fu= =Fv= | N       |
 | Force Sensor signal               | $\bm{f}, f_u, f_v$           | =f= =fu= =fv= | N       |
 | Relative Displacement             | $\bm{d}, d_u, d_v$           | =d= =du= =dv= | m       |
-| Relative Velocity                 | $\bm{v}, v_u, v_v$           | =v= =vu= =vv= | m/s     |
 | Resonance freq. when $\Omega = 0$ | $\omega_0$                   | =w0=          | rad/s   |
 | Rotation Speed                    | $\Omega = \dot{\theta}$      | =W=           | rad/s   |
 | Low Pass Filter corner frequency  | $\omega_i$                   | =wi=          | rad/s   |
@@ -2593,13 +2209,6 @@ exportFig('figs/opt_damp_vs_dc_comp.pdf', 'width', 'wide', 'height', 'normal');
 | Laplace variable | $s$                   | =s=    |         |
 | Complex number   | $j$                   | =j=    |         |
 | Frequency        | $\omega$              | =w=    | [rad/s] |
-
-|                | Mathematical Notation                          | Matlab | Unit    |
-|----------------+------------------------------------------------+--------+---------|
-| IFF Plant      | $\bm{G}_\text{IFF}(s) = \frac{\bm{f}}{\bm{F}}$ | =Giff= | N/N     |
-| DVF Plant      | $\bm{G}_\text{DVF}(s) = \frac{\bm{v}}{\bm{F}}$ | =Gdvf= | (m/s)/N |
-| IFF Controller | $\bm{K}_\text{IFF}(s)$                         | =Kiff= |         |
-| DVF Controller | $\bm{K}_\text{DVF}(s)$                         | =Kdvf= |         |
 
 * Functions                                                         :noexport:
 ** Sort Poles for the Root Locus

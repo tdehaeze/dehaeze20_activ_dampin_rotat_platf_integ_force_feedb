@@ -206,41 +206,36 @@ xlabel('Real Part'); ylabel('Imaginary Part');
 
 % While it seems that small $\omega_i$ do allow more damping to be added to the system (Figure [[fig:root_locus_wi_modified_iff]]), the control gains may be limited to small values due to eqref:eq:iff_gmax thus reducing the attainable damping.
 
-
 % There must be an optimum for $\omega_i$.
 % To find the optimum, the gain that maximize the simultaneous damping of the mode is identified for a wide range of $\omega_i$ (Figure [[fig:mod_iff_damping_wi]]).
 
-wis = logspace(-2, 1, 31)*w0; % [rad/s]
 
-opt_zeta = zeros(1, length(wis)); % Optimal simultaneous damping
+wis = logspace(-2, 1, 100)*w0; % [rad/s]
+
+opt_xi = zeros(1, length(wis)); % Optimal simultaneous damping
 opt_gain = zeros(1, length(wis)); % Corresponding optimal gain
 
 for wi_i = 1:length(wis)
     wi = wis(wi_i);
-    gains = linspace(0, (w0^2/W^2 - 1)*wi, 100);
+    Kiff = 1/(s + wi)*eye(2);
 
-    for g = gains
-        Kiff = (g/(wi+s))*eye(2);
+    fun = @(g)computeSimultaneousDamping(g, Giff, Kiff);
 
-        [w, zeta] = damp(minreal(feedback(Giff, Kiff)));
-
-        if min(zeta) > opt_zeta(wi_i) && all(zeta > 0)
-            opt_zeta(wi_i) = min(zeta);
-            opt_gain(wi_i) = g;
-        end
-    end
+    [g_opt, xi_opt] = fminsearch(fun, 0.5*wi*((w0/W)^2 - 1));
+    opt_xi(wi_i) = 1/xi_opt;
+    opt_gain(wi_i) = g_opt;
 end
 
 figure;
 yyaxis left
-plot(wis, opt_zeta, '-o', 'DisplayName', '$\xi_{cl}$');
+plot(wis, opt_xi, '-', 'DisplayName', '$\xi_{cl}$');
 set(gca, 'YScale', 'lin');
 ylim([0,1]);
 ylabel('Attainable Damping Ratio $\xi$');
 
 yyaxis right
 hold on;
-plot(wis, opt_gain, '-x', 'DisplayName', '$g_{opt}$');
+plot(wis, opt_gain, '-', 'DisplayName', '$g_{opt}$');
 plot(wis, wis*((w0/W)^2 - 1), '--', 'DisplayName', '$g_{max}$');
 set(gca, 'YScale', 'lin');
 ylim([0,10]);
