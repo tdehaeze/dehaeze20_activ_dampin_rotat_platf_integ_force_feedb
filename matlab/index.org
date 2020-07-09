@@ -34,6 +34,19 @@ It is structured in several sections:
 - Section [[sec:comparison]]: compares both proposed modifications to the classical IFF in terms of damping authority and closed-loop system behavior.
 - Section [[sec:notations]]: contains the notations used for both the Matlab code and the paper
 
+The matlab code is accessible on [[https://zenodo.org/record/3894343][Zonodo]] and [[https://github.com/tdehaeze/dehaeze20_contr_stewa_platf][Github]] cite:dehaeze20_activ_dampin_rotat_posit_platf.
+
+To run the Matlab code, go in the =matlab= directory and run the following Matlab files corresponding to each section.
+
+#+caption: Paper's sections and corresponding Matlab files
+| Sections                           | Matlab File                |
+|------------------------------------+----------------------------|
+| Section [[sec:system_description]]     | =s1_system_description.m=  |
+| Section [[sec:iff_pure_int]]           | =s2_iff_pure_int.m=        |
+| Section [[sec:iff_pseudo_int]]         | =s3_iff_hpf.m=             |
+| Section [[sec:iff_parallel_stiffness]] | =s4_iff_kp.m=              |
+| Section [[sec:comparison]]             | =s5_act_damp_comparison.m= |
+
 * System Description and Analysis
 :PROPERTIES:
 :header-args:matlab+: :tangle matlab/s1_system_description.m
@@ -231,7 +244,7 @@ The transfer function from $[F_u, F_v]$ to $[d_u, d_v]$ is identified from the S
   %% Input/Output definition
   clear io; io_i = 1;
   io(io_i) = linio([mdl, '/K'], 1, 'openinput');  io_i = io_i + 1;
-  io(io_i) = linio([mdl, '/G'], 3, 'openoutput'); io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/G'], 2, 'openoutput'); io_i = io_i + 1;
 #+end_src
 
 #+begin_src matlab
@@ -502,7 +515,7 @@ And the transfer function from $[F_u, F_v]$ to $[f_u, f_v]$ is identified using 
   %% Input/Output definition
   clear io; io_i = 1;
   io(io_i) = linio([mdl, '/K'], 1, 'openinput');  io_i = io_i + 1;
-  io(io_i) = linio([mdl, '/G'], 2, 'openoutput'); io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/G'], 1, 'openoutput'); io_i = io_i + 1;
 #+end_src
 
 #+begin_src matlab
@@ -1273,7 +1286,7 @@ The same transfer function from $[F_u, F_v]$ to $[f_u, f_v]$ is written down fro
   %% Input/Output definition
   clear io; io_i = 1;
   io(io_i) = linio([mdl, '/K'], 1, 'openinput');  io_i = io_i + 1;
-  io(io_i) = linio([mdl, '/G'], 2, 'openoutput'); io_i = io_i + 1;
+  io(io_i) = linio([mdl, '/G'], 1, 'openoutput'); io_i = io_i + 1;
 
   Giff = linearize(mdl, io, 0);
 
@@ -2210,6 +2223,9 @@ Critical Damping corresponds to to $\xi = 1$, and thus:
 | Complex number   | $j$                   | =j=    |         |
 | Frequency        | $\omega$              | =w=    | [rad/s] |
 
+* Bibliography                                                        :ignore:
+bibliographystyle:unsrt
+bibliography:ref.bib
 * Functions                                                         :noexport:
 ** Sort Poles for the Root Locus
 :PROPERTIES:

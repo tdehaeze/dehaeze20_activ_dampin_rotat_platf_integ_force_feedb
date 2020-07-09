@@ -79,7 +79,7 @@ mdl = 'rotating_frame';
 %% Input/Output definition
 clear io; io_i = 1;
 io(io_i) = linio([mdl, '/K'], 1, 'openinput');  io_i = io_i + 1;
-io(io_i) = linio([mdl, '/G'], 3, 'openoutput'); io_i = io_i + 1;
+io(io_i) = linio([mdl, '/G'], 2, 'openoutput'); io_i = io_i + 1;
 
 G = linearize(mdl, io, 0);
 
