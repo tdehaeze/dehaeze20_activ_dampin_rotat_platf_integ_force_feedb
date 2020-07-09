@@ -11,8 +11,13 @@ h1{
     font-size:175%;
 }
 
+h1.title{
+    text-align: center;
+}
+
 .subtitle{
-    font-size:95%; /* of h1 */
+    font-size:60%;
+    font-weight:lighter;
 }
 
 h2{
