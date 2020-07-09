@@ -58,7 +58,7 @@ The system consists of one 2 degree of freedom translation stage on top of a spi
 
 #+name: fig:system
 #+caption: Schematic of the studied system
-[[file:figs-tikz/system.png]]
+[[file:figs-paper/system.png]]
 
 The control inputs are the forces applied by the actuators of the translation stage ($F_u$ and $F_v$).
 As the translation stage is rotating around the Z axis due to the spindle, the forces are applied along $\vec{i}_u$ and $\vec{i}_v$.
@@ -203,7 +203,7 @@ It is shown in Figure [[fig:campbell_diagram]], and one can see that the system 
 #+end_src
 
 #+begin_src matlab :tangle no :exports none :results none
-  exportFig('figs-inkscape/campbell_diagram.pdf', 'width', 'full', 'height', 'normal', 'png', false, 'pdf', false, 'svg', true);
+  exportFig('figs-paper/campbell_diagram.pdf', 'width', 'full', 'height', 'normal', 'png', false, 'pdf', false, 'svg', true);
 #+end_src
 
 ** Simscape Model
@@ -394,7 +394,7 @@ They are compared in Figure [[fig:plant_compare_rotating_speed]].
 [[file:figs/plant_compare_rotating_speed.png]]
 
 #+begin_src matlab :tangle no :exports none :results none
-  exportFig('figs-inkscape/plant_compare_rotating_speed.pdf', 'width', 'full', 'height', 'full', 'png', false, 'pdf', false, 'svg', true);
+  exportFig('figs-paper/plant_compare_rotating_speed.pdf', 'width', 'full', 'height', 'full', 'png', false, 'pdf', false, 'svg', true);
 #+end_src
 
 * Problem with pure Integral Force Feedback
@@ -425,7 +425,7 @@ They are compared in Figure [[fig:plant_compare_rotating_speed]].
 
 #+name: fig:system_iff
 #+caption: Figure caption
-[[file:figs-tikz/system_iff.pdf]]
+[[file:figs-paper/system_iff.pdf]]
 
 ** Plant Parameters
 Let's define initial values for the model.
@@ -642,7 +642,7 @@ The obtained transfer functions are shown in Figure [[fig:plant_iff_compare_rota
 [[file:figs/plant_iff_compare_rotating_speed.png]]
 
 #+begin_src matlab :tangle no :exports none :results none
-  exportFig('figs-inkscape/plant_iff_compare_rotating_speed.pdf', 'width', 'full', 'height', 'full', 'png', false, 'pdf', false, 'svg', true);
+  exportFig('figs-paper/plant_iff_compare_rotating_speed.pdf', 'width', 'full', 'height', 'full', 'png', false, 'pdf', false, 'svg', true);
 #+end_src
 
 ** Decentralized Integral Force Feedback
@@ -723,7 +723,7 @@ It is shown that for non-null rotating speed, one pole is bound to the right-hal
 #+end_src
 
 #+begin_src matlab :tangle no :exports none :results none
-  exportFig('figs-inkscape/root_locus_pure_iff.pdf', 'width', 'wide', 'height', 'tall', 'png', false, 'pdf', false, 'svg', true);
+  exportFig('figs-paper/root_locus_pure_iff.pdf', 'width', 'wide', 'height', 'tall', 'png', false, 'pdf', false, 'svg', true);
 #+end_src
 
 * Integral Force Feedback with an High Pass Filter
@@ -839,7 +839,7 @@ The obtained Loop Gain is shown in Figure [[fig:loop_gain_modified_iff]].
 [[file:figs/loop_gain_modified_iff.png]]
 
 #+begin_src matlab :tangle no :exports none :results none
-  exportFig('figs-inkscape/loop_gain_modified_iff.pdf', 'width', 'full', 'height', 'full', 'png', false, 'pdf', false, 'svg', true);
+  exportFig('figs-paper/loop_gain_modified_iff.pdf', 'width', 'full', 'height', 'full', 'png', false, 'pdf', false, 'svg', true);
 #+end_src
 
 ** Root Locus
@@ -980,7 +980,7 @@ As shown in the Root Locus plot (Figure [[fig:root_locus_modified_iff]]), for so
 #+end_src
 
 #+begin_src matlab :tangle no :exports none :results none
-  exportFig('figs-inkscape/root_locus_modified_iff.pdf', 'width', 'full', 'height', 'tall', 'png', false, 'pdf', false, 'svg', true);
+  exportFig('figs-paper/root_locus_modified_iff.pdf', 'width', 'full', 'height', 'tall', 'png', false, 'pdf', false, 'svg', true);
 #+end_src
 
 ** What is the optimal $\omega_i$ and $g$?
@@ -1101,7 +1101,7 @@ In order to visualize the effect of $\omega_i$ on the attainable damping, the Ro
 #+end_src
 
 #+begin_src matlab :tangle no :exports none :results none
-  exportFig('figs-inkscape/root_locus_wi_modified_iff.pdf', 'width', 'full', 'height', 'tall', 'png', false, 'pdf', false, 'svg', true);
+  exportFig('figs-paper/root_locus_wi_modified_iff.pdf', 'width', 'full', 'height', 'tall', 'png', false, 'pdf', false, 'svg', true);
 #+end_src
 
 For the controller
@@ -1171,7 +1171,7 @@ To find the optimum, the gain that maximize the simultaneous damping of the mode
 [[file:figs/mod_iff_damping_wi.png]]
 
 #+begin_src matlab :tangle no :exports none :results none
-  exportFig('figs-inkscape/mod_iff_damping_wi.pdf', 'width', 'wide', 'height', 'normal', 'png', false, 'pdf', false, 'svg', true);
+  exportFig('figs-paper/mod_iff_damping_wi.pdf', 'width', 'wide', 'height', 'normal', 'png', false, 'pdf', false, 'svg', true);
 #+end_src
 
 * IFF with a stiffness in parallel with the force sensor
@@ -1199,7 +1199,7 @@ To find the optimum, the gain that maximize the simultaneous damping of the mode
 
 #+name: fig:system_parallel_springs
 #+caption: Figure caption
-[[file:figs-tikz/system_parallel_springs.png]]
+[[file:figs-paper/system_parallel_springs.png]]
 
 ** Equations
 #+begin_important
@@ -1471,7 +1471,7 @@ One can see that for $k_p > m \Omega^2$, the systems shows alternating complex c
 [[file:figs/plant_iff_kp.png]]
 
 #+begin_src matlab :tangle no :exports none :results none
-  exportFig('figs-inkscape/plant_iff_kp.pdf', 'width', 'full', 'height', 'full', 'png', false, 'pdf', false, 'svg', true);
+  exportFig('figs-paper/plant_iff_kp.pdf', 'width', 'full', 'height', 'full', 'png', false, 'pdf', false, 'svg', true);
 #+end_src
 
 ** IFF when adding a spring in parallel
@@ -1680,7 +1680,7 @@ Thus, decentralized IFF controller with pure integrators can be used if:
 #+end_src
 
 #+begin_src matlab :tangle no :exports none :results none
-  exportFig('figs-inkscape/root_locus_iff_kp.pdf', 'width', 'full', 'height', 'tall', 'png', false, 'pdf', false, 'svg', true);
+  exportFig('figs-paper/root_locus_iff_kp.pdf', 'width', 'full', 'height', 'tall', 'png', false, 'pdf', false, 'svg', true);
 #+end_src
 
 ** Effect of $k_p$ on the attainable damping
@@ -1783,7 +1783,7 @@ It is shown that large values of $k_p$ decreases the attainable damping.
 #+end_src
 
 #+begin_src matlab :tangle no :exports none :results none
-  exportFig('figs-inkscape/root_locus_iff_kps.pdf', 'width', 'wide', 'height', 'tall', 'png', false, 'pdf', false, 'svg', true);
+  exportFig('figs-paper/root_locus_iff_kps.pdf', 'width', 'wide', 'height', 'tall', 'png', false, 'pdf', false, 'svg', true);
 #+end_src
 
 #+begin_src matlab
@@ -1940,7 +1940,7 @@ Let's take $k_p = 5 m \Omega^2$ and find the optimal IFF control gain $g$ such t
 #+end_src
 
 #+begin_src matlab :tangle no :exports none :results none
-  exportFig('figs-inkscape/root_locus_opt_gain_iff_kp.pdf', 'width', 'wide', 'height', 'tall', 'png', false, 'pdf', false, 'svg', true);
+  exportFig('figs-paper/root_locus_opt_gain_iff_kp.pdf', 'width', 'wide', 'height', 'tall', 'png', false, 'pdf', false, 'svg', true);
 #+end_src
 
 * Comparison
@@ -2104,7 +2104,7 @@ IFF With parallel Stiffness
 #+end_src
 
 #+begin_src matlab :tangle no :exports none :results none
-  exportFig('figs-inkscape/comp_root_locus.pdf', 'width', 'wide', 'height', 'tall', 'png', false, 'pdf', false, 'svg', true);
+  exportFig('figs-paper/comp_root_locus.pdf', 'width', 'wide', 'height', 'tall', 'png', false, 'pdf', false, 'svg', true);
 #+end_src
 
 ** Controllers - Optimal Gains
@@ -2278,7 +2278,7 @@ Critical Damping corresponds to to $\xi = 1$, and thus:
 [[file:figs/comp_transmissibility.png]]
 
 #+begin_src matlab :tangle no :exports none :results none
-  exportFig('figs-inkscape/comp_transmissibility.pdf', 'width', 'half', 'height', 'normal', 'png', false, 'pdf', false, 'svg', true);
+  exportFig('figs-paper/comp_transmissibility.pdf', 'width', 'half', 'height', 'normal', 'png', false, 'pdf', false, 'svg', true);
 #+end_src
 
 *** Compliance                                                      :ignore:
@@ -2312,7 +2312,7 @@ Critical Damping corresponds to to $\xi = 1$, and thus:
 [[file:figs/comp_compliance.png]]
 
 #+begin_src matlab :tangle no :exports none :results none
-  exportFig('figs-inkscape/comp_compliance.pdf', 'width', 'half', 'height', 'normal', 'png', false, 'pdf', false, 'svg', true);
+  exportFig('figs-paper/comp_compliance.pdf', 'width', 'half', 'height', 'normal', 'png', false, 'pdf', false, 'svg', true);
 #+end_src
 
 ** DC Compliance
@@ -2568,7 +2568,7 @@ exportFig('figs/opt_damp_vs_dc_comp.pdf', 'width', 'wide', 'height', 'normal');
 [[file:figs/mod_iff_damping_kp.png]]
 
 #+begin_src matlab :tangle no :exports none :results none
-  exportFig('figs-inkscape/mod_iff_damping_kp.pdf', 'width', 'half', 'height', '650', 'png', false, 'pdf', false, 'svg', true);
+  exportFig('figs-paper/mod_iff_damping_kp.pdf', 'width', 'half', 'height', '650', 'png', false, 'pdf', false, 'svg', true);
 #+end_src
 
 * Notations
