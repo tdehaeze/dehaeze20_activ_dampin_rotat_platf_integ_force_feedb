@@ -22,7 +22,7 @@ Conditions for stability and optimal parameters are derived.
 The results reveal that, despite their different implementations, both modified IFF control scheme have almost identical damping authority on suspension modes.
 #+end_quote
 
-* Paper ([[file:paper/paper.pdf][link]])
+* Paper ([[file:paper/dehaeze20_activ_dampin_rotat_platf_integ_force_feedb.pdf][link]])
 :PROPERTIES:
 :UNNUMBERED: t
 :END:

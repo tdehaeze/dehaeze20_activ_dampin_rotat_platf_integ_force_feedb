@@ -312,7 +312,7 @@ The first one consists of slightly modifying the control law (Section ref:sec:if
 
 * Integral Force Feedback with High Pass Filter
 <<sec:iff_hpf>>
-** Modification of the Control Low                                   :ignore:
+** Modification of the Control Law                                   :ignore:
 As was explained in the previous section, the instability comes in part from the high gain at low frequency caused by the pure integrators.
 
 In order to limit this low frequency controller gain, an high pass filter (HPF) can be added to the controller
