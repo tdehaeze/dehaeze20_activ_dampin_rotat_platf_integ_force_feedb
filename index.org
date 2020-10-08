@@ -40,6 +40,15 @@ The Matlab scripts that permits to obtain all the results presented in the paper
 :END:
 All the figures in the paper are generated using either [[https://sourceforge.net/projects/pgf/][TikZ]] or [[https://inkscape.org/][Inkscape]]. The code snippets that was used to generate the figures are accessible [[file:tikz/index.org][here]].
 
+* Talk ([[file:talk/talk.pdf][link]])
+
+#+begin_export html
+    <iframe width="720"
+     height="540"
+     src="https://www.youtube.com/embed/F9j2-ge2FPE"
+     frameborder="0" allowfullscreen> </iframe>
+#+end_export
+
 * Cite this paper
 :PROPERTIES:
 :UNNUMBERED: t
