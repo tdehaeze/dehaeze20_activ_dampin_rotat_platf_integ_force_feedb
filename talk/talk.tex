@@ -1,4 +1,4 @@
-% Created 2020-07-29 mer. 15:27
+% Created 2020-08-24 lun. 18:19
 % Intended LaTeX compiler: pdflatex
 \documentclass[t, minted]{clean-beamer}
 \usepackage[utf8]{inputenc}
@@ -52,7 +52,7 @@
  pdftitle={Active Damping of Rotating Platforms using Integral Force Feedback},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 27.0.91 (Org mode 9.4)}, 
+ pdfcreator={Emacs 27.1.50 (Org mode 9.4)}, 
  pdflang={English}}
 \begin{document}
 
@@ -62,57 +62,32 @@
 \end{frame}
 
 
-\section{Dynamics of Rotating Positioning Platforms}
-\label{sec:orge7d05a8}
-\begin{frame}[label={sec:orgb466daa}]{Model of a Rotating Positioning Platform}
-\begin{columns}
-\begin{column}{0.55\columnwidth}
+\section{Dynamics of Rotating Platforms}
+\label{sec:orge3e010f}
+\begin{frame}[label={sec:orgac66c89}]{Model of a Rotating Positioning Platform}
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth]{figs/system.pdf}
+\includegraphics[width=0.7\linewidth]{figs/system.pdf}
 \caption{Schematic of the studied System}
 \end{figure}
-\end{column}
-
-\begin{column}{0.45\columnwidth}
-Simplest model to study the \textbf{gyroscopic effects} on Decentralized IFF
-
-\vspace{1em}
-
-Assumptions:
-\begin{itemize}
-\item Perfect Rotating Stage
-\item \(\dot{\theta}(t) = \Omega = \text{cst}\)
-\item Small displacements
-\item Position of the mass described by \([d_u\ d_v]\)
-\end{itemize}
-
-\vspace{1em}
-
-Two frames:
-\begin{itemize}
-\item Inertial frame \((\vec{i}_x, \vec{i}_y, \vec{i}_z)\)
-\item Uniform rotating frame \((\vec{i}_u, \vec{i}_v, \vec{i}_w)\)
-\end{itemize}
-\end{column}
-\end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgc029b67}]{Equations of Motion - Lagrangian Formalism}
-\vspace{-1em}
+\begin{frame}[label={sec:org614e76f}]{Equations of Motion - Lagrangian Formalism}
+Lagrangian equations:
 \begin{equation*}
   \frac{d}{dt} \left( \frac{\partial L}{\partial \dot{q}_i} \right) + \frac{\partial D}{\partial \dot{q}_i} - \frac{\partial L}{\partial q_i} = Q_i
 \end{equation*}
-with \(L = T - V\) the Lagrangian, \(D\) the dissipation function, and \(Q_i\) the generalized force associated with the generalized variable.
-\begin{align*}
-  T &= \frac{1}{2} m \left( \left( \dot{d}_u - \Omega d_v \right)^2 + \left( \dot{d}_v + \Omega d_u \right)^2 \right), \quad V = \frac{1}{2} k \left( {d_u}^2 + {d_v}^2 \right) \\
-  D &= \frac{1}{2} c \left( \dot{d}_u{}^2 + \dot{d}_v{}^2 \right), \quad Q_1 = F_u, \quad Q_2 = F_v
-\end{align*}
-\vspace{-1em}
+
+\vspace{1em}
+
+Equations of motion:
 \begin{align*}
   m \ddot{d}_u + c \dot{d}_u + ( k - m \Omega^2 ) d_u &= F_u + 2 m \Omega \dot{d}_v \\
   m \ddot{d}_v + c \dot{d}_v + ( k \underbrace{-\,m \Omega^2}_{\text{Centrif.}} ) d_v &= F_v \underbrace{-\,2 m \Omega \dot{d}_u}_{\text{Coriolis}}
 \end{align*}
+
+\vspace{1em}
+
 \begin{cbox}[]{blue}{}
 \begin{center}
 Centrifugal forces \(\Longleftrightarrow\) Negative Stiffness
@@ -122,27 +97,16 @@ Coriolis Forces \(\Longleftrightarrow\) Coupling
 \end{cbox}
 \end{frame}
 
-\begin{frame}[label={sec:org9fc6840}]{Transfer Function Matrix the Laplace domain}
-\vspace{-1em}
-\begin{equation*}
-  {\scriptsize \begin{bmatrix} d_u \\ d_v \end{bmatrix} = \bm{G}_d \begin{bmatrix} F_u \\ F_v \end{bmatrix}}
-\end{equation*}
-\begin{equation*}
-  {\scriptsize \bm{G}_{d} =
-               \frac{1}{k}
-               \begin{bmatrix}
-                 \frac{\frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2}}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2} & \frac{2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0}}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2} \\
-                 \frac{- 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0}}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2} & \frac{\frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2}}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2}
-               \end{bmatrix}}
-\end{equation*}
+\begin{frame}[label={sec:org0a25ba1}]{Transfer Function Matrix the Laplace domain}
+\vspace{2em}
 
 \begin{figure}[htbp]
-\begin{subfigure}[c]{0.4\linewidth}
+\begin{subfigure}[c]{0.49\linewidth}
 \includegraphics[width=\linewidth]{figs/campbell_diagram_real.pdf}
 \caption{\label{fig:campbell_diagram_real} Real Part}
 \end{subfigure}
 \hfill
-\begin{subfigure}[c]{0.4\linewidth}
+\begin{subfigure}[c]{0.49\linewidth}
 \includegraphics[width=\linewidth]{figs/campbell_diagram_imag.pdf}
 \caption{\label{fig:campbell_diagram_imag} Imaginary Part}
 \end{subfigure}
@@ -152,73 +116,25 @@ Coriolis Forces \(\Longleftrightarrow\) Coupling
 \end{figure}
 \end{frame}
 
-\begin{frame}[label={sec:orge87dc7b}]{Bode Plots of the System's Dynamics}
-\begin{figure}[htbp]
-\begin{subfigure}[c]{0.45\linewidth}
-\includegraphics[width=\linewidth]{figs/plant_compare_rotating_speed_direct.pdf}
-\caption{\label{fig:plant_compare_rotating_speed_direct} Direct Terms \(d_u/F_u\), \(d_v/F_v\)}
-\end{subfigure}
-\hfill
-\begin{subfigure}[c]{0.45\linewidth}
-\includegraphics[width=\linewidth]{figs/plant_compare_rotating_speed_coupling.pdf}
-\caption{\label{fig:plant_compare_rotating_speed_coupling} Coupling Terms \(d_v/F_u\), \(-d_u/F_v\)}
-\end{subfigure}
-\hfill
-\caption{Bode Plots for \(\bm{G}_d\) for several rotational speed \(\Omega\)}
-\centering
-\end{figure}
-
-For all the numerical analysis, \(\omega_0 = \SI{1}{\radian\per\second}\), \(k = \SI{1}{\newton\per\meter}\) and \(\xi = 0.025 = \SI{2.5}{\percent}\).
-\end{frame}
-
-\section{Problem with the Decentralized Integral Force Feedback}
-\label{sec:org59c3dbc}
-\begin{frame}[label={sec:org6faf2d3}]{Force Sensors and Control Architecture}
-\vspace{-1em}
-\begin{columns}
-\begin{column}{0.6\columnwidth}
+\section{Decentralized Integral Force Feedback}
+\label{sec:org8107aa6}
+\begin{frame}[label={sec:org818bd83}]{Force Sensors and Decentralized IFF Control Architecture}
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth]{figs/system_iff.pdf}
-\caption{System with added Force Sensor in series with the actuators}
-\end{figure}
-\end{column}
-
-\begin{column}{0.4\columnwidth}
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=\linewidth]{figs/control_diagram_iff.pdf}
-\caption{Control Diagram for decentralized IFF}
-\end{figure}
-
-\begin{equation*}
-  \bm{K}_F(s) = \begin{bmatrix} K_F(s) & 0 \\ 0 & K_F(s) \end{bmatrix}
-\end{equation*}
-
-\begin{equation*}
-  K_F(s) = g \cdot \frac{1}{s}
-\end{equation*}
-\end{column}
-\end{columns}
-\end{frame}
-
-\begin{frame}[label={sec:org387ca99}]{Plant Dynamics}
-\vspace{-1em}
-
-\begin{equation*}
-  \begin{bmatrix} f_{u} \\ f_{v} \end{bmatrix} =
-  \begin{bmatrix} F_u \\ F_v \end{bmatrix} - (c s + k)
-  \begin{bmatrix} d_u \\ d_v \end{bmatrix}
-\end{equation*}
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.9\linewidth]{figs/plant_iff_compare_rotating_speed.pdf}
-\caption{Bode plot of the diagonal terms of \(\bm{G}_f\) for several rotational speeds \(\Omega\)}
+\includegraphics[width=0.7\linewidth]{figs/system_iff.pdf}
+\caption{System with added Force Sensor in series with the actuators, \(K_F(s) = g \cdot \frac{1}{s}\)}
 \end{figure}
 \end{frame}
 
-\begin{frame}[label={sec:orgb8d521c}]{Decentralized IFF with Pure Integrators}
+\begin{frame}[label={sec:org159eb7e}]{IFF Plant Dynamics}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{figs/plant_iff_compare_rotating_speed.pdf}
+\caption{Bode plot of the dynamics from force actuator to force sensor for several rotational speeds \(\Omega\)}
+\end{figure}
+\end{frame}
+
+\begin{frame}[label={sec:orge6035da}]{Decentralized IFF with Pure Integrators}
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.7\linewidth]{figs/root_locus_pure_iff.pdf}
@@ -232,14 +148,14 @@ For all the numerical analysis, \(\omega_0 = \SI{1}{\radian\per\second}\), \(k =
 \end{cbox}
 \end{frame}
 
-\section{Modification of the control law: Add High-Pass Filter}
-\label{sec:orgc733c30}
-\begin{frame}[label={sec:orga459f5e}]{Modification of the Control Low}
-\vspace{-1em}
-
+\section{Integral Force Feedback with High Pass Filter}
+\label{sec:org789619d}
+\begin{frame}[label={sec:org2020343}]{Modification of the Control Law}
 \begin{equation*}
   K_{F}(s) = g \cdot \frac{1}{s} \cdot \underbrace{\frac{s/\omega_i}{1 + s/\omega_i}}_{\text{HPF}} = g \cdot \frac{1}{s + \omega_i}
 \end{equation*}
+
+\vspace{1em}
 
 \begin{minipage}[b]{0.45\linewidth}
 \begin{center}
@@ -254,18 +170,10 @@ For all the numerical analysis, \(\omega_0 = \SI{1}{\radian\per\second}\), \(k =
 \captionof{figure}{Root Locus}
 \end{center}
 \end{minipage}
-
-\vspace{-1em}
-
-\begin{align*}
-\text{Added HPF} &\Longleftrightarrow \text{limit the low frequency gain} \\
-                 &\Longleftrightarrow \text{shift the pole to the left along the real axis} \\
-                 &\Longrightarrow \text{stable system for small values of the gain}
-\end{align*}
 \end{frame}
 
 
-\begin{frame}[label={sec:org4390eac}]{Effect of \(\omega_i\) on the attainable damping}
+\begin{frame}[label={sec:org38b9bd2}]{Effect of \(\omega_i\) on the attainable damping}
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=\linewidth]{figs/root_locus_wi_modified_iff.pdf}
@@ -291,7 +199,7 @@ small \(\omega_i\) \(\Longrightarrow\) reduces maximum gain \(g_\text{max}\)
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org84c72de}]{Optimal Control Parameters}
+\begin{frame}[label={sec:orga2c2166}]{Optimal Control Parameters}
 \vspace{1em}
 
 \begin{figure}[htbp]
@@ -301,45 +209,22 @@ small \(\omega_i\) \(\Longrightarrow\) reduces maximum gain \(g_\text{max}\)
 \end{figure}
 \end{frame}
 
-\section{Modification of the Mechanical System: Parallel Stiffness}
-\label{sec:orgfa77c9b}
-\begin{frame}[label={sec:org4d07a64}]{Stiffness in Parallel with the Force Sensor}
-\vspace{-1em}
-\begin{columns}
-\begin{column}{0.6\columnwidth}
+\section{Integral Force Feedback with Parallel Springs}
+\label{sec:org7a61560}
+\begin{frame}[label={sec:orga6be4f6}]{Stiffness in Parallel with the Force Sensor}
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth]{figs/system_parallel_springs.pdf}
-\caption{Studied system with additional springs in parallel with the actuators and force sensors}
+\includegraphics[width=0.65\linewidth]{figs/system_parallel_springs.pdf}
+\caption{System with additional springs in parallel with the actuators and force sensors}
 \end{figure}
-\end{column}
-
-\begin{column}{0.4\columnwidth}
-\begin{cbox}[Intuitive Idea]{blue}{}
-\(k_p\) is used to counteract the negative stiffness \(-m\Omega^2\) when high control gains are used.
-\end{cbox}
-
-\vspace{-2em}
-
-\begin{align*}
-  k_p &= \alpha k \\
-  k_a &= (1 - \alpha) k
-\end{align*}
-with \(0 < \alpha < 1\).
-
-\vspace{1em}
-
-The overall stiffness \(k = k_a + k_p = \text{cst}\) \(\Longrightarrow\) the open-loop poles remains unchanged
-\end{column}
-\end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org223db59}]{Effect of the Parallel Stiffness on the Plant Dynamics}
+\begin{frame}[label={sec:org497c282}]{Effect of the Parallel Stiffness on the Plant Dynamics}
 \begin{minipage}[b]{0.42\linewidth}
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=\linewidth]{figs/plant_iff_kp.pdf}
-\caption{Bode Plot of \(f_u/F_u\) for \(k_p = 0\), \(k_p < m \Omega^2\) and \(k_p > m \Omega^2\), \(\Omega = 0.1 \omega_0\)}
+\caption{Bode Plot of \(f_u/F_u\)}
 \end{figure}
 \end{minipage}
 \hfill
@@ -347,29 +232,22 @@ The overall stiffness \(k = k_a + k_p = \text{cst}\) \(\Longrightarrow\) the ope
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=\linewidth]{figs/root_locus_iff_kp.pdf}
-\caption{Root Locus for IFF without parallel spring, with parallel springs with stiffness \(k_p < m \Omega^2\) and \(k_p > m \Omega^2\), \(\Omega = 0.1 \omega_0\)}
+\caption{Root Locus for IFF}
 \end{figure}
 \end{minipage}
+
+\vspace{1em}
 
 \begin{cbox}[]{blue}{}
 If \(k_p > m \Omega^2\), the poles of the closed-loop system stay in the (stable) right half-plane, and hence the \textbf{unconditional stability of IFF is recovered}.
 \end{cbox}
 \end{frame}
 
-\begin{frame}[label={sec:org8be51fd}]{Optimal Parallel Stiffness}
+\begin{frame}[label={sec:orgd7eccc9}]{Optimal Parallel Stiffness}
 \begin{figure}[htbp]
-\begin{subfigure}[c]{0.49\linewidth}
-\includegraphics[width=\linewidth]{figs/root_locus_iff_kps.pdf}
-\caption{\label{fig:root_locus_iff_kps} Comparison of three parallel stiffnesses \(k_p\)}
-\end{subfigure}
-\hfill
-\begin{subfigure}[c]{0.49\linewidth}
-\includegraphics[width=\linewidth]{figs/root_locus_opt_gain_iff_kp.pdf}
-\caption{\label{fig:root_locus_opt_gain_iff_kp} \(k_p = 5 m \Omega^2\), optimal damping \(\xi_\text{opt}\) is shown}
-\end{subfigure}
-\hfill
-\caption{Root Locus for IFF when parallel stiffness \(k_p\) is added, \(\Omega = 0.1 \omega_0\)}
 \centering
+\includegraphics[width=0.60\linewidth]{figs/root_locus_iff_kps.pdf}
+\caption{Root Locus for three parallel stiffnesses \(k_p\)}
 \end{figure}
 
 \begin{cbox}[]{blue}{}
@@ -378,9 +256,9 @@ Large parallel stiffness \(k_p\) reduces the attainable damping.
 \end{cbox}
 \end{frame}
 
-\section{Comparison of the two Proposed Modifications}
-\label{sec:orge227508}
-\begin{frame}[label={sec:org783f2c4}]{Comparison of the Attainable Damping}
+\section{Comparison and Discussion}
+\label{sec:org79d4359}
+\begin{frame}[label={sec:org7dda174}]{Comparison of the Attainable Damping}
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.7\linewidth]{figs/comp_root_locus.pdf}
@@ -388,7 +266,7 @@ Large parallel stiffness \(k_p\) reduces the attainable damping.
 \end{figure}
 \end{frame}
 
-\begin{frame}[label={sec:orgdd42828}]{Comparison Transmissibility and Compliance}
+\begin{frame}[label={sec:org9effb95}]{Comparison Transmissibility and Compliance}
 \begin{figure}[htbp]
 \begin{subfigure}[c]{0.49\linewidth}
 \includegraphics[width=\linewidth]{figs/comp_compliance.pdf}
@@ -405,26 +283,15 @@ Large parallel stiffness \(k_p\) reduces the attainable damping.
 \end{figure}
 \end{frame}
 
-\begin{frame}[label={sec:org5db221d}]{Conclusion \& Further work}
-The two proposed techniques gives almost identical results but are very different when it comes to their implementations
-
-\vspace{2em}
-
-The best technique depends on the application
-
-\vspace{2em}
-
-\begin{wrapfigure}{r}{0.45\textwidth}
-\vspace{-1em}
+\begin{frame}[label={sec:org46c3efd}]{}
+\vspace{8em}
 \begin{center}
-\includegraphics[width=\linewidth]{figs/apa_schematic.pdf}
+\Huge Thank you!
 \end{center}
-\end{wrapfigure}
+\vspace{8em}
 
-Amplified Piezoelectric Actuators are a nice way to have an actuator, a force sensors and a parallel stiffness in a compact manner
-
-\vspace{2em}
-
-Will be tested on the nano-hexapod
+Contact: \href{mailto:dehaeze.thomas@gmail.com}{dehaeze.thomas@gmail.com}
+\vspace{1em}
+\small \url{https://tdehaeze.github.io/dehaeze20\_contr\_stewa\_platf/}
 \end{frame}
 \end{document}
