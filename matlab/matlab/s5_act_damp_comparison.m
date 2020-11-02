@@ -85,7 +85,8 @@ axis square;
 xlim([-1.2, 0.05]); ylim([0, 1.25]);
 
 xlabel('Real Part'); ylabel('Imaginary Part');
-legend('location', 'northwest');
+leg = legend('location', 'northwest', 'FontSize', 8);
+leg.ItemTokenSize(1) = 8;
 
 % Controllers - Optimal Gains
 % In order to compare to three considered Active Damping techniques, gains that yield maximum damping of all the modes are computed for each case.
@@ -204,7 +205,7 @@ hold off;
 set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
 ylim([1e-2, 3e1]);
 xlabel('Frequency [rad/s]'); ylabel('Transmissibility [m/m]');
-legend('location', 'southwest');
+legend('location', 'southwest', 'FontSize', 8);
 
 % Compliance                                                      :ignore:
 
@@ -224,4 +225,4 @@ hold off;
 set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
 ylim([1e-2, 3e1]);
 xlabel('Frequency [rad/s]'); ylabel('Compliance [m/N]');
-legend('location', 'southwest');
+legend('location', 'southwest', 'FontSize', 8);

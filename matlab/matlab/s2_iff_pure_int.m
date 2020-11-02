@@ -59,7 +59,10 @@ Giff_th = 1/(((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))^2 + (2*W*s/(w0^2))^2)
 freqs = logspace(-1, 1, 1000);
 
 figure;
-ax1 = subplot(2, 2, 1);
+tiledlayout(3, 2, 'TileSpacing', 'None', 'Padding', 'None');
+
+% Magnitude
+ax1 = nexttile([2, 1]);
 hold on;
 plot(freqs, abs(squeeze(freqresp(Giff(1,1), freqs))), '-')
 plot(freqs, abs(squeeze(freqresp(Giff_th(1,1), freqs))), '--')
@@ -68,7 +71,16 @@ set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
 set(gca, 'XTickLabel',[]); ylabel('Magnitude [N/N]');
 title('$f_u/F_u$, $f_v/F_v$');
 
-ax3 = subplot(2, 2, 3);
+ax2 = nexttile([2, 1]);
+hold on;
+plot(freqs, abs(squeeze(freqresp(Giff(1,2), freqs))), '-')
+plot(freqs, abs(squeeze(freqresp(Giff_th(1,2), freqs))), '--')
+hold off;
+set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+set(gca, 'XTickLabel',[]); ylabel('Magnitude [N/N]');
+title('$f_u/F_v$, $f_v/F_u$');
+
+ax3 = nexttile;
 hold on;
 plot(freqs, 180/pi*angle(squeeze(freqresp(Giff(1,1), freqs))), '-')
 plot(freqs, 180/pi*angle(squeeze(freqresp(Giff_th(1,1), freqs))), '--')
@@ -78,16 +90,7 @@ yticks(-180:90:180);
 ylim([-180 180]);
 hold off;
 
-ax2 = subplot(2, 2, 2);
-hold on;
-plot(freqs, abs(squeeze(freqresp(Giff(1,2), freqs))), '-')
-plot(freqs, abs(squeeze(freqresp(Giff_th(1,2), freqs))), '--')
-hold off;
-set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
-set(gca, 'XTickLabel',[]); ylabel('Magnitude [N/N]');
-title('$f_u/F_v$, $f_v/F_u$');
-
-ax4 = subplot(2, 2, 4);
+ax4 = nexttile;
 hold on;
 plot(freqs, 180/pi*angle(squeeze(freqresp(Giff(1,2), freqs))), '-', ...
      'DisplayName', 'Simscape')
@@ -98,7 +101,7 @@ xlabel('Frequency [rad/s]'); ylabel('Phase [deg]');
 yticks(-180:90:180);
 ylim([-180 180]);
 hold off;
-legend('location', 'northeast');
+legend('location', 'northeast', 'FontSize', 8);
 
 linkaxes([ax1,ax2,ax3,ax4],'x');
 xlim([freqs(1), freqs(end)]);
@@ -107,7 +110,7 @@ linkaxes([ax1,ax2],'y');
 % Effect of the rotation speed
 % The transfer functions from $[F_u, F_v]$ to $[f_u, f_v]$ are identified for the following rotating speeds.
 
-Ws = [0, 0.2, 0.7, 1.1]*w0; % Rotating Speeds [rad/s]
+Ws = [0, 0.2, 0.7]*w0; % Rotating Speeds [rad/s]
 
 Gsiff = {zeros(2, 2, length(Ws))};
 
@@ -126,8 +129,10 @@ end
 freqs = logspace(-2, 1, 1000);
 
 figure;
+tiledlayout(3, 1, 'TileSpacing', 'None', 'Padding', 'None');
 
-ax1 = subplot(2, 1, 1);
+% Magnitude
+ax1 = nexttile([2, 1]);
 hold on;
 for W_i = 1:length(Ws)
     plot(freqs, abs(squeeze(freqresp(Gsiff{W_i}(1,1), freqs))), ...
@@ -136,9 +141,11 @@ end
 hold off;
 set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
 set(gca, 'XTickLabel',[]); ylabel('Magnitude [N/N]');
-legend('location', 'southeast');
+leg = legend('location', 'southeast', 'FontSize', 8);
+leg.ItemTokenSize(1) = 6;
 
-ax2 = subplot(2, 1, 2);
+% Phase
+ax2 = nexttile;
 hold on;
 for W_i = 1:length(Ws)
     plot(freqs, 180/pi*angle(squeeze(freqresp(Gsiff{W_i}(1,1), freqs))))
@@ -189,4 +196,5 @@ axis square;
 xlim([-2, 0.5]); ylim([0, 2.5]);
 
 xlabel('Real Part'); ylabel('Imaginary Part');
-legend('location', 'northwest');
+leg = legend('location', 'northwest', 'FontSize', 8);
+leg.ItemTokenSize(1) = 8;

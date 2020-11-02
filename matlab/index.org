@@ -118,7 +118,7 @@ Let's define initial values for the model.
 ** Campbell Diagram
 The Campbell Diagram displays the evolution of the real and imaginary parts of the system as a function of the rotating speed.
 
-It is shown in Figure [[fig:campbell_diagram]], and one can see that the system becomes unstable for $\Omega > \omega_0$ (the real part of one of the poles becomes positive).
+It is shown in Figures [[fig:campbell_diagram_real]] and [[fig:campbell_diagram_imag]], and one can see that the system becomes unstable for $\Omega > \omega_0$ (the real part of one of the poles becomes positive).
 
 #+begin_src matlab :exports none
   Ws = linspace(0, 2, 51); % Vector of considered rotation speed [rad/s]
@@ -136,40 +136,8 @@ It is shown in Figure [[fig:campbell_diagram]], and one can see that the system 
   clear pole_G;
 #+end_src
 
-#+begin_src matlab :exports none
-  figure;
-
-  ax1 = subplot(1,2,1);
-  hold on;
-  for p_i = 1:size(p_ws, 1)
-      plot(Ws, real(p_ws(p_i, :)), 'k-')
-  end
-  plot(Ws, zeros(size(Ws)), 'k--')
-  hold off;
-  xlabel('Rotational Speed [rad/s]'); ylabel('Real Part');
-
-  ax2 = subplot(1,2,2);
-  hold on;
-  for p_i = 1:size(p_ws, 1)
-      plot(Ws, imag(p_ws(p_i, :)), 'k-')
-  end
-  hold off;
-  xlabel('Rotational Speed [rad/s]'); ylabel('Imaginary Part');
-#+end_src
-
-#+begin_src matlab :tangle no :exports results :results file replace
-  exportFig('figs/campbell_diagram.pdf', 'width', 'full', 'height', 'normal');
-#+end_src
-
-#+name: fig:campbell_diagram
-#+caption: Campbell Diagram
-#+RESULTS:
-[[file:figs/campbell_diagram.png]]
-
 #+begin_src matlab :exports none :tangle no
   figure;
-
-  ax1 = subplot(1,2,1);
   hold on;
   set(gca,'ColorOrderIndex', 1);
   plot(Ws, real(p_ws(1, :)), '-', 'DisplayName', '$p_{+}$')
@@ -185,12 +153,24 @@ It is shown in Figure [[fig:campbell_diagram]], and one can see that the system 
   xlim([0, 2*w0]);
   xticks([0,w0/2,w0,3/2*w0,2*w0])
   xticklabels({'$0$', '', '$\omega_0$', '', '$2 \omega_0$'})
-  ylim([-3*xi, xi]);
-  yticks([-3*xi, -2*xi, -xi, 0, xi])
+  ylim([-3*xi, 3*xi]);
+  yticks([-3*xi, -2*xi, -xi, 0, xi, 2*xi, 3*xi])
   yticklabels({'', '', '$-\xi\omega_0$', '$0$', ''})
-  legend('location', 'northwest');
+  leg = legend('location', 'northwest', 'FontSize', 8);
+  leg.ItemTokenSize(1) = 6;
+#+end_src
 
-  ax2 = subplot(1,2,2);
+#+begin_src matlab :tangle no :exports results :results file replace
+  exportFig('figs/campbell_diagram_real.pdf', 'width', 325, 'height', 'short');
+#+end_src
+
+#+name: fig:campbell_diagram_real
+#+caption: Campbell Diagram - Real Part
+#+RESULTS:
+[[file:figs/campbell_diagram_real.png]]
+
+#+begin_src matlab :exports none :tangle no
+  figure;
   hold on;
   set(gca,'ColorOrderIndex', 1);
   plot(Ws, imag(p_ws(1, :)), '-')
@@ -211,9 +191,14 @@ It is shown in Figure [[fig:campbell_diagram]], and one can see that the system 
   yticklabels({'', '', '$-\omega_0$', '$0$', '$\omega_0$', '', ''})
 #+end_src
 
-#+begin_src matlab :tangle no :exports none :results none
-  exportFig('figs-paper/campbell_diagram.pdf', 'width', 'full', 'height', 'normal', 'png', false, 'pdf', false, 'svg', true);
+#+begin_src matlab :tangle no :exports results :results file replace
+  exportFig('figs/campbell_diagram_imag.pdf', 'width', 325, 'height', 'short');
 #+end_src
+
+#+name: fig:campbell_diagram_imag
+#+caption: Campbell Diagram - Imaginary Part
+#+RESULTS:
+[[file:figs/campbell_diagram_imag.png]]
 
 ** Simscape Model
 In order to validate all the equations of motion, a Simscape model of the same system has been developed.
@@ -268,7 +253,10 @@ Both transfer functions are compared in Figure [[fig:plant_simscape_analytical]]
   freqs = logspace(-1, 1, 1000);
 
   figure;
-  ax1 = subplot(2, 2, 1);
+  tiledlayout(3, 2, 'TileSpacing', 'None', 'Padding', 'None');
+
+  % Magnitude
+  ax1 = nexttile([2, 1]);
   hold on;
   plot(freqs, abs(squeeze(freqresp(G(1,1), freqs))), '-')
   plot(freqs, abs(squeeze(freqresp(Gth(1,1), freqs))), '--')
@@ -277,7 +265,16 @@ Both transfer functions are compared in Figure [[fig:plant_simscape_analytical]]
   set(gca, 'XTickLabel',[]); ylabel('Magnitude [m/N]');
   title('$d_u/F_u$, $d_v/F_v$');
 
-  ax3 = subplot(2, 2, 3);
+  ax2 = nexttile([2, 1]);
+  hold on;
+  plot(freqs, abs(squeeze(freqresp(G(1,2), freqs))), '-')
+  plot(freqs, abs(squeeze(freqresp(Gth(1,2), freqs))), '--')
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  set(gca, 'XTickLabel',[]); ylabel('Magnitude [m/N]');
+  title('$d_u/F_v$, $d_v/F_u$');
+
+  ax3 = nexttile;
   hold on;
   plot(freqs, 180/pi*angle(squeeze(freqresp(G(1,1), freqs))), '-')
   plot(freqs, 180/pi*angle(squeeze(freqresp(Gth(1,1), freqs))), '--')
@@ -287,16 +284,7 @@ Both transfer functions are compared in Figure [[fig:plant_simscape_analytical]]
   ylim([-180 180]);
   hold off;
 
-  ax2 = subplot(2, 2, 2);
-  hold on;
-  plot(freqs, abs(squeeze(freqresp(G(1,2), freqs))), '-')
-  plot(freqs, abs(squeeze(freqresp(Gth(1,2), freqs))), '--')
-  hold off;
-  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
-  set(gca, 'XTickLabel',[]); ylabel('Magnitude [m/N]');
-  title('$d_u/F_v$, $d_v/F_u$');
-
-  ax4 = subplot(2, 2, 4);
+  ax4 = nexttile;
   hold on;
   plot(freqs, 180/pi*angle(squeeze(freqresp(G(1,2), freqs))), '-', ...
        'DisplayName', 'Simscape')
@@ -307,7 +295,7 @@ Both transfer functions are compared in Figure [[fig:plant_simscape_analytical]]
   yticks(-180:90:180);
   ylim([-180 180]);
   hold off;
-  legend('location', 'southwest');
+  legend('location', 'southwest', 'FontSize', 8);
 
   linkaxes([ax1,ax2,ax3,ax4],'x');
   xlim([freqs(1), freqs(end)]);
@@ -315,7 +303,7 @@ Both transfer functions are compared in Figure [[fig:plant_simscape_analytical]]
 #+end_src
 
 #+begin_src matlab :tangle no :exports results :results file replace
-  exportFig('figs/plant_simscape_analytical.pdf', 'width', 'full', 'height', 'full');
+  exportFig('figs/plant_simscape_analytical.pdf', 'width', 'wide', 'height', 'tall');
 #+end_src
 
 #+name: fig:plant_simscape_analytical
@@ -341,13 +329,16 @@ The transfer functions from $[F_u, F_v]$ to $[d_u, d_v]$ are identified for the 
   end
 #+end_src
 
-They are compared in Figure [[fig:plant_compare_rotating_speed]].
+They are compared in Figures [[fig:plant_compare_rotating_speed_direct]] and [[fig:plant_compare_rotating_speed_coupling]].
 
 #+begin_src matlab :exports none
   freqs = logspace(-2, 1, 1000);
 
   figure;
-  ax1 = subplot(2, 2, 1);
+  tiledlayout(3, 1, 'TileSpacing', 'None', 'Padding', 'None');
+
+  % Magnitude
+  ax1 = nexttile([2, 1]);
   hold on;
   for W_i = 1:length(Ws)
       plot(freqs, abs(squeeze(freqresp(Gs{W_i}(1,1), freqs))), ...
@@ -356,10 +347,13 @@ They are compared in Figure [[fig:plant_compare_rotating_speed]].
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
   set(gca, 'XTickLabel',[]); ylabel('Magnitude [m/N]');
-  legend('location', 'southwest');
+  leg = legend('location', 'southwest', 'FontSize', 8);
+  leg.ItemTokenSize(1) = 6;
+  ylim([1e-4, 1e2]);
   title('$d_u/F_u$, $d_v/F_v$');
 
-  ax3 = subplot(2, 2, 3);
+  % Phase
+  ax2 = nexttile;
   hold on;
   for W_i = 1:length(Ws)
       plot(freqs, 180/pi*angle(squeeze(freqresp(Gs{W_i}(1,1), freqs))))
@@ -370,7 +364,25 @@ They are compared in Figure [[fig:plant_compare_rotating_speed]].
   ylim([-180 180]);
   hold off;
 
-  ax2 = subplot(2, 2, 2);
+  linkaxes([ax1,ax2],'x');
+  xlim([freqs(1), freqs(end)]);
+#+end_src
+
+#+begin_src matlab :tangle no :exports results :results file replace
+  exportFig('figs/plant_compare_rotating_speed_direct.pdf', 'width', 325, 'height', 'normal');
+#+end_src
+
+#+name: fig:plant_compare_rotating_speed_direct
+#+caption: Comparison of the transfer functions from $[F_u, F_v]$ to $[d_u, d_v]$ for several rotating speed - Direct Terms
+#+RESULTS:
+[[file:figs/plant_compare_rotating_speed_direct.png]]
+
+#+begin_src matlab :exports none
+  figure;
+  tiledlayout(3, 1, 'TileSpacing', 'None', 'Padding', 'None');
+
+  % Magnitude
+  ax1 = nexttile([2, 1]);
   hold on;
   for W_i = 1:length(Ws)
       plot(freqs, abs(squeeze(freqresp(Gs{W_i}(2,1), freqs))))
@@ -378,9 +390,11 @@ They are compared in Figure [[fig:plant_compare_rotating_speed]].
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
   set(gca, 'XTickLabel',[]); ylabel('Magnitude [m/N]');
+  ylim([1e-4, 1e2]);
   title('$d_u/F_v$, $d_v/F_u$');
 
-  ax4 = subplot(2, 2, 4);
+  % Phase
+  ax2 = nexttile;
   hold on;
   for W_i = 1:length(Ws)
       plot(freqs, 180/pi*angle(squeeze(freqresp(Gs{W_i}(2,1), freqs))))
@@ -391,23 +405,18 @@ They are compared in Figure [[fig:plant_compare_rotating_speed]].
   ylim([-180 180]);
   hold off;
 
-  linkaxes([ax1,ax2,ax3,ax4],'x');
+  linkaxes([ax1,ax2],'x');
   xlim([freqs(1), freqs(end)]);
-  linkaxes([ax1,ax2],'y');
 #+end_src
 
 #+begin_src matlab :tangle no :exports results :results file replace
-  exportFig('figs/plant_compare_rotating_speed.pdf', 'width', 'full', 'height', 'full');
+  exportFig('figs/plant_compare_rotating_speed_coupling.pdf', 'width', 325, 'height', 'normal');
 #+end_src
 
-#+name: fig:plant_compare_rotating_speed
-#+caption: Comparison of the transfer functions from $[F_u, F_v]$ to $[d_u, d_v]$ for several rotating speed
+#+name: fig:plant_compare_rotating_speed_coupling
+#+caption: Comparison of the transfer functions from $[F_u, F_v]$ to $[d_u, d_v]$ for several rotating speed - Coupling Terms
 #+RESULTS:
-[[file:figs/plant_compare_rotating_speed.png]]
-
-#+begin_src matlab :tangle no :exports none :results none
-  exportFig('figs-paper/plant_compare_rotating_speed.pdf', 'width', 'full', 'height', 'full', 'png', false, 'pdf', false, 'svg', true);
-#+end_src
+[[file:figs/plant_compare_rotating_speed_coupling.png]]
 
 * Problem with pure Integral Force Feedback
 :PROPERTIES:
@@ -538,7 +547,10 @@ The two are compared in Figure [[fig:plant_iff_comp_simscape_analytical]] and fo
   freqs = logspace(-1, 1, 1000);
 
   figure;
-  ax1 = subplot(2, 2, 1);
+  tiledlayout(3, 2, 'TileSpacing', 'None', 'Padding', 'None');
+
+  % Magnitude
+  ax1 = nexttile([2, 1]);
   hold on;
   plot(freqs, abs(squeeze(freqresp(Giff(1,1), freqs))), '-')
   plot(freqs, abs(squeeze(freqresp(Giff_th(1,1), freqs))), '--')
@@ -547,7 +559,16 @@ The two are compared in Figure [[fig:plant_iff_comp_simscape_analytical]] and fo
   set(gca, 'XTickLabel',[]); ylabel('Magnitude [N/N]');
   title('$f_u/F_u$, $f_v/F_v$');
 
-  ax3 = subplot(2, 2, 3);
+  ax2 = nexttile([2, 1]);
+  hold on;
+  plot(freqs, abs(squeeze(freqresp(Giff(1,2), freqs))), '-')
+  plot(freqs, abs(squeeze(freqresp(Giff_th(1,2), freqs))), '--')
+  hold off;
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
+  set(gca, 'XTickLabel',[]); ylabel('Magnitude [N/N]');
+  title('$f_u/F_v$, $f_v/F_u$');
+
+  ax3 = nexttile;
   hold on;
   plot(freqs, 180/pi*angle(squeeze(freqresp(Giff(1,1), freqs))), '-')
   plot(freqs, 180/pi*angle(squeeze(freqresp(Giff_th(1,1), freqs))), '--')
@@ -557,16 +578,7 @@ The two are compared in Figure [[fig:plant_iff_comp_simscape_analytical]] and fo
   ylim([-180 180]);
   hold off;
 
-  ax2 = subplot(2, 2, 2);
-  hold on;
-  plot(freqs, abs(squeeze(freqresp(Giff(1,2), freqs))), '-')
-  plot(freqs, abs(squeeze(freqresp(Giff_th(1,2), freqs))), '--')
-  hold off;
-  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
-  set(gca, 'XTickLabel',[]); ylabel('Magnitude [N/N]');
-  title('$f_u/F_v$, $f_v/F_u$');
-
-  ax4 = subplot(2, 2, 4);
+  ax4 = nexttile;
   hold on;
   plot(freqs, 180/pi*angle(squeeze(freqresp(Giff(1,2), freqs))), '-', ...
        'DisplayName', 'Simscape')
@@ -577,7 +589,7 @@ The two are compared in Figure [[fig:plant_iff_comp_simscape_analytical]] and fo
   yticks(-180:90:180);
   ylim([-180 180]);
   hold off;
-  legend('location', 'northeast');
+  legend('location', 'northeast', 'FontSize', 8);
 
   linkaxes([ax1,ax2,ax3,ax4],'x');
   xlim([freqs(1), freqs(end)]);
@@ -585,7 +597,7 @@ The two are compared in Figure [[fig:plant_iff_comp_simscape_analytical]] and fo
 #+end_src
 
 #+begin_src matlab :tangle no :exports results :results file replace
-  exportFig('figs/plant_iff_comp_simscape_analytical.pdf', 'width', 'full', 'height', 'full');
+  exportFig('figs/plant_iff_comp_simscape_analytical.pdf', 'width', 'wide', 'height', 'tall');
 #+end_src
 
 #+name: fig:plant_iff_comp_simscape_analytical
@@ -596,7 +608,7 @@ The two are compared in Figure [[fig:plant_iff_comp_simscape_analytical]] and fo
 ** Effect of the rotation speed
 The transfer functions from $[F_u, F_v]$ to $[f_u, f_v]$ are identified for the following rotating speeds.
 #+begin_src matlab
-  Ws = [0, 0.2, 0.7, 1.1]*w0; % Rotating Speeds [rad/s]
+  Ws = [0, 0.2, 0.7]*w0; % Rotating Speeds [rad/s]
 #+end_src
 
 #+begin_src matlab
@@ -616,8 +628,10 @@ The obtained transfer functions are shown in Figure [[fig:plant_iff_compare_rota
   freqs = logspace(-2, 1, 1000);
 
   figure;
+  tiledlayout(3, 1, 'TileSpacing', 'None', 'Padding', 'None');
 
-  ax1 = subplot(2, 1, 1);
+  % Magnitude
+  ax1 = nexttile([2, 1]);
   hold on;
   for W_i = 1:length(Ws)
       plot(freqs, abs(squeeze(freqresp(Gsiff{W_i}(1,1), freqs))), ...
@@ -626,9 +640,11 @@ The obtained transfer functions are shown in Figure [[fig:plant_iff_compare_rota
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
   set(gca, 'XTickLabel',[]); ylabel('Magnitude [N/N]');
-  legend('location', 'southeast');
+  leg = legend('location', 'southeast', 'FontSize', 8);
+  leg.ItemTokenSize(1) = 6;
 
-  ax2 = subplot(2, 1, 2);
+  % Phase
+  ax2 = nexttile;
   hold on;
   for W_i = 1:length(Ws)
       plot(freqs, 180/pi*angle(squeeze(freqresp(Gsiff{W_i}(1,1), freqs))))
@@ -644,17 +660,13 @@ The obtained transfer functions are shown in Figure [[fig:plant_iff_compare_rota
 #+end_src
 
 #+begin_src matlab :tangle no :exports results :results file replace
-  exportFig('figs/plant_iff_compare_rotating_speed.pdf', 'width', 'full', 'height', 'full');
+  exportFig('figs/plant_iff_compare_rotating_speed.pdf', 'width', 'half', 'height', 'normal');
 #+end_src
 
 #+name: fig:plant_iff_compare_rotating_speed
 #+caption: Comparison of the transfer functions from $[F_u, F_v]$ to $[f_u, f_v]$ for several rotating speed
 #+RESULTS:
 [[file:figs/plant_iff_compare_rotating_speed.png]]
-
-#+begin_src matlab :tangle no :exports none :results none
-  exportFig('figs-paper/plant_iff_compare_rotating_speed.pdf', 'width', 'full', 'height', 'full', 'png', false, 'pdf', false, 'svg', true);
-#+end_src
 
 ** Decentralized Integral Force Feedback
 The decentralized IFF controller consists of pure integrators:
@@ -693,11 +705,12 @@ It is shown that for non-null rotating speed, one pole is bound to the right-hal
   xlim([-2, 0.5]); ylim([0, 2.5]);
 
   xlabel('Real Part'); ylabel('Imaginary Part');
-  legend('location', 'northwest');
+  leg = legend('location', 'northwest', 'FontSize', 8);
+  leg.ItemTokenSize(1) = 8;
 #+end_src
 
 #+begin_src matlab :tangle no :exports results :results file replace
-  exportFig('figs/root_locus_pure_iff.pdf', 'width', 'wide', 'height', 'tall');
+  exportFig('figs/root_locus_pure_iff.pdf', 'width', 'half', 'height', 'normal');
 #+end_src
 
 #+name: fig:root_locus_pure_iff
@@ -730,11 +743,12 @@ It is shown that for non-null rotating speed, one pole is bound to the right-hal
   xlim([-2, 0.5]); ylim([0, 2.5]);
 
   xlabel('Real Part'); ylabel('Imaginary Part');
-  legend('location', 'northwest');
+  leg = legend('location', 'northwest', 'FontSize', 8);
+  leg.ItemTokenSize(1) = 8;
 #+end_src
 
 #+begin_src matlab :tangle no :exports none :results none
-  exportFig('figs-paper/root_locus_pure_iff.pdf', 'width', 'wide', 'height', 'tall', 'png', false, 'pdf', false, 'svg', true);
+  exportFig('figs-inkscape/root_locus_pure_iff.pdf', 'width', 'half', 'height', 'normal', 'png', false, 'pdf', false, 'svg', true);
 #+end_src
 
 * Integral Force Feedback with an High Pass Filter
@@ -811,8 +825,10 @@ The obtained Loop Gain is shown in Figure [[fig:loop_gain_modified_iff]].
   freqs = logspace(-2, 1, 1000);
 
   figure;
+  tiledlayout(3, 1, 'TileSpacing', 'None', 'Padding', 'None');
 
-  ax1 = subplot(2, 1, 1);
+  % Magnitude
+  ax1 = nexttile([2, 1]);
   hold on;
   plot(freqs, abs(squeeze(freqresp(Giff(1,1)*(g/s), freqs))))
   plot(freqs, abs(squeeze(freqresp(Giff(1,1)*Kiff(1,1), freqs))))
@@ -820,7 +836,8 @@ The obtained Loop Gain is shown in Figure [[fig:loop_gain_modified_iff]].
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
   set(gca, 'XTickLabel',[]); ylabel('Loop Gain');
 
-  ax2 = subplot(2, 1, 2);
+  % Phase
+  ax2 = nexttile;
   hold on;
   plot(freqs, 180/pi*angle(squeeze(freqresp(Giff(1,1)*(g/s), freqs))), ...
        'DisplayName', 'IFF')
@@ -830,7 +847,9 @@ The obtained Loop Gain is shown in Figure [[fig:loop_gain_modified_iff]].
   xlabel('Frequency [rad/s]'); ylabel('Phase [deg]');
   yticks(-180:90:180);
   ylim([-180 180]);
-  legend('location', 'southwest');
+  leg = legend('location', 'southwest', 'FontSize', 8);
+  leg.ItemTokenSize(1) = 6;
+
   hold off;
 
   linkaxes([ax1,ax2],'x');
@@ -838,17 +857,13 @@ The obtained Loop Gain is shown in Figure [[fig:loop_gain_modified_iff]].
 #+end_src
 
 #+begin_src matlab :tangle no :exports results :results file replace
-  exportFig('figs/loop_gain_modified_iff.pdf', 'width', 'full', 'height', 'full');
+  exportFig('figs/loop_gain_modified_iff.pdf', 'width', 'half', 'height', 'normal');
 #+end_src
 
 #+name: fig:loop_gain_modified_iff
 #+caption: Loop Gain for the modified IFF controller
 #+RESULTS:
 [[file:figs/loop_gain_modified_iff.png]]
-
-#+begin_src matlab :tangle no :exports none :results none
-  exportFig('figs-paper/loop_gain_modified_iff.pdf', 'width', 'full', 'height', 'full', 'png', false, 'pdf', false, 'svg', true);
-#+end_src
 
 ** Root Locus
 As shown in the Root Locus plot (Figure [[fig:root_locus_modified_iff]]), for some value of the gain, the system remains stable.
@@ -858,7 +873,6 @@ As shown in the Root Locus plot (Figure [[fig:root_locus_modified_iff]]), for so
 
   gains = logspace(-2, 4, 100);
 
-  ax1 = subplot(1, 2, 1);
   hold on;
   % Pure Integrator
   set(gca,'ColorOrderIndex',1);
@@ -883,45 +897,33 @@ As shown in the Root Locus plot (Figure [[fig:root_locus_modified_iff]]), for so
   hold off;
   axis square;
   xlim([-2, 0.5]); ylim([-1.25, 1.25]);
-  legend('location', 'northwest');
-  xlabel('Real Part'); ylabel('Imaginary Part');
-
-  ax2 = subplot(1, 2, 2);
-  hold on;
-  % Pure Integrator
-  set(gca,'ColorOrderIndex',1);
-  plot(real(pole(Giff)),  imag(pole(Giff)), 'x');
-  set(gca,'ColorOrderIndex',1);
-  plot(real(tzero(Giff)),  imag(tzero(Giff)), 'o');
-  for g = gains
-      clpoles = pole(feedback(Giff, (g/s)*eye(2)));
-      set(gca,'ColorOrderIndex',1);
-      plot(real(clpoles), imag(clpoles), '.');
-  end
-  % Modified IFF
-  set(gca,'ColorOrderIndex',2);
-  plot(real(pole(Giff)),  imag(pole(Giff)), 'x');
-  set(gca,'ColorOrderIndex',2);
-  plot(real(tzero(Giff)),  imag(tzero(Giff)), 'o');
-  for g = gains
-      clpoles = pole(feedback(Giff, (g/(wi+s))*eye(2)));
-      set(gca,'ColorOrderIndex',2);
-      plot(real(clpoles), imag(clpoles), '.');
-  end
-  hold off;
-  axis square;
-  xlim([-0.2, 0.1]); ylim([-0.15, 0.15]);
+  leg = legend('location', 'northwest', 'FontSize', 8);
+  leg.ItemTokenSize(1) = 8;
   xlabel('Real Part'); ylabel('Imaginary Part');
 #+end_src
 
 #+begin_src matlab :tangle no :exports results :results file replace
-  exportFig('figs/root_locus_modified_iff.pdf', 'width', 'full', 'height', 'tall');
+  exportFig('figs/root_locus_modified_iff.pdf', 'width', 'half', 'height', 'normal');
 #+end_src
 
 #+name: fig:root_locus_modified_iff
 #+caption: Root Locus for the modified IFF controller
 #+RESULTS:
 [[file:figs/root_locus_modified_iff.png]]
+
+#+begin_src matlab :exports none
+  xlim([-0.2, 0.1]); ylim([-0.15, 0.15]);
+  legend('hide');
+#+end_src
+
+#+begin_src matlab :tangle no :exports results :results file replace
+  exportFig('figs/root_locus_modified_iff_zoom.pdf', 'width', 'half', 'height', 'normal');
+#+end_src
+
+#+name: fig:root_locus_modified_iff_zoom
+#+caption: Root Locus for the modified IFF controller - Zoom
+#+RESULTS:
+[[file:figs/root_locus_modified_iff_zoom.png]]
 
 #+begin_src matlab :exports none :tangle no
   gains = logspace(-2, 3, 200);
@@ -931,7 +933,6 @@ As shown in the Root Locus plot (Figure [[fig:root_locus_modified_iff]]), for so
 
   figure;
 
-  ax1 = subplot(1, 2, 1);
   hold on;
   % Pure Integrator
   set(gca,'ColorOrderIndex',1);
@@ -956,39 +957,22 @@ As shown in the Root Locus plot (Figure [[fig:root_locus_modified_iff]]), for so
   hold off;
   axis square;
   xlim([-2, 0.5]); ylim([-1.25, 1.25]);
-  legend('location', 'northwest');
-  xlabel('Real Part'); ylabel('Imaginary Part');
-
-  ax2 = subplot(1, 2, 2);
-  hold on;
-  % Pure Integrator
-  set(gca,'ColorOrderIndex',1);
-  plot(real(pole(Giff)),  imag(pole(Giff)), 'x');
-  set(gca,'ColorOrderIndex',1);
-  plot(real(tzero(Giff)),  imag(tzero(Giff)), 'o');
-  for p_i = 1:size(poles_iff, 2)
-      set(gca,'ColorOrderIndex',1);
-      plot(real(poles_iff(:, p_i)), imag(poles_iff(:, p_i)), '-', ...
-           'HandleVisibility', 'off');
-  end
-  % Modified IFF
-  set(gca,'ColorOrderIndex',2);
-  plot(real(pole(Giff)),  imag(pole(Giff)), 'x');
-  set(gca,'ColorOrderIndex',2);
-  plot(real(tzero(Giff)),  imag(tzero(Giff)), 'o');
-  for p_i = 1:size(poles_iff_hpf, 2)
-      set(gca,'ColorOrderIndex',2);
-      plot(real(poles_iff_hpf(:, p_i)), imag(poles_iff_hpf(:, p_i)), '-', ...
-           'HandleVisibility', 'off');
-  end
-  hold off;
-  axis square;
-  xlim([-0.2, 0.1]); ylim([-0.15, 0.15]);
+  leg = legend('location', 'northwest', 'FontSize', 8);
+  leg.ItemTokenSize(1) = 8;
   xlabel('Real Part'); ylabel('Imaginary Part');
 #+end_src
 
 #+begin_src matlab :tangle no :exports none :results none
-  exportFig('figs-paper/root_locus_modified_iff.pdf', 'width', 'full', 'height', 'tall', 'png', false, 'pdf', false, 'svg', true);
+  exportFig('figs-inkscape/root_locus_modified_iff.pdf', 'width', 'half', 'height', 'normal', 'png', false, 'pdf', false, 'svg', true);
+#+end_src
+
+#+begin_src matlab :exports none :tangle no
+  xlim([-0.2, 0.1]); ylim([-0.15, 0.15]);
+  legend('hide');
+#+end_src
+
+#+begin_src matlab :tangle no :exports none :results none
+  exportFig('figs-inkscape/root_locus_modified_iff_zoom.pdf', 'width', 'half', 'height', 'normal', 'png', false, 'pdf', false, 'svg', true);
 #+end_src
 
 ** What is the optimal $\omega_i$ and $g$?
@@ -1002,7 +986,6 @@ In order to visualize the effect of $\omega_i$ on the attainable damping, the Ro
 
   gains = logspace(-2, 4, 100);
 
-  ax1 = subplot(1, 2, 1);
   hold on;
   for wi_i = 1:length(wis)
       set(gca,'ColorOrderIndex',wi_i);
@@ -1020,39 +1003,36 @@ In order to visualize the effect of $\omega_i$ on the attainable damping, the Ro
   axis square;
   xlim([-2.3, 0.1]); ylim([-1.2, 1.2]);
   xticks([-2:1:2]); yticks([-2:1:2]);
-  legend(L, 'location', 'northwest');
+  leg = legend(L, 'location', 'northwest', 'FontSize', 8);
+  leg.ItemTokenSize(1) = 8;
   xlabel('Real Part'); ylabel('Imaginary Part');
 
   clear L
-
-  ax2 = subplot(1, 2, 2);
-  hold on;
-  for wi_i = 1:length(wis)
-      set(gca,'ColorOrderIndex', wi_i);
-      wi = wis(wi_i);
-      for g = gains
-          clpoles = pole(feedback(Giff, (g/(wi+s))*eye(2)));
-          set(gca,'ColorOrderIndex', wi_i);
-          plot(real(clpoles), imag(clpoles), '.');
-      end
-  end
-  plot(real(pole(Giff)),  imag(pole(Giff)), 'kx');
-  plot(real(tzero(Giff)),  imag(tzero(Giff)), 'ko');
-  hold off;
-  axis square;
-  xlim([-0.2, 0.1]); ylim([-0.15, 0.15]);
-  xticks([-0.2:0.1:0.1]); yticks([-0.2:0.1:0.2]);
-  xlabel('Real Part'); ylabel('Imaginary Part');
 #+end_src
 
 #+begin_src matlab :tangle no :exports results :results file replace
-  exportFig('figs/root_locus_wi_modified_iff.pdf', 'width', 'full', 'height', 'tall');
+  exportFig('figs/root_locus_wi_modified_iff.pdf', 'width', 'half', 'height', 'normal');
 #+end_src
 
 #+name: fig:root_locus_wi_modified_iff
 #+caption: Root Locus for the modified IFF controller (zoomed plot on the left)
 #+RESULTS:
 [[file:figs/root_locus_wi_modified_iff.png]]
+
+#+begin_src matlab :exports none
+  xlim([-0.2, 0.1]); ylim([-0.15, 0.15]);
+  xticks([-0.2:0.1:0.1]); yticks([-0.2:0.1:0.2]);
+  legend('hide');
+#+end_src
+
+#+begin_src matlab :tangle no :exports results :results file replace
+  exportFig('figs/root_locus_wi_modified_iff_zoom.pdf', 'width', 'half', 'height', 'normal');
+#+end_src
+
+#+name: fig:root_locus_wi_modified_iff_zoom
+#+caption: Root Locus for the modified IFF controller (zoomed plot on the left)
+#+RESULTS:
+[[file:figs/root_locus_wi_modified_iff_zoom.png]]
 
 #+begin_src matlab :exports none :tangle no
   gains = logspace(-2, 4, 500);
@@ -1061,7 +1041,6 @@ In order to visualize the effect of $\omega_i$ on the attainable damping, the Ro
 
   figure;
 
-  ax1 = subplot(1, 2, 1);
   hold on;
   for wi_i = 1:length(wis)
       wi = wis(wi_i);
@@ -1082,34 +1061,25 @@ In order to visualize the effect of $\omega_i$ on the attainable damping, the Ro
   axis square;
   xlim([-2.3, 0.1]); ylim([-1.2, 1.2]);
   xticks([-2:1:2]); yticks([-2:1:2]);
-  legend(L, 'location', 'northwest');
+  leg = legend(L, 'location', 'northwest', 'FontSize', 8);
+  leg.ItemTokenSize(1) = 8;
   xlabel('Real Part'); ylabel('Imaginary Part');
 
   clear L
-
-  ax2 = subplot(1, 2, 2);
-  hold on;
-  for wi_i = 1:length(wis)
-      wi = wis(wi_i);
-
-      poles = rootLocusPolesSorted(Giff, 1/(s + wi)*eye(2), gains, 'd_max', 1e-4);
-      for p_i = 1:size(poles, 2)
-          set(gca,'ColorOrderIndex',wi_i);
-          plot(real(poles(:, p_i)), imag(poles(:, p_i)), '-', ...
-               'HandleVisibility', 'off');
-      end
-  end
-  plot(real(pole(Giff)),  imag(pole(Giff)), 'kx');
-  plot(real(tzero(Giff)),  imag(tzero(Giff)), 'ko');
-  hold off;
-  axis square;
-  xlim([-0.2, 0.1]); ylim([-0.15, 0.15]);
-  xticks([-0.2:0.1:0.1]); yticks([-0.2:0.1:0.2]);
-  xlabel('Real Part'); ylabel('Imaginary Part');
 #+end_src
 
 #+begin_src matlab :tangle no :exports none :results none
-  exportFig('figs-paper/root_locus_wi_modified_iff.pdf', 'width', 'full', 'height', 'tall', 'png', false, 'pdf', false, 'svg', true);
+  exportFig('figs-inkscape/root_locus_wi_modified_iff.pdf', 'width', 'half', 'height', 'normal', 'png', false, 'pdf', false, 'svg', true);
+#+end_src
+
+#+begin_src matlab :exports none :tangle no
+  xlim([-0.2, 0.1]); ylim([-0.15, 0.15]);
+  xticks([-0.2:0.1:0.1]); yticks([-0.2:0.1:0.2]);
+  legend('hide');
+#+end_src
+
+#+begin_src matlab :tangle no :exports none :results none
+  exportFig('figs-inkscape/root_locus_wi_modified_iff_zoom.pdf', 'width', 'half', 'height', 'normal', 'png', false, 'pdf', false, 'svg', true);
 #+end_src
 
 For the controller
@@ -1153,7 +1123,7 @@ To find the optimum, the gain that maximize the simultaneous damping of the mode
   plot(wis, opt_xi, '-', 'DisplayName', '$\xi_{cl}$');
   set(gca, 'YScale', 'lin');
   ylim([0,1]);
-  ylabel('Attainable Damping Ratio $\xi$');
+  ylabel('Damping Ratio $\xi$');
 
   yyaxis right
   hold on;
@@ -1165,21 +1135,17 @@ To find the optimum, the gain that maximize the simultaneous damping of the mode
 
   xlabel('$\omega_i/\omega_0$');
   set(gca, 'XScale', 'log');
-  legend('location', 'northeast');
+  legend('location', 'northeast', 'FontSize', 8);
 #+end_src
 
 #+begin_src matlab :tangle no :exports results :results file replace
-  exportFig('figs/mod_iff_damping_wi.pdf', 'width', 'wide', 'height', 'normal');
+  exportFig('figs/mod_iff_damping_wi.pdf', 'width', 'half', 'height', 'short');
 #+end_src
 
 #+name: fig:mod_iff_damping_wi
 #+caption: Simultaneous attainable damping of the closed loop poles as a function of $\omega_i$
 #+RESULTS:
 [[file:figs/mod_iff_damping_wi.png]]
-
-#+begin_src matlab :tangle no :exports none :results none
-  exportFig('figs-paper/mod_iff_damping_wi.pdf', 'width', 'wide', 'height', 'normal', 'png', false, 'pdf', false, 'svg', true);
-#+end_src
 
 * IFF with a stiffness in parallel with the force sensor
 :PROPERTIES:
@@ -1310,7 +1276,9 @@ The same transfer function from $[F_u, F_v]$ to $[f_u, f_v]$ is written down fro
   freqs = logspace(-1, 1, 1000);
 
   figure;
-  ax1 = subplot(2, 2, 1);
+  tiledlayout(3, 2, 'TileSpacing', 'None', 'Padding', 'None');
+
+  ax1 = nexttile([2, 1]);
   hold on;
   plot(freqs, abs(squeeze(freqresp(Giff(1,1), freqs))), '-')
   plot(freqs, abs(squeeze(freqresp(Giff_th(1,1), freqs))), '--')
@@ -1319,17 +1287,7 @@ The same transfer function from $[F_u, F_v]$ to $[f_u, f_v]$ is written down fro
   set(gca, 'XTickLabel',[]); ylabel('Magnitude [N/N]');
   title('$f_u/F_u$, $f_v/F_v$');
 
-  ax3 = subplot(2, 2, 3);
-  hold on;
-  plot(freqs, 180/pi*angle(squeeze(freqresp(Giff(1,1), freqs))), '-')
-  plot(freqs, 180/pi*angle(squeeze(freqresp(Giff_th(1,1), freqs))), '--')
-  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
-  xlabel('Frequency [rad/s]'); ylabel('Phase [deg]');
-  yticks(-180:90:180);
-  ylim([-180 180]);
-  hold off;
-
-  ax2 = subplot(2, 2, 2);
+  ax2 = nexttile([2, 1]);
   hold on;
   plot(freqs, abs(squeeze(freqresp(Giff(1,2), freqs))), '-')
   plot(freqs, abs(squeeze(freqresp(Giff_th(1,2), freqs))), '--')
@@ -1338,18 +1296,28 @@ The same transfer function from $[F_u, F_v]$ to $[f_u, f_v]$ is written down fro
   set(gca, 'XTickLabel',[]); ylabel('Magnitude [N/N]');
   title('$f_u/F_v$, $f_v/F_u$');
 
-  ax4 = subplot(2, 2, 4);
+  ax3 = nexttile;
   hold on;
-  plot(freqs, 180/pi*angle(squeeze(freqresp(Giff(1,2), freqs))), '-', ...
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Giff(1,1), freqs))), '-', ...
        'DisplayName', 'Simscape')
-  plot(freqs, 180/pi*angle(squeeze(freqresp(Giff_th(1,2), freqs))), '--', ...
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Giff_th(1,1), freqs))), '--', ...
        'DisplayName', 'Analytical')
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
   xlabel('Frequency [rad/s]'); ylabel('Phase [deg]');
   yticks(-180:90:180);
   ylim([-180 180]);
   hold off;
-  legend('location', 'northeast');
+  legend('location', 'southwest', 'FontSize', 8);
+
+  ax4 = nexttile;
+  hold on;
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Giff(1,2), freqs))), '-')
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Giff_th(1,2), freqs))), '--')
+  set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+  xlabel('Frequency [rad/s]'); ylabel('Phase [deg]');
+  yticks(-180:90:180);
+  ylim([-180 180]);
+  hold off;
 
   linkaxes([ax1,ax2,ax3,ax4],'x');
   xlim([freqs(1), freqs(end)]);
@@ -1357,7 +1325,7 @@ The same transfer function from $[F_u, F_v]$ to $[f_u, f_v]$ is written down fro
 #+end_src
 
 #+begin_src matlab :tangle no :exports results :results file replace
-  exportFig('figs/plant_iff_kp_comp_simscape_analytical.pdf', 'width', 'full', 'height', 'full');
+  exportFig('figs/plant_iff_kp_comp_simscape_analytical.pdf', 'width', 'wide', 'height', 'tall');
 #+end_src
 
 #+name: fig:plant_iff_kp_comp_simscape_analytical
@@ -1419,48 +1387,47 @@ One can see that for $k_p > m \Omega^2$, the systems shows alternating complex c
   freqs = logspace(-2, 1, 1000);
 
   figure;
+  tiledlayout(3, 1, 'TileSpacing', 'None', 'Padding', 'None');
 
-  ax1 = subplot(2, 1, 1);
+  % Magnitude
+  ax1 = nexttile([2, 1]);
   hold on;
-  plot(freqs, abs(squeeze(freqresp(Giff(1,1),   freqs))), 'k-')
-  plot(freqs, abs(squeeze(freqresp(Giff_s(1,1), freqs))), 'k--')
-  plot(freqs, abs(squeeze(freqresp(Giff_l(1,1), freqs))), 'k:')
+  plot(freqs, abs(squeeze(freqresp(Giff(1,1),   freqs))), 'k-', ...
+       'DisplayName', '$k_p = 0$')
+  plot(freqs, abs(squeeze(freqresp(Giff_s(1,1), freqs))), 'k--', ...
+       'DisplayName', '$k_p < m\Omega^2$')
+  plot(freqs, abs(squeeze(freqresp(Giff_l(1,1), freqs))), 'k:', ...
+       'DisplayName', '$k_p > m\Omega^2$')
   hold off;
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
   set(gca, 'XTickLabel',[]); ylabel('Magnitude [N/N]');
-  ylim([1e-5, 2e1]);
+  ylim([1e-4, 2e1]);
+  legend('location', 'southeast', 'FontSize', 8);
 
-  ax2 = subplot(2, 1, 2);
+  % Phase
+  ax2 = nexttile;
   hold on;
-  plot(freqs, 180/pi*angle(squeeze(freqresp(Giff(1,1),   freqs))), 'k-', ...
-       'DisplayName', '$k_p = 0$')
-  plot(freqs, 180/pi*angle(squeeze(freqresp(Giff_s(1,1), freqs))), 'k--', ...
-       'DisplayName', '$k_p < m\Omega^2$')
-  plot(freqs, 180/pi*angle(squeeze(freqresp(Giff_l(1,1), freqs))), 'k:', ...
-       'DisplayName', '$k_p > m\Omega^2$')
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Giff(1,1),   freqs))), 'k-')
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Giff_s(1,1), freqs))), 'k--')
+  plot(freqs, 180/pi*angle(squeeze(freqresp(Giff_l(1,1), freqs))), 'k:')
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
   xlabel('Frequency [rad/s]'); ylabel('Phase [deg]');
   yticks(-180:90:180);
   ylim([-180 180]);
   hold off;
-  legend('location', 'southwest');
 
   linkaxes([ax1,ax2],'x');
   xlim([freqs(1), freqs(end)]);
 #+end_src
 
 #+begin_src matlab :tangle no :exports results :results file replace
-  exportFig('figs/plant_iff_kp.pdf', 'width', 'full', 'height', 'full');
+  exportFig('figs/plant_iff_kp.pdf', 'width', 'half', 'height', 'normal');
 #+end_src
 
 #+name: fig:plant_iff_kp
 #+caption: Transfer function from $[F_u, F_v]$ to $[f_u, f_v]$ for $k_p = 0$, $k_p < m \Omega^2$ and $k_p > m \Omega^2$
 #+RESULTS:
 [[file:figs/plant_iff_kp.png]]
-
-#+begin_src matlab :tangle no :exports none :results none
-  exportFig('figs-paper/plant_iff_kp.pdf', 'width', 'full', 'height', 'full', 'png', false, 'pdf', false, 'svg', true);
-#+end_src
 
 ** IFF when adding a spring in parallel
 In Figure [[fig:root_locus_iff_kp]] is displayed the Root Locus in the three considered cases with
@@ -1479,11 +1446,9 @@ Thus, decentralized IFF controller with pure integrators can be used if:
 \end{equation}
 
 #+begin_src matlab :exports none
-  figure;
-
   gains = logspace(-2, 2, 100);
 
-  subplot(1,2,1);
+  figure;
   hold on;
   set(gca,'ColorOrderIndex',1);
   plot(real(pole(Giff)),  imag(pole(Giff)), 'x', ...
@@ -1528,54 +1493,32 @@ Thus, decentralized IFF controller with pure integrators can be used if:
   xlim([-1, 0.2]); ylim([0, 1.2]);
 
   xlabel('Real Part'); ylabel('Imaginary Part');
-  legend('location', 'northwest');
-
-  subplot(1,2,2);
-  hold on;
-  set(gca,'ColorOrderIndex',1);
-  plot(real(pole(Giff)),  imag(pole(Giff)), 'x');
-  set(gca,'ColorOrderIndex',1);
-  plot(real(tzero(Giff)),  imag(tzero(Giff)), 'o');
-  for g = gains
-      cl_poles = pole(feedback(Giff, (g/s)*eye(2)));
-      set(gca,'ColorOrderIndex',1);
-      plot(real(cl_poles), imag(cl_poles), '.');
-  end
-
-  set(gca,'ColorOrderIndex',2);
-  plot(real(pole(Giff_s)),  imag(pole(Giff_s)), 'x');
-  set(gca,'ColorOrderIndex',2);
-  plot(real(tzero(Giff_s)),  imag(tzero(Giff_s)), 'o');
-  for g = gains
-      cl_poles = pole(feedback(Giff_s, (g/s)*eye(2)));
-      set(gca,'ColorOrderIndex',2);
-      plot(real(cl_poles), imag(cl_poles), '.');
-  end
-
-  set(gca,'ColorOrderIndex',3);
-  plot(real(pole(Giff_l)),  imag(pole(Giff_l)), 'x');
-  set(gca,'ColorOrderIndex',3);
-  plot(real(tzero(Giff_l)),  imag(tzero(Giff_l)), 'o');
-  for g = gains
-      set(gca,'ColorOrderIndex',3);
-      cl_poles = pole(feedback(Giff_l, (g/s)*eye(2)));
-      plot(real(cl_poles), imag(cl_poles), '.');
-  end
-  hold off;
-  axis square;
-  xlim([-0.04, 0.06]); ylim([0, 0.1]);
-
-  xlabel('Real Part'); ylabel('Imaginary Part');
+  leg = legend('location', 'northwest', 'FontSize', 8);
+  leg.ItemTokenSize(1) = 8;
 #+end_src
 
 #+begin_src matlab :tangle no :exports results :results file replace
-  exportFig('figs/root_locus_iff_kp.pdf', 'width', 'full', 'height', 'tall');
+  exportFig('figs/root_locus_iff_kp.pdf', 'width', 'half', 'height', 'normal');
 #+end_src
 
 #+name: fig:root_locus_iff_kp
 #+caption: Root Locus
 #+RESULTS:
 [[file:figs/root_locus_iff_kp.png]]
+
+#+begin_src matlab :exports none
+  xlim([-0.04, 0.06]); ylim([0, 0.1]);
+  legend('hide');
+#+end_src
+
+#+begin_src matlab :tangle no :exports results :results file replace
+  exportFig('figs/root_locus_iff_kp_zoom.pdf', 'width', 'half', 'height', 'normal');
+#+end_src
+
+#+name: fig:root_locus_iff_kp_zoom
+#+caption: Root Locus
+#+RESULTS:
+[[file:figs/root_locus_iff_kp_zoom.png]]
 
 #+begin_src matlab :exports none :tangle no
   gains = logspace(-2, 2, 200);
@@ -1585,8 +1528,6 @@ Thus, decentralized IFF controller with pure integrators can be used if:
   poles_iff_l = rootLocusPolesSorted(Giff_l, 1/s*eye(2), gains, 'd_max', 1e-4);
 
   figure;
-
-  subplot(1,2,1);
   hold on;
   set(gca,'ColorOrderIndex',1);
   plot(real(pole(Giff)),  imag(pole(Giff)), 'x', ...
@@ -1628,47 +1569,21 @@ Thus, decentralized IFF controller with pure integrators can be used if:
   xlim([-1, 0.2]); ylim([0, 1.2]);
 
   xlabel('Real Part'); ylabel('Imaginary Part');
-  legend('location', 'northwest');
-
-  subplot(1,2,2);
-  hold on;
-  set(gca,'ColorOrderIndex',1);
-  plot(real(pole(Giff)),  imag(pole(Giff)), 'x');
-  set(gca,'ColorOrderIndex',1);
-  plot(real(tzero(Giff)),  imag(tzero(Giff)), 'o');
-  for p_i = 1:size(poles_iff, 2)
-      set(gca,'ColorOrderIndex',1);
-      plot(real(poles_iff(:, p_i)), imag(poles_iff(:, p_i)), '-', ...
-           'HandleVisibility', 'off');
-  end
-
-  set(gca,'ColorOrderIndex',2);
-  plot(real(pole(Giff_s)),  imag(pole(Giff_s)), 'x');
-  set(gca,'ColorOrderIndex',2);
-  plot(real(tzero(Giff_s)),  imag(tzero(Giff_s)), 'o');
-  for p_i = 1:size(poles_iff_s, 2)
-      set(gca,'ColorOrderIndex',2);
-      plot(real(poles_iff_s(:, p_i)), imag(poles_iff_s(:, p_i)), '-', ...
-           'HandleVisibility', 'off');
-  end
-
-  set(gca,'ColorOrderIndex',3);
-  plot(real(pole(Giff_l)),  imag(pole(Giff_l)), 'x');
-  set(gca,'ColorOrderIndex',3);
-  plot(real(tzero(Giff_l)),  imag(tzero(Giff_l)), 'o');
-  for p_i = 1:size(poles_iff_l, 2)
-      set(gca,'ColorOrderIndex',3);
-      plot(real(poles_iff_l(:, p_i)), imag(poles_iff_l(:, p_i)), '-', ...
-           'HandleVisibility', 'off');
-  end
-  hold off;
-  axis square;
-  xlim([-0.04, 0.06]); ylim([0, 0.1]);
-  xlabel('Real Part'); ylabel('Imaginary Part');
+  leg = legend('location', 'northwest', 'FontSize', 8);
+  leg.ItemTokenSize(1) = 8;
 #+end_src
 
 #+begin_src matlab :tangle no :exports none :results none
-  exportFig('figs-paper/root_locus_iff_kp.pdf', 'width', 'full', 'height', 'tall', 'png', false, 'pdf', false, 'svg', true);
+  exportFig('figs-inkscape/root_locus_iff_kp.pdf', 'width', 'half', 'height', 'normal', 'png', false, 'pdf', false, 'svg', true);
+#+end_src
+
+#+begin_src matlab :exports none :tangle no
+  xlim([-0.04, 0.06]); ylim([0, 0.1]);
+  legend('hide');
+#+end_src
+
+#+begin_src matlab :tangle no :exports none :results none
+  exportFig('figs-inkscape/root_locus_iff_kp_zoom.pdf', 'width', 'half', 'height', 'normal', 'png', false, 'pdf', false, 'svg', true);
 #+end_src
 
 ** Effect of $k_p$ on the attainable damping
@@ -1716,11 +1631,12 @@ It is shown that large values of $k_p$ decreases the attainable damping.
   xlim([-1.2, 0.2]); ylim([0, 1.4]);
 
   xlabel('Real Part'); ylabel('Imaginary Part');
-  legend('location', 'northwest');
+  leg = legend('location', 'northwest', 'FontSize', 8);
+  leg.ItemTokenSize(1) = 8;
 #+end_src
 
 #+begin_src matlab :tangle no :exports results :results file replace
-  exportFig('figs/root_locus_iff_kps.pdf', 'width', 'wide', 'height', 'tall');
+  exportFig('figs/root_locus_iff_kps.pdf', 'width', 'half', 'height', 'normal');
 #+end_src
 
 #+name: fig:root_locus_iff_kps
@@ -1764,11 +1680,12 @@ It is shown that large values of $k_p$ decreases the attainable damping.
   xlim([-1.2, 0.2]); ylim([0, 1.4]);
 
   xlabel('Real Part'); ylabel('Imaginary Part');
-  legend('location', 'northwest');
+  leg = legend('location', 'northwest', 'FontSize', 8);
+  leg.ItemTokenSize(1) = 8;
 #+end_src
 
 #+begin_src matlab :tangle no :exports none :results none
-  exportFig('figs-paper/root_locus_iff_kps.pdf', 'width', 'wide', 'height', 'tall', 'png', false, 'pdf', false, 'svg', true);
+  exportFig('figs-inkscape/root_locus_iff_kps.pdf', 'width', 'half', 'height', 'normal', 'png', false, 'pdf', false, 'svg', true);
 #+end_src
 
 #+begin_src matlab
@@ -1804,7 +1721,7 @@ It is shown that large values of $k_p$ decreases the attainable damping.
   plot(alphas, opt_xi, '-', 'DisplayName', '$\xi_{cl}$');
   set(gca, 'YScale', 'lin');
   ylim([0,1]);
-  ylabel('Attainable Damping Ratio $\xi$');
+  ylabel('Damping Ratio $\xi$');
 
   yyaxis right
   hold on;
@@ -1815,15 +1732,15 @@ It is shown that large values of $k_p$ decreases the attainable damping.
 
   xlabel('$\alpha$');
   set(gca, 'XScale', 'log');
-  legend('location', 'northeast');
+  legend('location', 'northeast', 'FontSize', 8);
 #+end_src
 
 #+begin_src matlab :tangle no :exports results :results file replace
-  exportFig('figs/opt_damp_alpha.pdf', 'width', 'wide', 'height', 'normal');
+  exportFig('figs/opt_damp_alpha.pdf', 'width', 'half', 'height', 'short');
 #+end_src
 
 #+name: fig:opt_damp_alpha
-#+caption:
+#+caption: Attainable damping ratio and corresponding controller gain for different parameter $\alpha$
 #+RESULTS:
 [[file:figs/opt_damp_alpha.png]]
 
@@ -1937,11 +1854,12 @@ IFF With parallel Stiffness
   xlim([-1.2, 0.05]); ylim([0, 1.25]);
 
   xlabel('Real Part'); ylabel('Imaginary Part');
-  legend('location', 'northwest');
+  leg = legend('location', 'northwest', 'FontSize', 8);
+  leg.ItemTokenSize(1) = 8;
 #+end_src
 
 #+begin_src matlab :tangle no :exports results :results file replace
-  exportFig('figs/comp_root_locus.pdf', 'width', 'wide', 'height', 'tall');
+  exportFig('figs/comp_root_locus.pdf', 'width', 'half', 'height', 'normal');
 #+end_src
 
 #+name: fig:comp_root_locus
@@ -1986,11 +1904,12 @@ IFF With parallel Stiffness
   xlim([-1.2, 0.05]); ylim([0, 1.25]);
 
   xlabel('Real Part'); ylabel('Imaginary Part');
-  legend('location', 'northwest');
+  leg = legend('location', 'northwest', 'FontSize', 8);
+  leg.ItemTokenSize(1) = 8;
 #+end_src
 
 #+begin_src matlab :tangle no :exports none :results none
-  exportFig('figs-paper/comp_root_locus.pdf', 'width', 'wide', 'height', 'tall', 'png', false, 'pdf', false, 'svg', true);
+  exportFig('figs-inkscape/comp_root_locus.pdf', 'width', 'half', 'height', 'normal', 'png', false, 'pdf', false, 'svg', true);
 #+end_src
 
 ** Controllers - Optimal Gains
@@ -2151,21 +2070,17 @@ Critical Damping corresponds to to $\xi = 1$, and thus:
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
   ylim([1e-2, 3e1]);
   xlabel('Frequency [rad/s]'); ylabel('Transmissibility [m/m]');
-  legend('location', 'southwest');
+  legend('location', 'southwest', 'FontSize', 8);
 #+end_src
 
 #+begin_src matlab :tangle no :exports results :results file replace
-  exportFig('figs/comp_transmissibility.pdf', 'width', 'wide', 'height', 'normal');
+  exportFig('figs/comp_transmissibility.pdf', 'width', 'half', 'height', 'short');
 #+end_src
 
 #+name: fig:comp_transmissibility
 #+caption: Comparison of the transmissibility
 #+RESULTS:
 [[file:figs/comp_transmissibility.png]]
-
-#+begin_src matlab :tangle no :exports none :results none
-  exportFig('figs-paper/comp_transmissibility.pdf', 'width', 'half', 'height', 'normal', 'png', false, 'pdf', false, 'svg', true);
-#+end_src
 
 *** Compliance                                                      :ignore:
 #+begin_src matlab :exports none
@@ -2185,21 +2100,17 @@ Critical Damping corresponds to to $\xi = 1$, and thus:
   set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
   ylim([1e-2, 3e1]);
   xlabel('Frequency [rad/s]'); ylabel('Compliance [m/N]');
-  legend('location', 'southwest');
+  legend('location', 'southwest', 'FontSize', 8);
 #+end_src
 
 #+begin_src matlab :tangle no :exports results :results file replace
-  exportFig('figs/comp_compliance.pdf', 'width', 'wide', 'height', 'normal');
+  exportFig('figs/comp_compliance.pdf', 'width', 'half', 'height', 'short');
 #+end_src
 
 #+name: fig:comp_compliance
 #+caption: Comparison of the obtained Compliance
 #+RESULTS:
 [[file:figs/comp_compliance.png]]
-
-#+begin_src matlab :tangle no :exports none :results none
-  exportFig('figs-paper/comp_compliance.pdf', 'width', 'half', 'height', 'normal', 'png', false, 'pdf', false, 'svg', true);
-#+end_src
 
 * Notations
 <<sec:notations>>

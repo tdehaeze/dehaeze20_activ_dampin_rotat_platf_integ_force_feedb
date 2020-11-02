@@ -55,7 +55,9 @@ Giff_th.OutputName = {'fu', 'fv'};
 freqs = logspace(-1, 1, 1000);
 
 figure;
-ax1 = subplot(2, 2, 1);
+tiledlayout(3, 2, 'TileSpacing', 'None', 'Padding', 'None');
+
+ax1 = nexttile([2, 1]);
 hold on;
 plot(freqs, abs(squeeze(freqresp(Giff(1,1), freqs))), '-')
 plot(freqs, abs(squeeze(freqresp(Giff_th(1,1), freqs))), '--')
@@ -64,17 +66,7 @@ set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
 set(gca, 'XTickLabel',[]); ylabel('Magnitude [N/N]');
 title('$f_u/F_u$, $f_v/F_v$');
 
-ax3 = subplot(2, 2, 3);
-hold on;
-plot(freqs, 180/pi*angle(squeeze(freqresp(Giff(1,1), freqs))), '-')
-plot(freqs, 180/pi*angle(squeeze(freqresp(Giff_th(1,1), freqs))), '--')
-set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
-xlabel('Frequency [rad/s]'); ylabel('Phase [deg]');
-yticks(-180:90:180);
-ylim([-180 180]);
-hold off;
-
-ax2 = subplot(2, 2, 2);
+ax2 = nexttile([2, 1]);
 hold on;
 plot(freqs, abs(squeeze(freqresp(Giff(1,2), freqs))), '-')
 plot(freqs, abs(squeeze(freqresp(Giff_th(1,2), freqs))), '--')
@@ -83,18 +75,28 @@ set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
 set(gca, 'XTickLabel',[]); ylabel('Magnitude [N/N]');
 title('$f_u/F_v$, $f_v/F_u$');
 
-ax4 = subplot(2, 2, 4);
+ax3 = nexttile;
 hold on;
-plot(freqs, 180/pi*angle(squeeze(freqresp(Giff(1,2), freqs))), '-', ...
+plot(freqs, 180/pi*angle(squeeze(freqresp(Giff(1,1), freqs))), '-', ...
      'DisplayName', 'Simscape')
-plot(freqs, 180/pi*angle(squeeze(freqresp(Giff_th(1,2), freqs))), '--', ...
+plot(freqs, 180/pi*angle(squeeze(freqresp(Giff_th(1,1), freqs))), '--', ...
      'DisplayName', 'Analytical')
 set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
 xlabel('Frequency [rad/s]'); ylabel('Phase [deg]');
 yticks(-180:90:180);
 ylim([-180 180]);
 hold off;
-legend('location', 'northeast');
+legend('location', 'southwest', 'FontSize', 8);
+
+ax4 = nexttile;
+hold on;
+plot(freqs, 180/pi*angle(squeeze(freqresp(Giff(1,2), freqs))), '-')
+plot(freqs, 180/pi*angle(squeeze(freqresp(Giff_th(1,2), freqs))), '--')
+set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
+xlabel('Frequency [rad/s]'); ylabel('Phase [deg]');
+yticks(-180:90:180);
+ylim([-180 180]);
+hold off;
 
 linkaxes([ax1,ax2,ax3,ax4],'x');
 xlim([freqs(1), freqs(end)]);
@@ -149,31 +151,34 @@ Giff_l = 1/( (s^2/w0p^2 + 2*xip*s/w0p + 1 - W^2/w0p^2)^2 + (2*(s/w0p)*(W/w0p))^2
 freqs = logspace(-2, 1, 1000);
 
 figure;
+tiledlayout(3, 1, 'TileSpacing', 'None', 'Padding', 'None');
 
-ax1 = subplot(2, 1, 1);
+% Magnitude
+ax1 = nexttile([2, 1]);
 hold on;
-plot(freqs, abs(squeeze(freqresp(Giff(1,1),   freqs))), 'k-')
-plot(freqs, abs(squeeze(freqresp(Giff_s(1,1), freqs))), 'k--')
-plot(freqs, abs(squeeze(freqresp(Giff_l(1,1), freqs))), 'k:')
+plot(freqs, abs(squeeze(freqresp(Giff(1,1),   freqs))), 'k-', ...
+     'DisplayName', '$k_p = 0$')
+plot(freqs, abs(squeeze(freqresp(Giff_s(1,1), freqs))), 'k--', ...
+     'DisplayName', '$k_p < m\Omega^2$')
+plot(freqs, abs(squeeze(freqresp(Giff_l(1,1), freqs))), 'k:', ...
+     'DisplayName', '$k_p > m\Omega^2$')
 hold off;
 set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
 set(gca, 'XTickLabel',[]); ylabel('Magnitude [N/N]');
-ylim([1e-5, 2e1]);
+ylim([1e-4, 2e1]);
+legend('location', 'southeast', 'FontSize', 8);
 
-ax2 = subplot(2, 1, 2);
+% Phase
+ax2 = nexttile;
 hold on;
-plot(freqs, 180/pi*angle(squeeze(freqresp(Giff(1,1),   freqs))), 'k-', ...
-     'DisplayName', '$k_p = 0$')
-plot(freqs, 180/pi*angle(squeeze(freqresp(Giff_s(1,1), freqs))), 'k--', ...
-     'DisplayName', '$k_p < m\Omega^2$')
-plot(freqs, 180/pi*angle(squeeze(freqresp(Giff_l(1,1), freqs))), 'k:', ...
-     'DisplayName', '$k_p > m\Omega^2$')
+plot(freqs, 180/pi*angle(squeeze(freqresp(Giff(1,1),   freqs))), 'k-')
+plot(freqs, 180/pi*angle(squeeze(freqresp(Giff_s(1,1), freqs))), 'k--')
+plot(freqs, 180/pi*angle(squeeze(freqresp(Giff_l(1,1), freqs))), 'k:')
 set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
 xlabel('Frequency [rad/s]'); ylabel('Phase [deg]');
 yticks(-180:90:180);
 ylim([-180 180]);
 hold off;
-legend('location', 'southwest');
 
 linkaxes([ax1,ax2],'x');
 xlim([freqs(1), freqs(end)]);
@@ -195,11 +200,9 @@ xlim([freqs(1), freqs(end)]);
 % \end{equation}
 
 
-figure;
-
 gains = logspace(-2, 2, 100);
 
-subplot(1,2,1);
+figure;
 hold on;
 set(gca,'ColorOrderIndex',1);
 plot(real(pole(Giff)),  imag(pole(Giff)), 'x', ...
@@ -244,44 +247,19 @@ axis square;
 xlim([-1, 0.2]); ylim([0, 1.2]);
 
 xlabel('Real Part'); ylabel('Imaginary Part');
-legend('location', 'northwest');
+leg = legend('location', 'northwest', 'FontSize', 8);
+leg.ItemTokenSize(1) = 8;
 
-subplot(1,2,2);
-hold on;
-set(gca,'ColorOrderIndex',1);
-plot(real(pole(Giff)),  imag(pole(Giff)), 'x');
-set(gca,'ColorOrderIndex',1);
-plot(real(tzero(Giff)),  imag(tzero(Giff)), 'o');
-for g = gains
-    cl_poles = pole(feedback(Giff, (g/s)*eye(2)));
-    set(gca,'ColorOrderIndex',1);
-    plot(real(cl_poles), imag(cl_poles), '.');
-end
 
-set(gca,'ColorOrderIndex',2);
-plot(real(pole(Giff_s)),  imag(pole(Giff_s)), 'x');
-set(gca,'ColorOrderIndex',2);
-plot(real(tzero(Giff_s)),  imag(tzero(Giff_s)), 'o');
-for g = gains
-    cl_poles = pole(feedback(Giff_s, (g/s)*eye(2)));
-    set(gca,'ColorOrderIndex',2);
-    plot(real(cl_poles), imag(cl_poles), '.');
-end
 
-set(gca,'ColorOrderIndex',3);
-plot(real(pole(Giff_l)),  imag(pole(Giff_l)), 'x');
-set(gca,'ColorOrderIndex',3);
-plot(real(tzero(Giff_l)),  imag(tzero(Giff_l)), 'o');
-for g = gains
-    set(gca,'ColorOrderIndex',3);
-    cl_poles = pole(feedback(Giff_l, (g/s)*eye(2)));
-    plot(real(cl_poles), imag(cl_poles), '.');
-end
-hold off;
-axis square;
+% #+name: fig:root_locus_iff_kp
+% #+caption: Root Locus
+% #+RESULTS:
+% [[file:figs/root_locus_iff_kp.png]]
+
+
 xlim([-0.04, 0.06]); ylim([0, 0.1]);
-
-xlabel('Real Part'); ylabel('Imaginary Part');
+legend('hide');
 
 % Effect of $k_p$ on the attainable damping
 % However, having large values of $k_p$ may decrease the attainable damping.
@@ -329,7 +307,8 @@ axis square;
 xlim([-1.2, 0.2]); ylim([0, 1.4]);
 
 xlabel('Real Part'); ylabel('Imaginary Part');
-legend('location', 'northwest');
+leg = legend('location', 'northwest', 'FontSize', 8);
+leg.ItemTokenSize(1) = 8;
 
 alphas = logspace(-2, 0, 100);
 
@@ -361,7 +340,7 @@ yyaxis left
 plot(alphas, opt_xi, '-', 'DisplayName', '$\xi_{cl}$');
 set(gca, 'YScale', 'lin');
 ylim([0,1]);
-ylabel('Attainable Damping Ratio $\xi$');
+ylabel('Damping Ratio $\xi$');
 
 yyaxis right
 hold on;
@@ -372,4 +351,4 @@ ylabel('Controller gain $g$');
 
 xlabel('$\alpha$');
 set(gca, 'XScale', 'log');
-legend('location', 'northeast');
+legend('location', 'northeast', 'FontSize', 8);

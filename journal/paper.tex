@@ -1,41 +1,32 @@
-% Created 2020-10-26 lun. 18:45
+% Created 2020-10-29 jeu. 12:36
 % Intended LaTeX compiler: pdflatex
 \documentclass[Afour,sagev,times]{sagej}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{graphicx}
 \usepackage{grffile}
-\usepackage{longtable}
-\usepackage{wrapfig}
-\usepackage{rotating}
 \usepackage[normalem]{ulem}
-\usepackage{amsmath}
-\usepackage{textcomp}
-\usepackage{amssymb}
 \usepackage{capt-of}
 \usepackage{hyperref}
-\usepackage[most]{tcolorbox}
 \usepackage{bm}
-\usepackage{booktabs}
-\usepackage{tabularx}
-\usepackage{array}
-\usepackage{siunitx}
 \usepackage{amsmath,amssymb,amsfonts, cases}
 \usepackage{algorithmic, graphicx, textcomp}
 \usepackage{xcolor, import}
 \usepackage{subcaption}
 \usepackage[USenglish, english]{babel}
-\usepackage{tikz}
-\usetikzlibrary{shapes.misc,arrows,arrows.meta}
+
+\usepackage{natbib}
+\bibliographystyle{SageV}
+
+\newcommand\BibTeX{{\rmfamily B\kern-.05em \textsc{i\kern-.025em b}\kern-.08em
+T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
 \hypersetup{colorlinks,bookmarksopen,bookmarksnumbered,citecolor=red,urlcolor=red}
-\newcommand\BibTeX{{\rmfamily B\kern-.05em \textsc{i\kern-.025em b}\kern-.08emT\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
-\def\volumeyear{2016}
-\author{Dehaeze Thomas\affilnum{1} and Collette Christophe\affilnum{2}}
+\author{Dehaeze Thomas\affilnum{1,3} and Collette Christophe\affilnum{1,2}}
 \affiliation{\affilnum{1}Precision Mechatronics Laboratory, University of Liege, Belgium\\
 \affilnum{2}BEAMS Department, Free University of Brussels, Belgium\\
 \affilnum{3}European Synchrotron Radiation Facility, Grenoble, France}
 \email{dehaeze.thomas@gmail.com}
-\bibliographystyle{SageV}
 \begin{abstract}
 This paper investigates the use of Integral Force Feedback (IFF) for the active damping of rotating mechanical systems.
 Guaranteed stability, typical benefit of IFF, is lost as soon as the system is rotating due to gyroscopic effects.
@@ -44,7 +35,7 @@ The first consists of slightly modifying the control law while the second consis
 Conditions for stability and optimal parameters are derived.
 The results reveal that, despite their different implementations, both modified IFF control scheme have almost identical damping authority on suspension modes.
 \end{abstract}
-\keywords{active damping, IFF}
+\keywords{Active damping, IFF, Rotating platform}
 \date{}
 \title{Active Damping of Rotating Platforms using Integral Force Feedback}
 \begin{document}
@@ -52,7 +43,7 @@ The results reveal that, despite their different implementations, both modified 
 \maketitle
 
 \section{Introduction}
-\label{sec:orgdef8140}
+\label{sec:org6f081c2}
 \label{sec:introduction}
 There is an increasing need to reduce the undesirable vibration of many sensitive equipment.
 A common method to reduce vibration is to mount the sensitive equipment on a suspended platform which attenuates the vibrations above the frequency of the suspension modes.
@@ -72,21 +63,21 @@ Section \ref{sec:iff_kp} proposes to add springs in parallel with the force sens
 Section \ref{sec:comparison} compares both proposed modifications to the classical IFF in terms of damping authority and closed-loop system behavior.
 
 \section{Dynamics of Rotating Platforms}
-\label{sec:org392ac57}
+\label{sec:org42fff77}
 \label{sec:dynamics}
 In order to study how the rotation does affect the use of IFF, a model of a suspended platform on top of a rotating stage is used.
 Figure \ref{fig:system} represents the model schematically which is the simplest in which gyroscopic forces can be studied.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.8\linewidth]{figs/system.pdf}
+\includegraphics[width=0.8\linewidth]{system.pdf}
 \caption{\label{fig:system}Schematic of the studied System}
 \end{figure}
 
-The rotating stage is supposed to be ideal, meaning it induces a perfect rotation \(\theta(t) = \Omega t\) where \(\Omega\) is the rotational speed in \(\si{\radian\per\second}\).
+The rotating stage is supposed to be ideal, meaning it induces a perfect rotation \(\theta(t) = \Omega t\) where \(\Omega\) is the rotational speed in rad/s.
 
-The suspended platform consists of two orthogonal actuators represented by three elements in parallel: a spring with a stiffness \(k\) in \(\si{\newton\per\meter}\), a dashpot with a damping coefficient \(c\) in \(\si{\newton\per\meter\second}\) and an ideal force source \(F_u, F_v\).
-A payload with a mass \(m\) in \(\si{\kilo\gram}\), representing the sensitive equipment, is mounted on the (rotating) suspended platform.
+The suspended platform consists of two orthogonal actuators represented by three elements in parallel: a spring with a stiffness \(k\) in N/m, a dashpot with a damping coefficient \(c\) in N/(m/s) and an ideal force source \(F_u, F_v\).
+A payload with a mass \(m\) in kg, representing the sensitive equipment, is mounted on the (rotating) suspended platform.
 
 Two reference frames are used: an inertial frame \((\vec{i}_x, \vec{i}_y, \vec{i}_z)\) and a uniform rotating frame \((\vec{i}_u, \vec{i}_v, \vec{i}_w)\) rigidly fixed on top of the rotating stage with \(\vec{i}_w\) aligned with the rotation axis.
 The position of the payload is represented by \((d_u, d_v, 0)\) expressed in the rotating frame.
@@ -123,33 +114,46 @@ The uniform rotation of the system induces two Gyroscopic effects as shown in \e
 \item Coriolis Forces: that couples the motion in the two orthogonal directions
 \end{itemize}
 
+One can verify that without rotation (\(\Omega = 0\)) the system becomes equivalent to two uncoupled one degree of freedom mass-spring-damper systems:
+\begin{subequations}
+\label{eq:oem_no_rotation}
+  \begin{align}
+    m \ddot{d}_u + c \dot{d}_u + k d_u &= F_u \\
+    m \ddot{d}_v + c \dot{d}_v + k d_v &= F_v
+  \end{align}
+\end{subequations}
+
 \par
 To study the dynamics of the system, the differential equations of motions \eqref{eq:eom_coupled} are transformed in the Laplace domain and the \(2 \times 2\) transfer function matrix \(\bm{G}_d\) from \(\begin{bmatrix}F_u & F_v\end{bmatrix}\) to \(\begin{bmatrix}d_u & d_v\end{bmatrix}\) is obtained
-\begin{align}
-  \begin{bmatrix} d_u \\ d_v \end{bmatrix} &= \bm{G}_d \begin{bmatrix} F_u \\ F_v \end{bmatrix} \label{eq:Gd_mimo_tf} \\
-  \bm{G}_{d}(1,1) &= \frac{ms^2 + cs + k - m \Omega^2}{\left( m s^2 + cs + k - m \Omega^2 \right)^2 + \left( 2 m \Omega s \right)^2} \\
-                  &= \bm{G}_{d}(2,2) \nonumber \\
-  \bm{G}_{d}(1,2) &= \frac{2 m \Omega s}{\left( m s^2 + cs + k - m \Omega^2 \right)^2 + \left( 2 m \Omega s \right)^2} \\
-                  &= -\bm{G}_{d}(1,2) \nonumber
-\end{align}
+\begin{equation}
+\label{eq:Gd_mimo_tf}
+  \begin{bmatrix} d_u \\ d_v \end{bmatrix} = \bm{G}_d \begin{bmatrix} F_u \\ F_v \end{bmatrix}
+\end{equation}
+
+\begin{subequations}
+  \begin{align}
+    \bm{G}_{d}(1,1) &= \frac{ms^2 + cs + k - m \Omega^2}{\left( m s^2 + cs + k - m \Omega^2 \right)^2 + \left( 2 m \Omega s \right)^2} \\
+                    &= \bm{G}_{d}(2,2) \nonumber \\
+    \bm{G}_{d}(1,2) &= \frac{2 m \Omega s}{\left( m s^2 + cs + k - m \Omega^2 \right)^2 + \left( 2 m \Omega s \right)^2} \\
+                    &= -\bm{G}_{d}(1,2) \nonumber
+  \end{align}
+\end{subequations}
 
 To simplify the analysis, the undamped natural frequency \(\omega_0\) and the damping ratio \(\xi\) are used
 \begin{equation}
-  \omega_0 = \sqrt{\frac{k}{m}} \text{ in } \si{\radian\per\second}, \quad \xi = \frac{c}{2 \sqrt{k m}}
+  \omega_0 = \sqrt{\frac{k}{m}} \text{ in rad/s}, \quad \xi = \frac{c}{2 \sqrt{k m}}
 \end{equation}
 
-The transfer function matrix \(\bm{G}_d\) becomes equal to
-\begin{equation}
+The elements of the transfer function matrix \(\bm{G}_d\) become equal to
+\begin{subequations}
 \label{eq:Gd_w0_xi_k}
-\bm{G}_{d} =
-  \frac{1}{k}
-  \begin{bmatrix}
-    \frac{\frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2}}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2} & \frac{2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0}}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2} \\
-    \frac{- 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0}}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2} & \frac{\frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2}}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2}
-  \end{bmatrix}
-\end{equation}
+  \begin{align}
+    \bm{G}_{d}(1,1) &= {\scriptstyle \frac{\frac{1}{k} \left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2} } \\
+    \bm{G}_{d}(1,2) &= {\scriptstyle \frac{\frac{1}{k} \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2} }
+  \end{align}
+\end{subequations}
 
-For all further numerical analysis in this study, we consider \(\omega_0 = \SI{1}{\radian\per\second}\), \(k = \SI{1}{\newton\per\meter}\) and \(\xi = 0.025 = \SI{2.5}{\percent}\).
+For all further numerical analysis in this study, we consider \(\omega_0 = 1\,\text{rad}/s\), \(k = 1\,N/m\) and \(\xi = 0.025 = 2.5\,\%\).
 Even though no system with such parameters will be encountered in practice, conclusions can be drawn relative to these parameters such that they can be generalized to any other set of parameters.
 
 \par
@@ -175,13 +179,13 @@ Physically, the negative stiffness term \(-m\Omega^2\) induced by centrifugal fo
 In the rest of this study, rotational speeds smaller than the undamped natural frequency of the system are assumed (\(\Omega < \omega_0\)).
 
 \begin{figure}[htbp]
-\begin{subfigure}[c]{0.49\linewidth}
-\includegraphics[width=\linewidth]{figs/campbell_diagram_real.pdf}
+\begin{subfigure}[c]{0.45\linewidth}
+\includegraphics[width=\linewidth]{campbell_diagram_real.pdf}
 \caption{\label{fig:campbell_diagram_real} Real Part}
 \end{subfigure}
 \hfill
-\begin{subfigure}[c]{0.49\linewidth}
-\includegraphics[width=\linewidth]{figs/campbell_diagram_imag.pdf}
+\begin{subfigure}[c]{0.45\linewidth}
+\includegraphics[width=\linewidth]{campbell_diagram_imag.pdf}
 \caption{\label{fig:campbell_diagram_imag} Imaginary Part}
 \end{subfigure}
 \hfill
@@ -196,13 +200,13 @@ For \(\Omega > \omega_0\), the low frequency pair of complex conjugate poles \(p
 
 \begin{figure}[htbp]
 \begin{subfigure}[c]{0.49\linewidth}
-\includegraphics[width=\linewidth]{figs/plant_compare_rotating_speed_direct.pdf}
-\caption{\label{fig:plant_compare_rotating_speed_direct} Direct Terms \(d_u/F_u\), \(d_v/F_v\)}
+\includegraphics[width=\linewidth]{plant_compare_rotating_speed_direct.pdf}
+\caption{\label{fig:plant_compare_rotating_speed_direct} Direct Terms \(d_u/F_u\) and \(d_v/F_v\)}
 \end{subfigure}
 \hfill
 \begin{subfigure}[c]{0.49\linewidth}
-\includegraphics[width=\linewidth]{figs/plant_compare_rotating_speed_coupling.pdf}
-\caption{\label{fig:plant_compare_rotating_speed_coupling} Coupling Terms \(d_v/F_u\), \(-d_u/F_v\)}
+\includegraphics[width=\linewidth]{plant_compare_rotating_speed_coupling.pdf}
+\caption{\label{fig:plant_compare_rotating_speed_coupling} Coupling Terms \(d_v/F_u\) and -\(d_u/F_v\)}
 \end{subfigure}
 \hfill
 \caption{\label{fig:plant_compare_rotating_speed}Bode Plots for \(\bm{G}_d\) for several rotational speed \(\Omega\)}
@@ -210,7 +214,7 @@ For \(\Omega > \omega_0\), the low frequency pair of complex conjugate poles \(p
 \end{figure}
 
 \section{Decentralized Integral Force Feedback}
-\label{sec:orgcaa78cf}
+\label{sec:org955ee19}
 \label{sec:iff}
 In order to apply IFF to the system, force sensors are added in series with the two actuators (Figure \ref{fig:system_iff}).
 As this study focuses on decentralized control, two identical controllers \(K_F\) are used to feedback each of the sensed force to its associated actuator and no attempt is made to counteract the interactions in the system.
@@ -218,13 +222,13 @@ The control diagram is schematically shown in Figure \ref{fig:control_diagram_if
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.8\linewidth]{figs/system_iff.pdf}
+\includegraphics[width=0.8\linewidth]{system_iff.pdf}
 \caption{\label{fig:system_iff}System with added Force Sensor in series with the actuators}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[scale=1]{figs/control_diagram_iff.pdf}
+\includegraphics[scale=1]{control_diagram_iff.pdf}
 \caption{\label{fig:control_diagram_iff}Control Diagram for decentralized IFF}
 \end{figure}
 
@@ -238,13 +242,18 @@ The forces \(\begin{bmatrix}f_u & f_v\end{bmatrix}\) measured by the two force s
 \end{equation}
 
 Inserting \eqref{eq:Gd_w0_xi_k} into \eqref{eq:measured_force} yields
-\begin{align}
-  \begin{bmatrix} f_{u} \\ f_{v} \end{bmatrix} &= \bm{G}_{f} \begin{bmatrix} F_u \\ F_v \end{bmatrix} \label{eq:Gf_mimo_tf} \\
-  \bm{G}_{f} &= \begin{bmatrix}
-  \frac{\left( \frac{s^2}{{\omega_0}^2} - \frac{\Omega^2}{{\omega_0}^2} \right) \left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right) + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2} & \frac{- \left( 2 \xi \frac{s}{\omega_0} + 1 \right) \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2} \\
-  \frac{\left( 2 \xi \frac{s}{\omega_0} + 1 \right) \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2} & \frac{\left( \frac{s^2}{{\omega_0}^2} - \frac{\Omega^2}{{\omega_0}^2} \right) \left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right) + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2}
-\end{bmatrix} \label{eq:Gf}
-\end{align}
+\begin{equation}
+\label{eq:Gf_mimo_tf}
+  \begin{bmatrix} f_{u} \\ f_{v} \end{bmatrix} = \bm{G}_{f} \begin{bmatrix} F_u \\ F_v \end{bmatrix}
+\end{equation}
+
+\begin{subequations}
+\label{eq:Gf}
+  \begin{align}
+    \bm{G}_{f}(1,1) &= {\scriptstyle \frac{\left( \frac{s^2}{{\omega_0}^2} - \frac{\Omega^2}{{\omega_0}^2} \right) \left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right) + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2} } \\
+    \bm{G}_{f}(1,2) &= {\scriptstyle \frac{- \left( 2 \xi \frac{s}{\omega_0} + 1 \right) \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2} }
+  \end{align}
+\end{subequations}
 
 The zeros of the diagonal terms of \(\bm{G}_f\) are equal to (neglecting the damping for simplicity)
 \begin{subequations}
@@ -257,7 +266,7 @@ The zeros of the diagonal terms of \(\bm{G}_f\) are equal to (neglecting the dam
 The frequency of the pair of complex conjugate zeros \(z_c\) \eqref{eq:iff_zero_cc} always lies between the frequency of the two pairs of complex conjugate poles \(p_{-}\) and \(p_{+}\) \eqref{eq:pole_values}.
 
 For non-null rotational speeds, two real zeros \(z_r\) \eqref{eq:iff_zero_real} appear in the diagonal terms inducing a non-minimum phase behavior.
-This can be seen in the Bode plot of the diagonal terms (Figure \ref{fig:plant_iff_compare_rotating_speed}) where the low frequency gain is no longer zero while the phase stays at \(\SI{180}{\degree}\).
+This can be seen in the Bode plot of the diagonal terms (Figure \ref{fig:plant_iff_compare_rotating_speed}) where the low frequency gain is no longer zero while the phase stays at \(180\,\text{deg}\).
 
 The low frequency gain of \(\bm{G}_f\) increases with the rotational speed \(\Omega\)
 \begin{equation}
@@ -272,7 +281,7 @@ This can be explained as follows: a constant force \(F_u\) induces a small displ
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth]{figs/plant_iff_compare_rotating_speed.pdf}
+\includegraphics[scale=1]{plant_iff_compare_rotating_speed.pdf}
 \caption{\label{fig:plant_iff_compare_rotating_speed}Bode plot of the dynamics from a force actuator to its collocated force sensor (\(f_u/F_u\), \(f_v/F_v\)) for several rotational speeds \(\Omega\)}
 \end{figure}
 
@@ -286,12 +295,12 @@ The two IFF controllers \(K_F\) consist of a pure integrator
 where \(g\) is a scalar representing the gain of the controller.
 
 In order to see how the IFF affects the poles of the closed loop system, a Root Locus plot (Figure \ref{fig:root_locus_pure_iff}) is constructed as follows: the poles of the closed-loop system are drawn in the complex plane as the controller gain \(g\) varies from \(0\) to \(\infty\) for the two controllers \(K_F\) simultaneously.
-As explained in \cite{preumont08_trans_zeros_struc_contr_with,skogestad07_multiv_feedb_contr}, the closed-loop poles start at the open-loop poles (shown by \(\tikz[baseline=-0.6ex] \node[cross out, draw=black, minimum size=1ex, line width=2pt, inner sep=0pt, outer sep=0pt] at (0, 0){};\)) for \(g = 0\) and coincide with the transmission zeros (shown by \(\tikz[baseline=-0.6ex] \draw[line width=2pt, inner sep=0pt, outer sep=0pt] (0,0) circle[radius=3pt];\)) as \(g \to \infty\).
-The direction of increasing gain is indicated by arrows \(\tikz[baseline=-0.6ex] \draw[-{Stealth[round]},line width=2pt] (0,0) -- (0.3,0);\).
+As explained in \cite{preumont08_trans_zeros_struc_contr_with,skogestad07_multiv_feedb_contr}, the closed-loop poles start at the open-loop poles (shown by crosses) for \(g = 0\) and coincide with the transmission zeros (shown by circles) as \(g \to \infty\).
+The direction of increasing gain is indicated by arrows.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth]{figs/root_locus_pure_iff.pdf}
+\includegraphics[scale=1]{root_locus_pure_iff.pdf}
 \caption{\label{fig:root_locus_pure_iff}Root Locus: evolution of the closed-loop poles with increasing controller gains \(g\)}
 \end{figure}
 
@@ -305,7 +314,7 @@ In order to apply decentralized IFF on rotating platforms, two solutions are pro
 The first one consists of slightly modifying the control law (Section \ref{sec:iff_hpf}) while the second one consists of adding springs in parallel with the force sensors (Section \ref{sec:iff_kp}).
 
 \section{Integral Force Feedback with High Pass Filter}
-\label{sec:org704f416}
+\label{sec:orgeb779c5}
 \label{sec:iff_hpf}
 As was explained in the previous section, the instability comes in part from the high gain at low frequency caused by the pure integrators.
 
@@ -334,13 +343,13 @@ It is interesting to note that \(g_{\text{max}}\) also corresponds to the gain w
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[scale=1]{figs/loop_gain_modified_iff.pdf}
+\includegraphics[scale=1]{loop_gain_modified_iff.pdf}
 \caption{\label{fig:loop_gain_modified_iff}Modification of the loop gain with the added HFP, \(g = 2\), \(\omega_i = 0.1 \omega_0\) and \(\Omega = 0.1 \omega_0\)}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[scale=1]{figs/root_locus_modified_iff.pdf}
+\includegraphics[scale=1]{root_locus_modified_iff.pdf}
 \caption{\label{fig:root_locus_modified_iff}Modification of the Root Locus with the added HPF, \(\omega_i = 0.1 \omega_0\) and \(\Omega = 0.1 \omega_0\)}
 \end{figure}
 
@@ -353,7 +362,7 @@ It is shown that even though small \(\omega_i\) seem to allow more damping to be
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth]{figs/root_locus_wi_modified_iff.pdf}
+\includegraphics[scale=1]{root_locus_wi_modified_iff.pdf}
 \caption{\label{fig:root_locus_wi_modified_iff}Root Locus for several HPF cut-off frequencies \(\omega_i\), \(\Omega = 0.1 \omega_0\)}
 \end{figure}
 
@@ -362,7 +371,7 @@ The gain \(g_{\text{opt}}\) at which this maximum damping is obtained is also di
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth]{figs/mod_iff_damping_wi.pdf}
+\includegraphics[scale=1]{mod_iff_damping_wi.pdf}
 \caption{\label{fig:mod_iff_damping_wi}Attainable damping ratio \(\xi_\text{cl}\) as a function of \(\omega_i/\omega_0\). Corresponding control gain \(g_\text{opt}\) and \(g_\text{max}\) are also shown}
 \end{figure}
 
@@ -374,7 +383,7 @@ Three regions can be observed:
 \end{itemize}
 
 \section{Integral Force Feedback with Parallel Springs}
-\label{sec:org1c4a11f}
+\label{sec:org41af864}
 \label{sec:iff_kp}
 In this section additional springs in parallel with the force sensors are added to counteract the negative stiffness induced by the rotation.
 Such springs are schematically shown in Figure \ref{fig:system_parallel_springs} where \(k_a\) is the stiffness of the actuator and \(k_p\) the stiffness in parallel with the actuator and force sensor.
@@ -385,14 +394,14 @@ An example of such system is shown in Figure \ref{fig:cedrat_xy25xs}.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.8\linewidth]{figs/system_parallel_springs.pdf}
+\includegraphics[width=0.8\linewidth]{system_parallel_springs.pdf}
 \caption{\label{fig:system_parallel_springs}Studied system with additional springs in parallel with the actuators and force sensors}
 \end{figure}
 
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.8\linewidth]{figs/cedrat_xy25xs.png}
+\includegraphics[width=0.8\linewidth]{cedrat_xy25xs.pdf}
 \caption{\label{fig:cedrat_xy25xs}XY Piezoelectric Stage (XY25XS from Cedrat Technology)}
 \end{figure}
 
@@ -411,16 +420,20 @@ In order to keep the overall stiffness \(k = k_a + k_p\) constant, thus not modi
 \end{equation}
 
 The equations of motion are derived and transformed in the Laplace domain
+\begin{equation}
+\label{eq:Gk_mimo_tf}
+  \begin{bmatrix} f_u \\ f_v \end{bmatrix} =
+  \bm{G}_k
+  \begin{bmatrix} F_u \\ F_v \end{bmatrix}
+\end{equation}
+
+\begin{subequations}
+\label{eq:Gk}
 \begin{align}
-\begin{bmatrix} f_u \\ f_v \end{bmatrix} &=
-\bm{G}_k
-\begin{bmatrix} F_u \\ F_v \end{bmatrix} \label{eq:Gk_mimo_tf} \\
-\bm{G}_k &=
-\begin{bmatrix}
-  \frac{\left( \frac{s^2}{{\omega_0}^2} - \frac{\Omega^2}{{\omega_0}^2} + \alpha \right) \left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right) + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2} & \frac{- \left( 2 \xi \frac{s}{\omega_0} + 1 - \alpha \right) \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2} \\
-  \frac{\left( 2 \xi \frac{s}{\omega_0} + 1 - \alpha \right) \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2} & \frac{\left( \frac{s^2}{{\omega_0}^2} - \frac{\Omega^2}{{\omega_0}^2} + \alpha \right) \left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right) + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2}
-\end{bmatrix} \label{eq:Gk}
+\bm{G}_{k}(1,1) &= {\scriptstyle \frac{\left( \frac{s^2}{{\omega_0}^2} - \frac{\Omega^2}{{\omega_0}^2} + \alpha \right) \left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right) + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2} } \\
+\bm{G}_{k}(1,2) &= {\scriptstyle \frac{- \left( 2 \xi \frac{s}{\omega_0} + 1 - \alpha \right) \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)}{\left( \frac{s^2}{{\omega_0}^2} + 2 \xi \frac{s}{\omega_0} + 1 - \frac{{\Omega}^2}{{\omega_0}^2} \right)^2 + \left( 2 \frac{\Omega}{\omega_0} \frac{s}{\omega_0} \right)^2} }
 \end{align}
+\end{subequations}
 
 Comparing \(\bm{G}_k\) \eqref{eq:Gk} with \(\bm{G}_f\) \eqref{eq:Gf} shows that while the poles of the system are kept the same, the zeros of the diagonal terms have changed.
 The two real zeros \(z_r\) \eqref{eq:iff_zero_real} that were inducing non-minimum phase behavior are transformed into complex conjugate zeros if the following condition hold
@@ -437,13 +450,13 @@ It is shown that if the added stiffness is higher than the maximum negative stif
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[scale=1]{figs/plant_iff_kp.pdf}
+\includegraphics[scale=1]{plant_iff_kp.pdf}
 \caption{\label{fig:plant_iff_kp}Bode Plot of \(f_u/F_u\) without parallel spring, with parallel springs with stiffness \(k_p < m \Omega^2\) and \(k_p > m \Omega^2\), \(\Omega = 0.1 \omega_0\)}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth]{figs/root_locus_iff_kp.pdf}
+\includegraphics[scale=1]{root_locus_iff_kp.pdf}
 \caption{\label{fig:root_locus_iff_kp}Root Locus for IFF without parallel spring, with parallel springs with stiffness \(k_p < m \Omega^2\) and \(k_p > m \Omega^2\), \(\Omega = 0.1 \omega_0\)}
 \end{figure}
 
@@ -455,23 +468,23 @@ To study this effect, Root Locus plots for several parallel stiffnesses \(k_p > 
 The frequencies of the transmission zeros of the system are increasing with the parallel stiffness \(k_p\) and the associated attainable damping is reduced.
 Therefore, even though the parallel stiffness \(k_p\) should be larger than \(m \Omega^2\) for stability reasons, it should not be taken too high as this would limit the attainable bandwidth.
 
-This is confirmed in Figure \ref{fig:mod_iff_damping_kp} where the attainable closed-loop damping ratio \(\xi_{\text{cl}}\) and the associated control gain \(g_\text{opt}\) are computed as a function of \(\alpha\).
+This is confirmed in Figure \ref{fig:opt_damp_alpha} where the attainable closed-loop damping ratio \(\xi_{\text{cl}}\) and the associated control gain \(g_\text{opt}\) are computed as a function of \(\alpha\).
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth]{figs/root_locus_iff_kps.pdf}
+\includegraphics[scale=1]{root_locus_iff_kps.pdf}
 \caption{\label{fig:root_locus_iff_kps}Comparison the Root Locus for three parallel stiffnessses \(k_p\)}
 \end{figure}
 
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth]{figs/mod_iff_damping_kp.pdf}
-\caption{\label{fig:mod_iff_damping_kp}Optimal Damping Ratio \(\xi_\text{opt}\) and the corresponding optimal gain \(g_\text{opt}\) as a function of \(\alpha\)}
+\includegraphics[scale=1]{opt_damp_alpha.pdf}
+\caption{\label{fig:opt_damp_alpha}Optimal Damping Ratio \(\xi_\text{opt}\) and the corresponding optimal gain \(g_\text{opt}\) as a function of \(\alpha\)}
 \end{figure}
 
 \section{Comparison and Discussion}
-\label{sec:orgcd508a8}
+\label{sec:org2279161}
 \label{sec:comparison}
 Two modifications to adapt the IFF control strategy to rotating platforms have been proposed in Sections \ref{sec:iff_hpf} and \ref{sec:iff_kp}.
 These two methods are now compared in terms of added damping, closed-loop compliance and transmissibility.
@@ -490,7 +503,7 @@ It is interesting to note that the maximum added damping is very similar for bot
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth]{figs/comp_root_locus.pdf}
+\includegraphics[scale=1]{comp_root_locus.pdf}
 \caption{\label{fig:comp_root_locus}Root Locus for the two proposed modifications of decentralized IFF, \(\Omega = 0.1 \omega_0\)}
 \end{figure}
 
@@ -513,14 +526,14 @@ It is also confirmed that these two techniques can significantly damp the suspen
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[scale=1]{figs/comp_transmissibility.pdf}
+\includegraphics[scale=1]{comp_transmissibility.pdf}
 \caption{\label{fig:comp_transmissibility}Comparison of the two proposed Active Damping Techniques - Transmissibility}
 \end{figure}
 
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[scale=1]{figs/comp_compliance.pdf}
+\includegraphics[scale=1]{comp_compliance.pdf}
 \caption{\label{fig:comp_compliance}Comparison of the two proposed Active Damping Techniques - Compliance}
 \end{figure}
 
@@ -529,7 +542,7 @@ On can see in Figure \ref{fig:comp_transmissibility} that the problem of the deg
 The addition of the HPF or the use of the parallel stiffness permit to limit the degradation of the compliance as compared with classical IFF (Figure \ref{fig:comp_compliance}).
 
 \section{Conclusion}
-\label{sec:org6cd163b}
+\label{sec:org40ed087}
 \label{sec:conclusion}
 
 Due to gyroscopic effects, decentralized IFF with pure integrators was shown to be unstable when applied to rotating platforms.
@@ -550,8 +563,8 @@ Future work will focus on the experimental validation of the proposed active dam
 The Matlab code that was used for this study is available under a MIT License and archived in Zenodo \cite{dehaeze20_activ_dampin_rotat_posit_platf}.
 
 \section*{Acknowledgment}
-\label{sec:org7856ac4}
-This research benefited from a FRIA grant from the French Community of Belgium.
+\label{sec:org7ba6f08}
+This research benefited from a FRIA grant (grant number: FC 31597) from the French Community of Belgium.
 
 \bibliography{ref.bib}
 \end{document}

@@ -51,8 +51,10 @@ Giff = 1/(((s^2)/(w0^2) + 2*xi*s/w0 + 1 - (W^2)/(w0^2))^2 + (2*W*s/(w0^2))^2) * 
 freqs = logspace(-2, 1, 1000);
 
 figure;
+tiledlayout(3, 1, 'TileSpacing', 'None', 'Padding', 'None');
 
-ax1 = subplot(2, 1, 1);
+% Magnitude
+ax1 = nexttile([2, 1]);
 hold on;
 plot(freqs, abs(squeeze(freqresp(Giff(1,1)*(g/s), freqs))))
 plot(freqs, abs(squeeze(freqresp(Giff(1,1)*Kiff(1,1), freqs))))
@@ -60,7 +62,8 @@ hold off;
 set(gca, 'XScale', 'log'); set(gca, 'YScale', 'log');
 set(gca, 'XTickLabel',[]); ylabel('Loop Gain');
 
-ax2 = subplot(2, 1, 2);
+% Phase
+ax2 = nexttile;
 hold on;
 plot(freqs, 180/pi*angle(squeeze(freqresp(Giff(1,1)*(g/s), freqs))), ...
      'DisplayName', 'IFF')
@@ -70,7 +73,9 @@ set(gca, 'XScale', 'log'); set(gca, 'YScale', 'lin');
 xlabel('Frequency [rad/s]'); ylabel('Phase [deg]');
 yticks(-180:90:180);
 ylim([-180 180]);
-legend('location', 'southwest');
+leg = legend('location', 'southwest', 'FontSize', 8);
+leg.ItemTokenSize(1) = 6;
+
 hold off;
 
 linkaxes([ax1,ax2],'x');
@@ -84,7 +89,6 @@ figure;
 
 gains = logspace(-2, 4, 100);
 
-ax1 = subplot(1, 2, 1);
 hold on;
 % Pure Integrator
 set(gca,'ColorOrderIndex',1);
@@ -109,35 +113,20 @@ end
 hold off;
 axis square;
 xlim([-2, 0.5]); ylim([-1.25, 1.25]);
-legend('location', 'northwest');
+leg = legend('location', 'northwest', 'FontSize', 8);
+leg.ItemTokenSize(1) = 8;
 xlabel('Real Part'); ylabel('Imaginary Part');
 
-ax2 = subplot(1, 2, 2);
-hold on;
-% Pure Integrator
-set(gca,'ColorOrderIndex',1);
-plot(real(pole(Giff)),  imag(pole(Giff)), 'x');
-set(gca,'ColorOrderIndex',1);
-plot(real(tzero(Giff)),  imag(tzero(Giff)), 'o');
-for g = gains
-    clpoles = pole(feedback(Giff, (g/s)*eye(2)));
-    set(gca,'ColorOrderIndex',1);
-    plot(real(clpoles), imag(clpoles), '.');
-end
-% Modified IFF
-set(gca,'ColorOrderIndex',2);
-plot(real(pole(Giff)),  imag(pole(Giff)), 'x');
-set(gca,'ColorOrderIndex',2);
-plot(real(tzero(Giff)),  imag(tzero(Giff)), 'o');
-for g = gains
-    clpoles = pole(feedback(Giff, (g/(wi+s))*eye(2)));
-    set(gca,'ColorOrderIndex',2);
-    plot(real(clpoles), imag(clpoles), '.');
-end
-hold off;
-axis square;
+
+
+% #+name: fig:root_locus_modified_iff
+% #+caption: Root Locus for the modified IFF controller
+% #+RESULTS:
+% [[file:figs/root_locus_modified_iff.png]]
+
+
 xlim([-0.2, 0.1]); ylim([-0.15, 0.15]);
-xlabel('Real Part'); ylabel('Imaginary Part');
+legend('hide');
 
 % What is the optimal $\omega_i$ and $g$?
 % In order to visualize the effect of $\omega_i$ on the attainable damping, the Root Locus is displayed in Figure [[fig:root_locus_wi_modified_iff]] for the following $\omega_i$:
@@ -148,7 +137,6 @@ figure;
 
 gains = logspace(-2, 4, 100);
 
-ax1 = subplot(1, 2, 1);
 hold on;
 for wi_i = 1:length(wis)
     set(gca,'ColorOrderIndex',wi_i);
@@ -166,29 +154,23 @@ hold off;
 axis square;
 xlim([-2.3, 0.1]); ylim([-1.2, 1.2]);
 xticks([-2:1:2]); yticks([-2:1:2]);
-legend(L, 'location', 'northwest');
+leg = legend(L, 'location', 'northwest', 'FontSize', 8);
+leg.ItemTokenSize(1) = 8;
 xlabel('Real Part'); ylabel('Imaginary Part');
 
 clear L
 
-ax2 = subplot(1, 2, 2);
-hold on;
-for wi_i = 1:length(wis)
-    set(gca,'ColorOrderIndex', wi_i);
-    wi = wis(wi_i);
-    for g = gains
-        clpoles = pole(feedback(Giff, (g/(wi+s))*eye(2)));
-        set(gca,'ColorOrderIndex', wi_i);
-        plot(real(clpoles), imag(clpoles), '.');
-    end
-end
-plot(real(pole(Giff)),  imag(pole(Giff)), 'kx');
-plot(real(tzero(Giff)),  imag(tzero(Giff)), 'ko');
-hold off;
-axis square;
+
+
+% #+name: fig:root_locus_wi_modified_iff
+% #+caption: Root Locus for the modified IFF controller (zoomed plot on the left)
+% #+RESULTS:
+% [[file:figs/root_locus_wi_modified_iff.png]]
+
+
 xlim([-0.2, 0.1]); ylim([-0.15, 0.15]);
 xticks([-0.2:0.1:0.1]); yticks([-0.2:0.1:0.2]);
-xlabel('Real Part'); ylabel('Imaginary Part');
+legend('hide');
 
 
 
@@ -231,7 +213,7 @@ yyaxis left
 plot(wis, opt_xi, '-', 'DisplayName', '$\xi_{cl}$');
 set(gca, 'YScale', 'lin');
 ylim([0,1]);
-ylabel('Attainable Damping Ratio $\xi$');
+ylabel('Damping Ratio $\xi$');
 
 yyaxis right
 hold on;
@@ -243,4 +225,4 @@ ylabel('Controller gain $g$');
 
 xlabel('$\omega_i/\omega_0$');
 set(gca, 'XScale', 'log');
-legend('location', 'northeast');
+legend('location', 'northeast', 'FontSize', 8);
