@@ -93,7 +93,7 @@ Figure ref:fig:system represents the model schematically which is the simplest i
 #+name: fig:system
 #+caption: Schematic of the studied System
 #+attr_latex: :width \linewidth
-[[file:figs/system.pdf]]
+[[file:figs/fig01.pdf]]
 
 The rotating stage is supposed to be ideal, meaning it induces a perfect rotation $\theta(t) = \Omega t$ where $\Omega$ is the rotational speed in $\si{\radian\per\second}$.
 
@@ -211,7 +211,7 @@ In the rest of this study, rotational speeds smaller than the undamped natural f
 #+name: fig:campbell_diagram
 #+caption: Campbell Diagram : Evolution of the complex and real parts of the system's poles as a function of the rotational speed $\Omega$
 #+attr_latex: :environment subfigure :width 0.48\linewidth :align c
-| file:figs/campbell_diagram_real.pdf     | file:figs/campbell_diagram_imag.pdf          |
+| file:figs/fig02a.pdf                    | file:figs/fig02b.pdf                         |
 | <<fig:campbell_diagram_real>> Real Part | <<fig:campbell_diagram_imag>> Imaginary Part |
 
 Looking at the transfer function matrix $\bm{G}_d$ in Eq. eqref:eq:Gd_w0_xi_k, one can see that the two diagonal (direct) terms are equal and the two off-diagonal (coupling) terms are opposite.
@@ -222,7 +222,7 @@ For $\Omega > \omega_0$, the low frequency pair of complex conjugate poles $p_{-
 #+name: fig:plant_compare_rotating_speed
 #+caption: Bode Plots for $\bm{G}_d$ for several rotational speed $\Omega$
 #+attr_latex: :environment subfigure :width 0.48\linewidth :align c
-| file:figs/plant_compare_rotating_speed_direct.pdf        | file:figs/plant_compare_rotating_speed_coupling.pdf          |
+| file:figs/fig03a.pdf                                     | file:figs/fig03b.pdf                                         |
 | <<fig:plant_compare_rotating_speed_direct>> Direct Terms | <<fig:plant_compare_rotating_speed_coupling>> Coupling Terms |
 
 * Decentralized Integral Force Feedback
@@ -235,12 +235,12 @@ The control diagram is schematically shown in Figure ref:fig:control_diagram_iff
 #+name: fig:system_iff
 #+caption: System with added Force Sensor in series with the actuators
 #+attr_latex: :width \linewidth
-[[file:figs/system_iff.pdf]]
+[[file:figs/fig04.pdf]]
 
 #+name: fig:control_diagram_iff
 #+caption: Control Diagram for decentralized IFF
 #+attr_latex: :scale 1
-[[file:figs/control_diagram_iff.pdf]]
+[[file:figs/fig05.pdf]]
 
 #+latex: \par
 
@@ -294,7 +294,7 @@ This can be explained as follows: a constant force $F_u$ induces a small displac
 #+name: fig:plant_iff_compare_rotating_speed
 #+caption: Bode plot of the dynamics from a force actuator to its collocated force sensor ($f_u/F_u$, $f_v/F_v$) for several rotational speeds $\Omega$
 #+attr_latex: :width \linewidth
-[[file:figs/plant_iff_compare_rotating_speed.pdf]]
+[[file:figs/fig06.pdf]]
 
 #+latex: \par
 
@@ -317,7 +317,7 @@ The direction of increasing gain is indicated by arrows $\tikz[baseline=-0.6ex] 
 #+name: fig:root_locus_pure_iff
 #+caption: Root Locus: evolution of the closed-loop poles with increasing controller gains $g$
 #+attr_latex: :scale 1
-[[file:figs/root_locus_pure_iff.pdf]]
+[[file:figs/fig07.pdf]]
 
 Whereas collocated IFF is usually associated with unconditional stability cite:preumont91_activ, this property is lost as soon as the rotational speed in non-null due to gyroscopic effects.
 This can be seen in the Root Locus plot (Figure ref:fig:root_locus_pure_iff) where the poles corresponding to the controller are bound to the right half plane implying closed-loop system instability.
@@ -361,12 +361,12 @@ It is interesting to note that $g_{\text{max}}$ also corresponds to the gain whe
 #+name: fig:loop_gain_modified_iff
 #+caption: Modification of the loop gain with the added HFP, $g = 2$, $\omega_i = 0.1 \omega_0$ and $\Omega = 0.1 \omega_0$
 #+attr_latex: :width \linewidth
-[[file:figs/loop_gain_modified_iff.pdf]]
+[[file:figs/fig08.pdf]]
 
 #+name: fig:root_locus_modified_iff
 #+caption: Modification of the Root Locus with the added HPF, $\omega_i = 0.1 \omega_0$ and $\Omega = 0.1 \omega_0$
 #+attr_latex: :scale 1
-[[file:figs/root_locus_modified_iff.pdf]]
+[[file:figs/fig09.pdf]]
 
 #+latex: \par
 
@@ -380,7 +380,7 @@ It is shown that even though small $\omega_i$ seem to allow more damping to be a
 #+name: fig:root_locus_wi_modified_iff
 #+caption: Root Locus for several HPF cut-off frequencies $\omega_i$, $\Omega = 0.1 \omega_0$
 #+attr_latex: :width \linewidth
-[[file:figs/root_locus_wi_modified_iff.pdf]]
+[[file:figs/fig10.pdf]]
 
 In order to study this trade off, the attainable closed-loop damping ratio $\xi_{\text{cl}}$ is computed as a function of $\omega_i/\omega_0$.
 The gain $g_{\text{opt}}$ at which this maximum damping is obtained is also displayed and compared with the gain $g_{\text{max}}$ at which the system becomes unstable (Figure ref:fig:mod_iff_damping_wi).
@@ -388,7 +388,7 @@ The gain $g_{\text{opt}}$ at which this maximum damping is obtained is also disp
 #+name: fig:mod_iff_damping_wi
 #+caption: Attainable damping ratio $\xi_\text{cl}$ as a function of $\omega_i/\omega_0$. Corresponding control gain $g_\text{opt}$ and $g_\text{max}$ are also shown
 #+attr_latex: :width \linewidth
-[[file:figs/mod_iff_damping_wi.pdf]]
+[[file:figs/fig11.pdf]]
 
 Three regions can be observed:
 - $\omega_i/\omega_0 < 0.02$: the added damping is limited by the maximum allowed control gain $g_{\text{max}}$
@@ -408,13 +408,13 @@ An example of such system is shown in Figure ref:fig:cedrat_xy25xs.
 #+name: fig:system_parallel_springs
 #+caption: Studied system with additional springs in parallel with the actuators and force sensors
 #+attr_latex: :width \linewidth
-[[file:figs/system_parallel_springs.pdf]]
+[[file:figs/fig12.pdf]]
 
 
 #+name: fig:cedrat_xy25xs
 #+caption: XY Piezoelectric Stage (XY25XS from Cedrat Technology)
 #+attr_latex: :width 0.8\linewidth
-[[file:figs/cedrat_xy25xs.png]]
+[[file:figs/fig13.pdf]]
 
 #+latex: \par
 
@@ -465,12 +465,12 @@ It is shown that if the added stiffness is higher than the maximum negative stif
 #+name: fig:plant_iff_kp
 #+caption: Bode plot of $f_u/F_u$ without parallel spring, with parallel springs with stiffness $k_p < m \Omega^2$ and $k_p > m \Omega^2$, $\Omega = 0.1 \omega_0$
 #+attr_latex: :width \linewidth
-[[file:figs/plant_iff_kp.pdf]]
+[[file:figs/fig14.pdf]]
 
 #+name: fig:root_locus_iff_kp
 #+caption: Root Locus for IFF without parallel spring, with parallel springs with stiffness $k_p < m \Omega^2$ and $k_p > m \Omega^2$, $\Omega = 0.1 \omega_0$
 #+attr_latex: :width \linewidth
-[[file:figs/root_locus_iff_kp.pdf]]
+[[file:figs/fig15.pdf]]
 
 #+latex: \par
 
@@ -487,13 +487,13 @@ This is confirmed in Figure ref:fig:opt_damp_alpha where the attainable closed-l
 #+name: fig:root_locus_iff_kps
 #+caption: Comparison the Root Locus for three parallel stiffnessses $k_p$
 #+attr_latex: :scale 1
-[[file:figs/root_locus_iff_kps.pdf]]
+[[file:figs/fig16.pdf]]
 
 
 #+name: fig:opt_damp_alpha
 #+caption: Optimal Damping Ratio $\xi_\text{opt}$ and the corresponding optimal gain $g_\text{opt}$ as a function of $\alpha$
 #+attr_latex: :width \linewidth
-[[file:figs/opt_damp_alpha.pdf]]
+[[file:figs/fig17.pdf]]
 
 * Comparison and Discussion
 <<sec:comparison>>
@@ -518,7 +518,7 @@ It is interesting to note that the maximum added damping is very similar for bot
 #+name: fig:comp_root_locus
 #+caption: Root Locus for the two proposed modifications of decentralized IFF, $\Omega = 0.1 \omega_0$
 #+attr_latex: :scale 1
-[[file:figs/comp_root_locus.pdf]]
+[[file:figs/fig18.pdf]]
 
 #+latex: \par
 
@@ -542,13 +542,13 @@ It is also confirmed that these two techniques can significantly damp the suspen
 #+name: fig:comp_transmissibility
 #+caption: Comparison of the two proposed Active Damping Techniques - Transmissibility
 #+attr_latex: :scale 1
-[[file:figs/comp_transmissibility.pdf]]
+[[file:figs/fig19.pdf]]
 
 
 #+name: fig:comp_compliance
 #+caption: Comparison of the two proposed Active Damping Techniques - Compliance
 #+attr_latex: :scale 1
-[[file:figs/comp_compliance.pdf]]
+[[file:figs/fig20.pdf]]
 
 On can see in Figure ref:fig:comp_transmissibility that the problem of the degradation of the transmissibility at high frequency when using passive damping techniques is overcome by the use of IFF.
 

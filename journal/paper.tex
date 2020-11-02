@@ -1,4 +1,4 @@
-% Created 2020-11-02 lun. 14:38
+% Created 2020-11-02 lun. 14:46
 % Intended LaTeX compiler: pdflatex
 \documentclass[10pt]{iopart}
 
@@ -50,7 +50,7 @@ The results reveal that, despite their different implementations, both modified 
 \ioptwocol
 
 \section{Introduction}
-\label{sec:orgcbd1527}
+\label{sec:org45302f3}
 \label{sec:introduction}
 There is an increasing need to reduce the undesirable vibration of many sensitive equipment.
 A common method to reduce vibration is to mount the sensitive equipment on a suspended platform which attenuates the vibrations above the frequency of the suspension modes.
@@ -70,14 +70,14 @@ Section \ref{sec:iff_kp} proposes to add springs in parallel with the force sens
 Section \ref{sec:comparison} compares both proposed modifications to the classical IFF in terms of damping authority and closed-loop system behavior.
 
 \section{Dynamics of Rotating Platforms}
-\label{sec:org90939ec}
+\label{sec:org2c62ca5}
 \label{sec:dynamics}
 In order to study how the rotation does affect the use of IFF, a model of a suspended platform on top of a rotating stage is used.
 Figure \ref{fig:system} represents the model schematically which is the simplest in which gyroscopic forces can be studied.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth]{figs/system.pdf}
+\includegraphics[width=\linewidth]{figs/fig01.pdf}
 \caption{\label{fig:system}Schematic of the studied System}
 \end{figure}
 
@@ -192,12 +192,12 @@ In the rest of this study, rotational speeds smaller than the undamped natural f
 
 \begin{figure}[htbp]
 \begin{subfigure}[c]{0.48\linewidth}
-\includegraphics[width=\linewidth]{figs/campbell_diagram_real.pdf}
+\includegraphics[width=\linewidth]{figs/fig02a.pdf}
 \caption{\label{fig:campbell_diagram_real} Real Part}
 \end{subfigure}
 \hfill
 \begin{subfigure}[c]{0.48\linewidth}
-\includegraphics[width=\linewidth]{figs/campbell_diagram_imag.pdf}
+\includegraphics[width=\linewidth]{figs/fig02b.pdf}
 \caption{\label{fig:campbell_diagram_imag} Imaginary Part}
 \end{subfigure}
 \hfill
@@ -212,12 +212,12 @@ For \(\Omega > \omega_0\), the low frequency pair of complex conjugate poles \(p
 
 \begin{figure}[htbp]
 \begin{subfigure}[c]{0.48\linewidth}
-\includegraphics[width=\linewidth]{figs/plant_compare_rotating_speed_direct.pdf}
+\includegraphics[width=\linewidth]{figs/fig03a.pdf}
 \caption{\label{fig:plant_compare_rotating_speed_direct} Direct Terms}
 \end{subfigure}
 \hfill
 \begin{subfigure}[c]{0.48\linewidth}
-\includegraphics[width=\linewidth]{figs/plant_compare_rotating_speed_coupling.pdf}
+\includegraphics[width=\linewidth]{figs/fig03b.pdf}
 \caption{\label{fig:plant_compare_rotating_speed_coupling} Coupling Terms}
 \end{subfigure}
 \hfill
@@ -226,7 +226,7 @@ For \(\Omega > \omega_0\), the low frequency pair of complex conjugate poles \(p
 \end{figure}
 
 \section{Decentralized Integral Force Feedback}
-\label{sec:orgabd3121}
+\label{sec:orgaa40c6a}
 \label{sec:iff}
 In order to apply IFF to the system, force sensors are added in series with the two actuators (Figure \ref{fig:system_iff}).
 As this study focuses on decentralized control, two identical controllers \(K_F\) are used to feedback each of the sensed force to its associated actuator and no attempt is made to counteract the interactions in the system.
@@ -234,13 +234,13 @@ The control diagram is schematically shown in Figure \ref{fig:control_diagram_if
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth]{figs/system_iff.pdf}
+\includegraphics[width=\linewidth]{figs/fig04.pdf}
 \caption{\label{fig:system_iff}System with added Force Sensor in series with the actuators}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[scale=1]{figs/control_diagram_iff.pdf}
+\includegraphics[scale=1]{figs/fig05.pdf}
 \caption{\label{fig:control_diagram_iff}Control Diagram for decentralized IFF}
 \end{figure}
 
@@ -293,7 +293,7 @@ This can be explained as follows: a constant force \(F_u\) induces a small displ
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth]{figs/plant_iff_compare_rotating_speed.pdf}
+\includegraphics[width=\linewidth]{figs/fig06.pdf}
 \caption{\label{fig:plant_iff_compare_rotating_speed}Bode plot of the dynamics from a force actuator to its collocated force sensor (\(f_u/F_u\), \(f_v/F_v\)) for several rotational speeds \(\Omega\)}
 \end{figure}
 
@@ -315,7 +315,7 @@ The direction of increasing gain is indicated by arrows \(\tikz[baseline=-0.6ex]
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[scale=1]{figs/root_locus_pure_iff.pdf}
+\includegraphics[scale=1]{figs/fig07.pdf}
 \caption{\label{fig:root_locus_pure_iff}Root Locus: evolution of the closed-loop poles with increasing controller gains \(g\)}
 \end{figure}
 
@@ -329,7 +329,7 @@ In order to apply decentralized IFF on rotating platforms, two solutions are pro
 The first one consists of slightly modifying the control law (Section \ref{sec:iff_hpf}) while the second one consists of adding springs in parallel with the force sensors (Section \ref{sec:iff_kp}).
 
 \section{Integral Force Feedback with High Pass Filter}
-\label{sec:orgb936693}
+\label{sec:orgcc80b31}
 \label{sec:iff_hpf}
 As was explained in the previous section, the instability comes in part from the high gain at low frequency caused by the pure integrators.
 
@@ -358,13 +358,13 @@ It is interesting to note that \(g_{\text{max}}\) also corresponds to the gain w
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth]{figs/loop_gain_modified_iff.pdf}
+\includegraphics[width=\linewidth]{figs/fig08.pdf}
 \caption{\label{fig:loop_gain_modified_iff}Modification of the loop gain with the added HFP, \(g = 2\), \(\omega_i = 0.1 \omega_0\) and \(\Omega = 0.1 \omega_0\)}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[scale=1]{figs/root_locus_modified_iff.pdf}
+\includegraphics[scale=1]{figs/fig09.pdf}
 \caption{\label{fig:root_locus_modified_iff}Modification of the Root Locus with the added HPF, \(\omega_i = 0.1 \omega_0\) and \(\Omega = 0.1 \omega_0\)}
 \end{figure}
 
@@ -377,7 +377,7 @@ It is shown that even though small \(\omega_i\) seem to allow more damping to be
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth]{figs/root_locus_wi_modified_iff.pdf}
+\includegraphics[width=\linewidth]{figs/fig10.pdf}
 \caption{\label{fig:root_locus_wi_modified_iff}Root Locus for several HPF cut-off frequencies \(\omega_i\), \(\Omega = 0.1 \omega_0\)}
 \end{figure}
 
@@ -386,7 +386,7 @@ The gain \(g_{\text{opt}}\) at which this maximum damping is obtained is also di
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth]{figs/mod_iff_damping_wi.pdf}
+\includegraphics[width=\linewidth]{figs/fig11.pdf}
 \caption{\label{fig:mod_iff_damping_wi}Attainable damping ratio \(\xi_\text{cl}\) as a function of \(\omega_i/\omega_0\). Corresponding control gain \(g_\text{opt}\) and \(g_\text{max}\) are also shown}
 \end{figure}
 
@@ -398,7 +398,7 @@ Three regions can be observed:
 \end{itemize}
 
 \section{Integral Force Feedback with Parallel Springs}
-\label{sec:org9c04fb0}
+\label{sec:org7af993d}
 \label{sec:iff_kp}
 In this section additional springs in parallel with the force sensors are added to counteract the negative stiffness induced by the rotation.
 Such springs are schematically shown in Figure \ref{fig:system_parallel_springs} where \(k_a\) is the stiffness of the actuator and \(k_p\) the stiffness in parallel with the actuator and force sensor.
@@ -409,14 +409,14 @@ An example of such system is shown in Figure \ref{fig:cedrat_xy25xs}.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth]{figs/system_parallel_springs.pdf}
+\includegraphics[width=\linewidth]{figs/fig12.pdf}
 \caption{\label{fig:system_parallel_springs}Studied system with additional springs in parallel with the actuators and force sensors}
 \end{figure}
 
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.8\linewidth]{figs/cedrat_xy25xs.png}
+\includegraphics[width=0.8\linewidth]{figs/fig13.pdf}
 \caption{\label{fig:cedrat_xy25xs}XY Piezoelectric Stage (XY25XS from Cedrat Technology)}
 \end{figure}
 
@@ -466,13 +466,13 @@ It is shown that if the added stiffness is higher than the maximum negative stif
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth]{figs/plant_iff_kp.pdf}
+\includegraphics[width=\linewidth]{figs/fig14.pdf}
 \caption{\label{fig:plant_iff_kp}Bode plot of \(f_u/F_u\) without parallel spring, with parallel springs with stiffness \(k_p < m \Omega^2\) and \(k_p > m \Omega^2\), \(\Omega = 0.1 \omega_0\)}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth]{figs/root_locus_iff_kp.pdf}
+\includegraphics[width=\linewidth]{figs/fig15.pdf}
 \caption{\label{fig:root_locus_iff_kp}Root Locus for IFF without parallel spring, with parallel springs with stiffness \(k_p < m \Omega^2\) and \(k_p > m \Omega^2\), \(\Omega = 0.1 \omega_0\)}
 \end{figure}
 
@@ -488,19 +488,19 @@ This is confirmed in Figure \ref{fig:opt_damp_alpha} where the attainable closed
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[scale=1]{figs/root_locus_iff_kps.pdf}
+\includegraphics[scale=1]{figs/fig16.pdf}
 \caption{\label{fig:root_locus_iff_kps}Comparison the Root Locus for three parallel stiffnessses \(k_p\)}
 \end{figure}
 
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth]{figs/opt_damp_alpha.pdf}
+\includegraphics[width=\linewidth]{figs/fig17.pdf}
 \caption{\label{fig:opt_damp_alpha}Optimal Damping Ratio \(\xi_\text{opt}\) and the corresponding optimal gain \(g_\text{opt}\) as a function of \(\alpha\)}
 \end{figure}
 
 \section{Comparison and Discussion}
-\label{sec:org6e6cf51}
+\label{sec:orgc3da302}
 \label{sec:comparison}
 Two modifications to adapt the IFF control strategy to rotating platforms have been proposed in Sections \ref{sec:iff_hpf} and \ref{sec:iff_kp}.
 These two methods are now compared in terms of added damping, closed-loop compliance and transmissibility.
@@ -519,7 +519,7 @@ It is interesting to note that the maximum added damping is very similar for bot
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[scale=1]{figs/comp_root_locus.pdf}
+\includegraphics[scale=1]{figs/fig18.pdf}
 \caption{\label{fig:comp_root_locus}Root Locus for the two proposed modifications of decentralized IFF, \(\Omega = 0.1 \omega_0\)}
 \end{figure}
 
@@ -542,14 +542,14 @@ It is also confirmed that these two techniques can significantly damp the suspen
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[scale=1]{figs/comp_transmissibility.pdf}
+\includegraphics[scale=1]{figs/fig19.pdf}
 \caption{\label{fig:comp_transmissibility}Comparison of the two proposed Active Damping Techniques - Transmissibility}
 \end{figure}
 
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[scale=1]{figs/comp_compliance.pdf}
+\includegraphics[scale=1]{figs/fig20.pdf}
 \caption{\label{fig:comp_compliance}Comparison of the two proposed Active Damping Techniques - Compliance}
 \end{figure}
 
@@ -558,7 +558,7 @@ On can see in Figure \ref{fig:comp_transmissibility} that the problem of the deg
 The addition of the HPF or the use of the parallel stiffness permit to limit the degradation of the compliance as compared with classical IFF (Figure \ref{fig:comp_compliance}).
 
 \section{Conclusion}
-\label{sec:org0fc9335}
+\label{sec:org3e5d606}
 \label{sec:conclusion}
 
 Due to gyroscopic effects, decentralized IFF with pure integrators was shown to be unstable when applied to rotating platforms.
@@ -579,11 +579,11 @@ Future work will focus on the experimental validation of the proposed active dam
 The Matlab code that was used for this study is available under a MIT License and archived in Zenodo \cite{dehaeze20_activ_dampin_rotat_posit_platf}.
 
 \section*{Acknowledgments}
-\label{sec:org45730f8}
+\label{sec:org2fdf2e5}
 This research benefited from a FRIA grant from the French Community of Belgium.
 
 \section*{References}
-\label{sec:org676de81}
+\label{sec:org684d4d0}
 \bibliographystyle{iopart-num}
 \bibliography{ref.bib}
 \end{document}
