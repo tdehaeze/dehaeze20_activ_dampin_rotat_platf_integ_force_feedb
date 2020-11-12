@@ -3,17 +3,13 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-10-27 mar. 09:18 -->
+<!-- 2020-11-12 jeu. 10:40 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>Active Damping of Rotating Platforms using Integral Force Feedback - Matlab Computation</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="Thomas Dehaeze" />
-<link rel="stylesheet" type="text/css" href="../css/htmlize.css"/>
-<link rel="stylesheet" type="text/css" href="../css/readtheorg.css"/>
-<script src="../js/jquery.min.js"></script>
-<script src="../js/bootstrap.min.js"></script>
-<script src="../js/jquery.stickytableheaders.min.js"></script>
-<script src="../js/readtheorg.js"></script>
+<link rel="stylesheet" type="text/css" href="https://research.tdehaeze.xyz/css/style.css"/>
+<script type="text/javascript" src="https://research.tdehaeze.xyz/js/script.js"></script>
 <script>MathJax = {
           tex: {
             tags: 'ams',
@@ -34,58 +30,58 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org4dd3571">1. System Description and Analysis</a>
+<li><a href="#org19f8b41">1. System Description and Analysis</a>
 <ul>
-<li><a href="#org102a388">1.1. System description</a></li>
-<li><a href="#orgf2f55e2">1.2. Equations</a></li>
-<li><a href="#org5e98250">1.3. Numerical Values</a></li>
-<li><a href="#org3640334">1.4. Campbell Diagram</a></li>
-<li><a href="#orga12b88a">1.5. Simscape Model</a></li>
-<li><a href="#org375be86">1.6. Effect of the rotation speed</a></li>
+<li><a href="#org98a8dea">1.1. System description</a></li>
+<li><a href="#orgfaaa549">1.2. Equations</a></li>
+<li><a href="#org34789ad">1.3. Numerical Values</a></li>
+<li><a href="#org1e81232">1.4. Campbell Diagram</a></li>
+<li><a href="#orga9a73f1">1.5. Simscape Model</a></li>
+<li><a href="#org70c5289">1.6. Effect of the rotation speed</a></li>
 </ul>
 </li>
-<li><a href="#orgcf5b992">2. Problem with pure Integral Force Feedback</a>
+<li><a href="#orgd11a8cf">2. Problem with pure Integral Force Feedback</a>
 <ul>
-<li><a href="#org8f2a6ef">2.1. Plant Parameters</a></li>
-<li><a href="#orgfb449f5">2.2. Equations</a></li>
-<li><a href="#org05033a6">2.3. Comparison of the Analytical Model and the Simscape Model</a></li>
-<li><a href="#orge2f7644">2.4. Effect of the rotation speed</a></li>
-<li><a href="#org5688a92">2.5. Decentralized Integral Force Feedback</a></li>
+<li><a href="#org9987b80">2.1. Plant Parameters</a></li>
+<li><a href="#orgbd3b27a">2.2. Equations</a></li>
+<li><a href="#orgfa7d7a2">2.3. Comparison of the Analytical Model and the Simscape Model</a></li>
+<li><a href="#orgcab9733">2.4. Effect of the rotation speed</a></li>
+<li><a href="#org358cdd6">2.5. Decentralized Integral Force Feedback</a></li>
 </ul>
 </li>
-<li><a href="#org073f9e0">3. Integral Force Feedback with an High Pass Filter</a>
+<li><a href="#orgd71a2dc">3. Integral Force Feedback with an High Pass Filter</a>
 <ul>
-<li><a href="#org2a5c510">3.1. Plant Parameters</a></li>
-<li><a href="#org7bb3bef">3.2. Modified Integral Force Feedback Controller</a></li>
-<li><a href="#org9335519">3.3. Root Locus</a></li>
-<li><a href="#org1172118">3.4. What is the optimal \(\omega_i\) and \(g\)?</a></li>
+<li><a href="#orgf7495fd">3.1. Plant Parameters</a></li>
+<li><a href="#org2950938">3.2. Modified Integral Force Feedback Controller</a></li>
+<li><a href="#org38695fe">3.3. Root Locus</a></li>
+<li><a href="#org60aa70e">3.4. What is the optimal \(\omega_i\) and \(g\)?</a></li>
 </ul>
 </li>
-<li><a href="#org4422289">4. IFF with a stiffness in parallel with the force sensor</a>
+<li><a href="#orgdb918b6">4. IFF with a stiffness in parallel with the force sensor</a>
 <ul>
-<li><a href="#org114428c">4.1. Schematic</a></li>
-<li><a href="#orgfa353f8">4.2. Equations</a></li>
-<li><a href="#orgfc70f3c">4.3. Plant Parameters</a></li>
-<li><a href="#orgc8587f7">4.4. Comparison of the Analytical Model and the Simscape Model</a></li>
-<li><a href="#orgee3f689">4.5. Effect of the parallel stiffness on the IFF plant</a></li>
-<li><a href="#orgd0375c8">4.6. IFF when adding a spring in parallel</a></li>
-<li><a href="#org75d1588">4.7. Effect of \(k_p\) on the attainable damping</a></li>
+<li><a href="#orgad442be">4.1. Schematic</a></li>
+<li><a href="#orgeaf20e9">4.2. Equations</a></li>
+<li><a href="#org754aa7c">4.3. Plant Parameters</a></li>
+<li><a href="#org09dcf36">4.4. Comparison of the Analytical Model and the Simscape Model</a></li>
+<li><a href="#orga083ad0">4.5. Effect of the parallel stiffness on the IFF plant</a></li>
+<li><a href="#org9a801a8">4.6. IFF when adding a spring in parallel</a></li>
+<li><a href="#org43bf919">4.7. Effect of \(k_p\) on the attainable damping</a></li>
 </ul>
 </li>
-<li><a href="#orgddb3c90">5. Comparison</a>
+<li><a href="#org49b4648">5. Comparison</a>
 <ul>
-<li><a href="#org431d055">5.1. Plant Parameters</a></li>
-<li><a href="#orge2bc0fb">5.2. Root Locus</a></li>
-<li><a href="#org4408310">5.3. Controllers - Optimal Gains</a></li>
-<li><a href="#orge8f52b1">5.4. Passive Damping - Critical Damping</a></li>
-<li><a href="#org72e760e">5.5. Transmissibility And Compliance</a>
+<li><a href="#org49053ce">5.1. Plant Parameters</a></li>
+<li><a href="#orgb7ee15d">5.2. Root Locus</a></li>
+<li><a href="#org410d42d">5.3. Controllers - Optimal Gains</a></li>
+<li><a href="#orga369eef">5.4. Passive Damping - Critical Damping</a></li>
+<li><a href="#orga86e2e4">5.5. Transmissibility And Compliance</a>
 <ul>
-<li><a href="#org6712b69">5.5.1. Passive Damping</a></li>
+<li><a href="#orga1f0122">5.5.1. Passive Damping</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org0deef61">6. Notations</a></li>
+<li><a href="#org5f907f2">6. Notations</a></li>
 </ul>
 </div>
 </div>
@@ -98,12 +94,12 @@ This document gathers the Matlab code used to for the paper (<a href="#citeproc_
 It is structured in several sections:
 </p>
 <ul class="org-ul">
-<li>Section <a href="#orgc0bf01d">1</a>: presents a simple model of a rotating suspended platform that will be used throughout this study.</li>
-<li>Section <a href="#orgef5f38f">2</a>: explains how the unconditional stability of IFF is lost due to Gyroscopic effects induced by the rotation.</li>
-<li>Section <a href="#orgc5d9c3c">3</a>: suggests a simple modification of the control law such that damping can be added to the suspension modes in a robust way.</li>
-<li>Section <a href="#org630382c">4</a>: proposes to add springs in parallel with the force sensors to regain the unconditional stability of IFF.</li>
-<li>Section <a href="#orge4c5d48">5</a>: compares both proposed modifications to the classical IFF in terms of damping authority and closed-loop system behavior.</li>
-<li>Section <a href="#orgf01f0c5">6</a>: contains the notations used for both the Matlab code and the paper</li>
+<li>Section <a href="#orge2ad7e2">1</a>: presents a simple model of a rotating suspended platform that will be used throughout this study.</li>
+<li>Section <a href="#org5675407">2</a>: explains how the unconditional stability of IFF is lost due to Gyroscopic effects induced by the rotation.</li>
+<li>Section <a href="#orgbed1a10">3</a>: suggests a simple modification of the control law such that damping can be added to the suspension modes in a robust way.</li>
+<li>Section <a href="#org63d6e2c">4</a>: proposes to add springs in parallel with the force sensors to regain the unconditional stability of IFF.</li>
+<li>Section <a href="#orgaede0ad">5</a>: compares both proposed modifications to the classical IFF in terms of damping authority and closed-loop system behavior.</li>
+<li>Section <a href="#org15fb531">6</a>: contains the notations used for both the Matlab code and the paper</li>
 </ul>
 
 <p>
@@ -130,49 +126,49 @@ To run the Matlab code, go in the <code>matlab</code> directory and run the foll
 </thead>
 <tbody>
 <tr>
-<td class="org-left">Section <a href="#orgc0bf01d">1</a></td>
+<td class="org-left">Section <a href="#orge2ad7e2">1</a></td>
 <td class="org-left"><code>s1_system_description.m</code></td>
 </tr>
 
 <tr>
-<td class="org-left">Section <a href="#orgef5f38f">2</a></td>
+<td class="org-left">Section <a href="#org5675407">2</a></td>
 <td class="org-left"><code>s2_iff_pure_int.m</code></td>
 </tr>
 
 <tr>
-<td class="org-left">Section <a href="#orgc5d9c3c">3</a></td>
+<td class="org-left">Section <a href="#orgbed1a10">3</a></td>
 <td class="org-left"><code>s3_iff_hpf.m</code></td>
 </tr>
 
 <tr>
-<td class="org-left">Section <a href="#org630382c">4</a></td>
+<td class="org-left">Section <a href="#org63d6e2c">4</a></td>
 <td class="org-left"><code>s4_iff_kp.m</code></td>
 </tr>
 
 <tr>
-<td class="org-left">Section <a href="#orge4c5d48">5</a></td>
+<td class="org-left">Section <a href="#orgaede0ad">5</a></td>
 <td class="org-left"><code>s5_act_damp_comparison.m</code></td>
 </tr>
 </tbody>
 </table>
 
-<div id="outline-container-org4dd3571" class="outline-2">
-<h2 id="org4dd3571"><span class="section-number-2">1</span> System Description and Analysis</h2>
+<div id="outline-container-org19f8b41" class="outline-2">
+<h2 id="org19f8b41"><span class="section-number-2">1</span> System Description and Analysis</h2>
 <div class="outline-text-2" id="text-1">
 <p>
-<a id="orgc0bf01d"></a>
+<a id="orge2ad7e2"></a>
 </p>
 </div>
 
-<div id="outline-container-org102a388" class="outline-3">
-<h3 id="org102a388"><span class="section-number-3">1.1</span> System description</h3>
+<div id="outline-container-org98a8dea" class="outline-3">
+<h3 id="org98a8dea"><span class="section-number-3">1.1</span> System description</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
-The system consists of one 2 degree of freedom translation stage on top of a spindle (figure <a href="#orga4d0ff4">1</a>).
+The system consists of one 2 degree of freedom translation stage on top of a spindle (figure <a href="#org1c9a817">1</a>).
 </p>
 
 
-<div id="orga4d0ff4" class="figure">
+<div id="org1c9a817" class="figure">
 <p><img src="figs-paper/system.png" alt="system.png" />
 </p>
 <p><span class="figure-number">Figure 1: </span>Schematic of the studied system</p>
@@ -185,13 +181,13 @@ As the translation stage is rotating around the Z axis due to the spindle, the f
 </div>
 </div>
 
-<div id="outline-container-orgf2f55e2" class="outline-3">
-<h3 id="orgf2f55e2"><span class="section-number-3">1.2</span> Equations</h3>
+<div id="outline-container-orgfaaa549" class="outline-3">
+<h3 id="orgfaaa549"><span class="section-number-3">1.2</span> Equations</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
-Based on the Figure <a href="#orga4d0ff4">1</a>, the equations of motions are:
+Based on the Figure <a href="#org1c9a817">1</a>, the equations of motions are:
 </p>
-<div class="important" id="orgc9bbc1e">
+<div class="important" id="org68f2629">
 \begin{equation}
 \begin{bmatrix} d_u \\ d_v \end{bmatrix} =
 \bm{G}_d
@@ -221,8 +217,8 @@ With:
 </div>
 </div>
 
-<div id="outline-container-org5e98250" class="outline-3">
-<h3 id="org5e98250"><span class="section-number-3">1.3</span> Numerical Values</h3>
+<div id="outline-container-org34789ad" class="outline-3">
+<h3 id="org34789ad"><span class="section-number-3">1.3</span> Numerical Values</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
 Let&rsquo;s define initial values for the model.
@@ -242,28 +238,35 @@ w0 = sqrt(k<span class="org-type">/</span>m); <span class="org-comment">% [rad/s
 </div>
 </div>
 
-<div id="outline-container-org3640334" class="outline-3">
-<h3 id="org3640334"><span class="section-number-3">1.4</span> Campbell Diagram</h3>
+<div id="outline-container-org1e81232" class="outline-3">
+<h3 id="org1e81232"><span class="section-number-3">1.4</span> Campbell Diagram</h3>
 <div class="outline-text-3" id="text-1-4">
 <p>
 The Campbell Diagram displays the evolution of the real and imaginary parts of the system as a function of the rotating speed.
 </p>
 
 <p>
-It is shown in Figure <a href="#orga8b6b21">2</a>, and one can see that the system becomes unstable for \(\Omega > \omega_0\) (the real part of one of the poles becomes positive).
+It is shown in Figures <a href="#org4431307">2</a> and <a href="#orgca54070">3</a>, and one can see that the system becomes unstable for \(\Omega > \omega_0\) (the real part of one of the poles becomes positive).
 </p>
 
 
-<div id="orga8b6b21" class="figure">
-<p><img src="figs/campbell_diagram.png" alt="campbell_diagram.png" />
+<div id="org4431307" class="figure">
+<p><img src="figs/campbell_diagram_real.png" alt="campbell_diagram_real.png" />
 </p>
-<p><span class="figure-number">Figure 2: </span>Campbell Diagram</p>
+<p><span class="figure-number">Figure 2: </span>Campbell Diagram - Real Part</p>
+</div>
+
+
+<div id="orgca54070" class="figure">
+<p><img src="figs/campbell_diagram_imag.png" alt="campbell_diagram_imag.png" />
+</p>
+<p><span class="figure-number">Figure 3: </span>Campbell Diagram - Imaginary Part</p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orga12b88a" class="outline-3">
-<h3 id="orga12b88a"><span class="section-number-3">1.5</span> Simscape Model</h3>
+<div id="outline-container-orga9a73f1" class="outline-3">
+<h3 id="orga9a73f1"><span class="section-number-3">1.5</span> Simscape Model</h3>
 <div class="outline-text-3" id="text-1-5">
 <p>
 In order to validate all the equations of motion, a Simscape model of the same system has been developed.
@@ -318,20 +321,20 @@ The same transfer function from \([F_u, F_v]\) to \([d_u, d_v]\) is written down
 </div>
 
 <p>
-Both transfer functions are compared in Figure <a href="#org1f0413f">3</a> and are found to perfectly match.
+Both transfer functions are compared in Figure <a href="#orga2b2c73">4</a> and are found to perfectly match.
 </p>
 
 
-<div id="org1f0413f" class="figure">
+<div id="orga2b2c73" class="figure">
 <p><img src="figs/plant_simscape_analytical.png" alt="plant_simscape_analytical.png" />
 </p>
-<p><span class="figure-number">Figure 3: </span>Bode plot of the transfer function from \([F_u, F_v]\) to \([d_u, d_v]\) as identified from the Simscape model and from an analytical model</p>
+<p><span class="figure-number">Figure 4: </span>Bode plot of the transfer function from \([F_u, F_v]\) to \([d_u, d_v]\) as identified from the Simscape model and from an analytical model</p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org375be86" class="outline-3">
-<h3 id="org375be86"><span class="section-number-3">1.6</span> Effect of the rotation speed</h3>
+<div id="outline-container-org70c5289" class="outline-3">
+<h3 id="org70c5289"><span class="section-number-3">1.6</span> Effect of the rotation speed</h3>
 <div class="outline-text-3" id="text-1-6">
 <p>
 The transfer functions from \([F_u, F_v]\) to \([d_u, d_v]\) are identified for the following rotating speeds.
@@ -355,27 +358,34 @@ The transfer functions from \([F_u, F_v]\) to \([d_u, d_v]\) are identified for 
 </div>
 
 <p>
-They are compared in Figure <a href="#org6839846">4</a>.
+They are compared in Figures <a href="#orgb60dd62">5</a> and <a href="#org8c7bb13">6</a>.
 </p>
 
 
-<div id="org6839846" class="figure">
-<p><img src="figs/plant_compare_rotating_speed.png" alt="plant_compare_rotating_speed.png" />
+<div id="orgb60dd62" class="figure">
+<p><img src="figs/plant_compare_rotating_speed_direct.png" alt="plant_compare_rotating_speed_direct.png" />
 </p>
-<p><span class="figure-number">Figure 4: </span>Comparison of the transfer functions from \([F_u, F_v]\) to \([d_u, d_v]\) for several rotating speed</p>
+<p><span class="figure-number">Figure 5: </span>Comparison of the transfer functions from \([F_u, F_v]\) to \([d_u, d_v]\) for several rotating speed - Direct Terms</p>
+</div>
+
+
+<div id="org8c7bb13" class="figure">
+<p><img src="figs/plant_compare_rotating_speed_coupling.png" alt="plant_compare_rotating_speed_coupling.png" />
+</p>
+<p><span class="figure-number">Figure 6: </span>Comparison of the transfer functions from \([F_u, F_v]\) to \([d_u, d_v]\) for several rotating speed - Coupling Terms</p>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgcf5b992" class="outline-2">
-<h2 id="orgcf5b992"><span class="section-number-2">2</span> Problem with pure Integral Force Feedback</h2>
+<div id="outline-container-orgd11a8cf" class="outline-2">
+<h2 id="orgd11a8cf"><span class="section-number-2">2</span> Problem with pure Integral Force Feedback</h2>
 <div class="outline-text-2" id="text-2">
 <p>
-<a id="orgef5f38f"></a>
+<a id="org5675407"></a>
 </p>
 <p>
-Force sensors are added in series with the two actuators (Figure <a href="#orgd005cc2">5</a>).
+Force sensors are added in series with the two actuators (Figure <a href="#org2c86f67">7</a>).
 </p>
 
 <p>
@@ -383,15 +393,15 @@ Two identical controllers \(K_F\) are used to feedback each of the sensed force 
 </p>
 
 
-<div id="orgd005cc2" class="figure">
+<div id="org2c86f67" class="figure">
 <p><img src="figs-paper/system_iff.png" alt="system_iff.png" />
 </p>
-<p><span class="figure-number">Figure 5: </span>System with added Force Sensor in series with the actuators</p>
+<p><span class="figure-number">Figure 7: </span>System with added Force Sensor in series with the actuators</p>
 </div>
 </div>
 
-<div id="outline-container-org8f2a6ef" class="outline-3">
-<h3 id="org8f2a6ef"><span class="section-number-3">2.1</span> Plant Parameters</h3>
+<div id="outline-container-org9987b80" class="outline-3">
+<h3 id="org9987b80"><span class="section-number-3">2.1</span> Plant Parameters</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 Let&rsquo;s define initial values for the model.
@@ -411,8 +421,8 @@ w0 = sqrt(k<span class="org-type">/</span>m); <span class="org-comment">% [rad/s
 </div>
 </div>
 
-<div id="outline-container-orgfb449f5" class="outline-3">
-<h3 id="orgfb449f5"><span class="section-number-3">2.2</span> Equations</h3>
+<div id="outline-container-orgbd3b27a" class="outline-3">
+<h3 id="orgbd3b27a"><span class="section-number-3">2.2</span> Equations</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 The sensed forces are equal to:
@@ -430,7 +440,7 @@ The sensed forces are equal to:
 <p>
 Which then gives:
 </p>
-<div class="important" id="org82cdaab">
+<div class="important" id="org19dc48f">
 \begin{equation}
 \begin{bmatrix} f_{u} \\ f_{v} \end{bmatrix} =
 \bm{G}_{f}
@@ -457,8 +467,8 @@ Which then gives:
 </div>
 </div>
 
-<div id="outline-container-org05033a6" class="outline-3">
-<h3 id="org05033a6"><span class="section-number-3">2.3</span> Comparison of the Analytical Model and the Simscape Model</h3>
+<div id="outline-container-orgfa7d7a2" class="outline-3">
+<h3 id="orgfa7d7a2"><span class="section-number-3">2.3</span> Comparison of the Analytical Model and the Simscape Model</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 The rotation speed is set to \(\Omega = 0.1 \omega_0\).
@@ -507,25 +517,25 @@ The same transfer function from \([F_u, F_v]\) to \([f_u, f_v]\) is written down
 </div>
 
 <p>
-The two are compared in Figure <a href="#org9b003d1">6</a> and found to perfectly match.
+The two are compared in Figure <a href="#org38c526e">8</a> and found to perfectly match.
 </p>
 
-<div id="org9b003d1" class="figure">
+<div id="org38c526e" class="figure">
 <p><img src="figs/plant_iff_comp_simscape_analytical.png" alt="plant_iff_comp_simscape_analytical.png" />
 </p>
-<p><span class="figure-number">Figure 6: </span>Comparison of the transfer functions from \([F_u, F_v]\) to \([f_u, f_v]\) between the Simscape model and the analytical one</p>
+<p><span class="figure-number">Figure 8: </span>Comparison of the transfer functions from \([F_u, F_v]\) to \([f_u, f_v]\) between the Simscape model and the analytical one</p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orge2f7644" class="outline-3">
-<h3 id="orge2f7644"><span class="section-number-3">2.4</span> Effect of the rotation speed</h3>
+<div id="outline-container-orgcab9733" class="outline-3">
+<h3 id="orgcab9733"><span class="section-number-3">2.4</span> Effect of the rotation speed</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
 The transfer functions from \([F_u, F_v]\) to \([f_u, f_v]\) are identified for the following rotating speeds.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">Ws = [0, 0.2, 0.7, 1.1]<span class="org-type">*</span>w0; <span class="org-comment">% Rotating Speeds [rad/s]</span>
+<pre class="src src-matlab">Ws = [0, 0.2, 0.7]<span class="org-type">*</span>w0; <span class="org-comment">% Rotating Speeds [rad/s]</span>
 </pre>
 </div>
 
@@ -543,19 +553,19 @@ The transfer functions from \([F_u, F_v]\) to \([f_u, f_v]\) are identified for 
 </div>
 
 <p>
-The obtained transfer functions are shown in Figure <a href="#orgd195c47">7</a>.
+The obtained transfer functions are shown in Figure <a href="#org6f772b1">9</a>.
 </p>
 
-<div id="orgd195c47" class="figure">
+<div id="org6f772b1" class="figure">
 <p><img src="figs/plant_iff_compare_rotating_speed.png" alt="plant_iff_compare_rotating_speed.png" />
 </p>
-<p><span class="figure-number">Figure 7: </span>Comparison of the transfer functions from \([F_u, F_v]\) to \([f_u, f_v]\) for several rotating speed</p>
+<p><span class="figure-number">Figure 9: </span>Comparison of the transfer functions from \([F_u, F_v]\) to \([f_u, f_v]\) for several rotating speed</p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org5688a92" class="outline-3">
-<h3 id="org5688a92"><span class="section-number-3">2.5</span> Decentralized Integral Force Feedback</h3>
+<div id="outline-container-org358cdd6" class="outline-3">
+<h3 id="org358cdd6"><span class="section-number-3">2.5</span> Decentralized Integral Force Feedback</h3>
 <div class="outline-text-3" id="text-2-5">
 <p>
 The decentralized IFF controller consists of pure integrators:
@@ -568,30 +578,30 @@ The decentralized IFF controller consists of pure integrators:
 \end{equation}
 
 <p>
-The Root Locus (evolution of the poles of the closed loop system in the complex plane as a function of \(g\)) is shown in Figure <a href="#org6455a6c">8</a>.
+The Root Locus (evolution of the poles of the closed loop system in the complex plane as a function of \(g\)) is shown in Figure <a href="#org3cd7728">10</a>.
 It is shown that for non-null rotating speed, one pole is bound to the right-half plane, and thus the closed loop system is unstable.
 </p>
 
 
-<div id="org6455a6c" class="figure">
+<div id="org3cd7728" class="figure">
 <p><img src="figs/root_locus_pure_iff.png" alt="root_locus_pure_iff.png" />
 </p>
-<p><span class="figure-number">Figure 8: </span>Root Locus for the Decentralized Integral Force Feedback controller. Several rotating speed are shown.</p>
+<p><span class="figure-number">Figure 10: </span>Root Locus for the Decentralized Integral Force Feedback controller. Several rotating speed are shown.</p>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org073f9e0" class="outline-2">
-<h2 id="org073f9e0"><span class="section-number-2">3</span> Integral Force Feedback with an High Pass Filter</h2>
+<div id="outline-container-orgd71a2dc" class="outline-2">
+<h2 id="orgd71a2dc"><span class="section-number-2">3</span> Integral Force Feedback with an High Pass Filter</h2>
 <div class="outline-text-2" id="text-3">
 <p>
-<a id="orgc5d9c3c"></a>
+<a id="orgbed1a10"></a>
 </p>
 </div>
 
-<div id="outline-container-org2a5c510" class="outline-3">
-<h3 id="org2a5c510"><span class="section-number-3">3.1</span> Plant Parameters</h3>
+<div id="outline-container-orgf7495fd" class="outline-3">
+<h3 id="orgf7495fd"><span class="section-number-3">3.1</span> Plant Parameters</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 Let&rsquo;s define initial values for the model.
@@ -611,8 +621,8 @@ w0 = sqrt(k<span class="org-type">/</span>m); <span class="org-comment">% [rad/s
 </div>
 </div>
 
-<div id="outline-container-org7bb3bef" class="outline-3">
-<h3 id="org7bb3bef"><span class="section-number-3">3.2</span> Modified Integral Force Feedback Controller</h3>
+<div id="outline-container-org2950938" class="outline-3">
+<h3 id="org2950938"><span class="section-number-3">3.2</span> Modified Integral Force Feedback Controller</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 Let&rsquo;s modify the initial Integral Force Feedback Controller ; instead of using pure integrators, pseudo integrators (i.e. low pass filters) are used:
@@ -647,38 +657,45 @@ And the following rotating speed.
 </div>
 
 <p>
-The obtained Loop Gain is shown in Figure <a href="#org3f82ef6">9</a>.
+The obtained Loop Gain is shown in Figure <a href="#org30acdfb">11</a>.
 </p>
 
-<div id="org3f82ef6" class="figure">
+<div id="org30acdfb" class="figure">
 <p><img src="figs/loop_gain_modified_iff.png" alt="loop_gain_modified_iff.png" />
 </p>
-<p><span class="figure-number">Figure 9: </span>Loop Gain for the modified IFF controller</p>
+<p><span class="figure-number">Figure 11: </span>Loop Gain for the modified IFF controller</p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org9335519" class="outline-3">
-<h3 id="org9335519"><span class="section-number-3">3.3</span> Root Locus</h3>
+<div id="outline-container-org38695fe" class="outline-3">
+<h3 id="org38695fe"><span class="section-number-3">3.3</span> Root Locus</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
-As shown in the Root Locus plot (Figure <a href="#orgf377d23">10</a>), for some value of the gain, the system remains stable.
+As shown in the Root Locus plot (Figure <a href="#org8fd08f7">12</a>), for some value of the gain, the system remains stable.
 </p>
 
 
-<div id="orgf377d23" class="figure">
+<div id="org8fd08f7" class="figure">
 <p><img src="figs/root_locus_modified_iff.png" alt="root_locus_modified_iff.png" />
 </p>
-<p><span class="figure-number">Figure 10: </span>Root Locus for the modified IFF controller</p>
+<p><span class="figure-number">Figure 12: </span>Root Locus for the modified IFF controller</p>
+</div>
+
+
+<div id="org6bf833a" class="figure">
+<p><img src="figs/root_locus_modified_iff_zoom.png" alt="root_locus_modified_iff_zoom.png" />
+</p>
+<p><span class="figure-number">Figure 13: </span>Root Locus for the modified IFF controller - Zoom</p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org1172118" class="outline-3">
-<h3 id="org1172118"><span class="section-number-3">3.4</span> What is the optimal \(\omega_i\) and \(g\)?</h3>
+<div id="outline-container-org60aa70e" class="outline-3">
+<h3 id="org60aa70e"><span class="section-number-3">3.4</span> What is the optimal \(\omega_i\) and \(g\)?</h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
-In order to visualize the effect of \(\omega_i\) on the attainable damping, the Root Locus is displayed in Figure <a href="#orge3358a4">11</a> for the following \(\omega_i\):
+In order to visualize the effect of \(\omega_i\) on the attainable damping, the Root Locus is displayed in Figure <a href="#orgc07662f">14</a> for the following \(\omega_i\):
 </p>
 <div class="org-src-container">
 <pre class="src src-matlab">wis = [0.01, 0.1, 0.5, 1]<span class="org-type">*</span>w0; <span class="org-comment">% [rad/s]</span>
@@ -686,10 +703,17 @@ In order to visualize the effect of \(\omega_i\) on the attainable damping, the 
 </div>
 
 
-<div id="orge3358a4" class="figure">
+<div id="orgc07662f" class="figure">
 <p><img src="figs/root_locus_wi_modified_iff.png" alt="root_locus_wi_modified_iff.png" />
 </p>
-<p><span class="figure-number">Figure 11: </span>Root Locus for the modified IFF controller (zoomed plot on the left)</p>
+<p><span class="figure-number">Figure 14: </span>Root Locus for the modified IFF controller (zoomed plot on the left)</p>
+</div>
+
+
+<div id="org9068d66" class="figure">
+<p><img src="figs/root_locus_wi_modified_iff_zoom.png" alt="root_locus_wi_modified_iff_zoom.png" />
+</p>
+<p><span class="figure-number">Figure 15: </span>Root Locus for the modified IFF controller (zoomed plot on the left)</p>
 </div>
 
 <p>
@@ -709,12 +733,12 @@ The gain at which the system becomes unstable is
 \end{equation}
 
 <p>
-While it seems that small \(\omega_i\) do allow more damping to be added to the system (Figure <a href="#orge3358a4">11</a>), the control gains may be limited to small values due to \eqref{eq:iff_gmax} thus reducing the attainable damping.
+While it seems that small \(\omega_i\) do allow more damping to be added to the system (Figure <a href="#orgc07662f">14</a>), the control gains may be limited to small values due to \eqref{eq:iff_gmax} thus reducing the attainable damping.
 </p>
 
 <p>
 There must be an optimum for \(\omega_i\).
-To find the optimum, the gain that maximize the simultaneous damping of the mode is identified for a wide range of \(\omega_i\) (Figure <a href="#org1939966">12</a>).
+To find the optimum, the gain that maximize the simultaneous damping of the mode is identified for a wide range of \(\omega_i\) (Figure <a href="#org609eb89">16</a>).
 </p>
 
 <div class="org-src-container">
@@ -737,35 +761,35 @@ opt_gain = zeros(1, length(wis)); <span class="org-comment">% Corresponding opti
 </div>
 
 
-<div id="org1939966" class="figure">
+<div id="org609eb89" class="figure">
 <p><img src="figs/mod_iff_damping_wi.png" alt="mod_iff_damping_wi.png" />
 </p>
-<p><span class="figure-number">Figure 12: </span>Simultaneous attainable damping of the closed loop poles as a function of \(\omega_i\)</p>
+<p><span class="figure-number">Figure 16: </span>Simultaneous attainable damping of the closed loop poles as a function of \(\omega_i\)</p>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org4422289" class="outline-2">
-<h2 id="org4422289"><span class="section-number-2">4</span> IFF with a stiffness in parallel with the force sensor</h2>
+<div id="outline-container-orgdb918b6" class="outline-2">
+<h2 id="orgdb918b6"><span class="section-number-2">4</span> IFF with a stiffness in parallel with the force sensor</h2>
 <div class="outline-text-2" id="text-4">
 <p>
-<a id="org630382c"></a>
+<a id="org63d6e2c"></a>
 </p>
 </div>
 
-<div id="outline-container-org114428c" class="outline-3">
-<h3 id="org114428c"><span class="section-number-3">4.1</span> Schematic</h3>
+<div id="outline-container-orgad442be" class="outline-3">
+<h3 id="orgad442be"><span class="section-number-3">4.1</span> Schematic</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 In this section additional springs in parallel with the force sensors are added to counteract the negative stiffness induced by the rotation.
 </p>
 
 
-<div id="orgfdfe933" class="figure">
+<div id="org13edf46" class="figure">
 <p><img src="figs-paper/system_parallel_springs.png" alt="system_parallel_springs.png" />
 </p>
-<p><span class="figure-number">Figure 13: </span>Studied system with additional springs in parallel with the actuators and force sensors</p>
+<p><span class="figure-number">Figure 17: </span>Studied system with additional springs in parallel with the actuators and force sensors</p>
 </div>
 
 <p>
@@ -777,10 +801,10 @@ In order to keep the overall stiffness \(k = k_a + k_p\) constant, a scalar para
 </div>
 </div>
 
-<div id="outline-container-orgfa353f8" class="outline-3">
-<h3 id="orgfa353f8"><span class="section-number-3">4.2</span> Equations</h3>
+<div id="outline-container-orgeaf20e9" class="outline-3">
+<h3 id="orgeaf20e9"><span class="section-number-3">4.2</span> Equations</h3>
 <div class="outline-text-3" id="text-4-2">
-<div class="important" id="org96d2e1e">
+<div class="important" id="org6c89777">
 \begin{equation}
 \begin{bmatrix} f_u \\ f_v \end{bmatrix} =
 \bm{G}_k
@@ -817,8 +841,8 @@ In order to have two complex conjugate zeros (instead of real zeros):
 </div>
 </div>
 
-<div id="outline-container-orgfc70f3c" class="outline-3">
-<h3 id="orgfc70f3c"><span class="section-number-3">4.3</span> Plant Parameters</h3>
+<div id="outline-container-org754aa7c" class="outline-3">
+<h3 id="org754aa7c"><span class="section-number-3">4.3</span> Plant Parameters</h3>
 <div class="outline-text-3" id="text-4-3">
 <p>
 Let&rsquo;s define initial values for the model.
@@ -838,8 +862,8 @@ w0 = sqrt(k<span class="org-type">/</span>m); <span class="org-comment">% [rad/s
 </div>
 </div>
 
-<div id="outline-container-orgc8587f7" class="outline-3">
-<h3 id="orgc8587f7"><span class="section-number-3">4.4</span> Comparison of the Analytical Model and the Simscape Model</h3>
+<div id="outline-container-org09dcf36" class="outline-3">
+<h3 id="org09dcf36"><span class="section-number-3">4.4</span> Comparison of the Analytical Model and the Simscape Model</h3>
 <div class="outline-text-3" id="text-4-4">
 <p>
 The same transfer function from \([F_u, F_v]\) to \([f_u, f_v]\) is written down from the analytical model.
@@ -887,16 +911,16 @@ Giff_th.OutputName = {<span class="org-string">'fu'</span>, <span class="org-str
 </div>
 
 
-<div id="org51b5cf2" class="figure">
+<div id="org87b6263" class="figure">
 <p><img src="figs/plant_iff_kp_comp_simscape_analytical.png" alt="plant_iff_kp_comp_simscape_analytical.png" />
 </p>
-<p><span class="figure-number">Figure 14: </span>Comparison of the transfer functions from \([F_u, F_v]\) to \([f_u, f_v]\) between the Simscape model and the analytical one</p>
+<p><span class="figure-number">Figure 18: </span>Comparison of the transfer functions from \([F_u, F_v]\) to \([f_u, f_v]\) between the Simscape model and the analytical one</p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgee3f689" class="outline-3">
-<h3 id="orgee3f689"><span class="section-number-3">4.5</span> Effect of the parallel stiffness on the IFF plant</h3>
+<div id="outline-container-orga083ad0" class="outline-3">
+<h3 id="orga083ad0"><span class="section-number-3">4.5</span> Effect of the parallel stiffness on the IFF plant</h3>
 <div class="outline-text-3" id="text-4-5">
 <p>
 The rotation speed is set to \(\Omega = 0.1 \omega_0\).
@@ -916,7 +940,7 @@ And the IFF plant (transfer function from \([F_u, F_v]\) to \([f_u, f_v]\)) is i
 </ul>
 
 <p>
-The results are shown in Figure <a href="#org03c4484">15</a>.
+The results are shown in Figure <a href="#org6ecd303">19</a>.
 </p>
 
 <p>
@@ -962,19 +986,19 @@ Giff_l = 1<span class="org-type">/</span>( (s<span class="org-type">^</span>2<sp
 </div>
 
 
-<div id="org03c4484" class="figure">
+<div id="org6ecd303" class="figure">
 <p><img src="figs/plant_iff_kp.png" alt="plant_iff_kp.png" />
 </p>
-<p><span class="figure-number">Figure 15: </span>Transfer function from \([F_u, F_v]\) to \([f_u, f_v]\) for \(k_p = 0\), \(k_p < m \Omega^2\) and \(k_p > m \Omega^2\)</p>
+<p><span class="figure-number">Figure 19: </span>Transfer function from \([F_u, F_v]\) to \([f_u, f_v]\) for \(k_p = 0\), \(k_p < m \Omega^2\) and \(k_p > m \Omega^2\)</p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgd0375c8" class="outline-3">
-<h3 id="orgd0375c8"><span class="section-number-3">4.6</span> IFF when adding a spring in parallel</h3>
+<div id="outline-container-org9a801a8" class="outline-3">
+<h3 id="org9a801a8"><span class="section-number-3">4.6</span> IFF when adding a spring in parallel</h3>
 <div class="outline-text-3" id="text-4-6">
 <p>
-In Figure <a href="#org2e1709c">16</a> is displayed the Root Locus in the three considered cases with
+In Figure <a href="#org1f55ab2">20</a> is displayed the Root Locus in the three considered cases with
 </p>
 \begin{equation}
   K_{\text{IFF}} = \frac{g}{s} \begin{bmatrix}
@@ -995,23 +1019,30 @@ Thus, decentralized IFF controller with pure integrators can be used if:
 \end{equation}
 
 
-<div id="org2e1709c" class="figure">
+<div id="org1f55ab2" class="figure">
 <p><img src="figs/root_locus_iff_kp.png" alt="root_locus_iff_kp.png" />
 </p>
-<p><span class="figure-number">Figure 16: </span>Root Locus</p>
+<p><span class="figure-number">Figure 20: </span>Root Locus</p>
+</div>
+
+
+<div id="orgf23aef5" class="figure">
+<p><img src="figs/root_locus_iff_kp_zoom.png" alt="root_locus_iff_kp_zoom.png" />
+</p>
+<p><span class="figure-number">Figure 21: </span>Root Locus</p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org75d1588" class="outline-3">
-<h3 id="org75d1588"><span class="section-number-3">4.7</span> Effect of \(k_p\) on the attainable damping</h3>
+<div id="outline-container-org43bf919" class="outline-3">
+<h3 id="org43bf919"><span class="section-number-3">4.7</span> Effect of \(k_p\) on the attainable damping</h3>
 <div class="outline-text-3" id="text-4-7">
 <p>
 However, having large values of \(k_p\) may decrease the attainable damping.
 </p>
 
 <p>
-To study the second point, Root Locus plots for the following values of \(k_p\) are shown in Figure <a href="#org00f5b30">17</a>.
+To study the second point, Root Locus plots for the following values of \(k_p\) are shown in Figure <a href="#org49df006">22</a>.
 </p>
 <div class="org-src-container">
 <pre class="src src-matlab">kps = [2, 20, 40]<span class="org-type">*</span>m<span class="org-type">*</span>W<span class="org-type">^</span>2;
@@ -1022,10 +1053,10 @@ To study the second point, Root Locus plots for the following values of \(k_p\) 
 It is shown that large values of \(k_p\) decreases the attainable damping.
 </p>
 
-<div id="org00f5b30" class="figure">
+<div id="org49df006" class="figure">
 <p><img src="figs/root_locus_iff_kps.png" alt="root_locus_iff_kps.png" />
 </p>
-<p><span class="figure-number">Figure 17: </span>Root Locus plot</p>
+<p><span class="figure-number">Figure 22: </span>Root Locus plot</p>
 </div>
 
 <div class="org-src-container">
@@ -1057,19 +1088,20 @@ Kiff = 1<span class="org-type">/</span>s<span class="org-type">*</span>eye(2);
 </div>
 
 
-<div id="org9598cb2" class="figure">
+<div id="orgfa8828a" class="figure">
 <p><img src="figs/opt_damp_alpha.png" alt="opt_damp_alpha.png" />
 </p>
+<p><span class="figure-number">Figure 23: </span>Attainable damping ratio and corresponding controller gain for different parameter \(\alpha\)</p>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgddb3c90" class="outline-2">
-<h2 id="orgddb3c90"><span class="section-number-2">5</span> Comparison</h2>
+<div id="outline-container-org49b4648" class="outline-2">
+<h2 id="org49b4648"><span class="section-number-2">5</span> Comparison</h2>
 <div class="outline-text-2" id="text-5">
 <p>
-<a id="orge4c5d48"></a>
+<a id="orgaede0ad"></a>
 </p>
 <p>
 Two modifications to adapt the IFF control strategy to rotating platforms have been proposed.
@@ -1077,8 +1109,8 @@ These two methods are now compared in terms of added damping, closed-loop compli
 </p>
 </div>
 
-<div id="outline-container-org431d055" class="outline-3">
-<h3 id="org431d055"><span class="section-number-3">5.1</span> Plant Parameters</h3>
+<div id="outline-container-org49053ce" class="outline-3">
+<h3 id="org49053ce"><span class="section-number-3">5.1</span> Plant Parameters</h3>
 <div class="outline-text-3" id="text-5-1">
 <p>
 Let&rsquo;s define initial values for the model.
@@ -1106,8 +1138,8 @@ The rotating speed is set to \(\Omega = 0.1 \omega_0\).
 </div>
 </div>
 
-<div id="outline-container-orge2bc0fb" class="outline-3">
-<h3 id="orge2bc0fb"><span class="section-number-3">5.2</span> Root Locus</h3>
+<div id="outline-container-orgb7ee15d" class="outline-3">
+<h3 id="orgb7ee15d"><span class="section-number-3">5.2</span> Root Locus</h3>
 <div class="outline-text-3" id="text-5-2">
 <p>
 IFF with High Pass Filter
@@ -1140,16 +1172,16 @@ k = k <span class="org-type">+</span> kp;
 </div>
 
 
-<div id="org79055fa" class="figure">
+<div id="orgda0a6de" class="figure">
 <p><img src="figs/comp_root_locus.png" alt="comp_root_locus.png" />
 </p>
-<p><span class="figure-number">Figure 19: </span>Root Locus plot - Comparison of IFF with additional high pass filter, IFF with additional parallel stiffness</p>
+<p><span class="figure-number">Figure 24: </span>Root Locus plot - Comparison of IFF with additional high pass filter, IFF with additional parallel stiffness</p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org4408310" class="outline-3">
-<h3 id="org4408310"><span class="section-number-3">5.3</span> Controllers - Optimal Gains</h3>
+<div id="outline-container-org410d42d" class="outline-3">
+<h3 id="org410d42d"><span class="section-number-3">5.3</span> Controllers - Optimal Gains</h3>
 <div class="outline-text-3" id="text-5-3">
 <p>
 In order to compare to three considered Active Damping techniques, gains that yield maximum damping of all the modes are computed for each case.
@@ -1193,8 +1225,8 @@ The obtained damping ratio and control are shown below.
 </div>
 </div>
 
-<div id="outline-container-orge8f52b1" class="outline-3">
-<h3 id="orge8f52b1"><span class="section-number-3">5.4</span> Passive Damping - Critical Damping</h3>
+<div id="outline-container-orga369eef" class="outline-3">
+<h3 id="orga369eef"><span class="section-number-3">5.4</span> Passive Damping - Critical Damping</h3>
 <div class="outline-text-3" id="text-5-4">
 \begin{equation}
   \xi = \frac{c}{2 \sqrt{km}}
@@ -1214,11 +1246,11 @@ Critical Damping corresponds to to \(\xi = 1\), and thus:
 </div>
 </div>
 
-<div id="outline-container-org72e760e" class="outline-3">
-<h3 id="org72e760e"><span class="section-number-3">5.5</span> Transmissibility And Compliance</h3>
+<div id="outline-container-orga86e2e4" class="outline-3">
+<h3 id="orga86e2e4"><span class="section-number-3">5.5</span> Transmissibility And Compliance</h3>
 <div class="outline-text-3" id="text-5-5">
 <p>
-<a id="org2d9db6b"></a>
+<a id="orgd9d7966"></a>
 </p>
 
 <div class="org-src-container">
@@ -1247,8 +1279,8 @@ G_ol.OutputName = {<span class="org-string">'Dx'</span>, <span class="org-string
 </div>
 </div>
 
-<div id="outline-container-org6712b69" class="outline-4">
-<h4 id="org6712b69"><span class="section-number-4">5.5.1</span> Passive Damping</h4>
+<div id="outline-container-orga1f0122" class="outline-4">
+<h4 id="orga1f0122"><span class="section-number-4">5.5.1</span> Passive Damping</h4>
 <div class="outline-text-4" id="text-5-5-1">
 <div class="org-src-container">
 <pre class="src src-matlab">kp = 0;
@@ -1318,29 +1350,29 @@ G_kp.OutputName = {<span class="org-string">'Dx'</span>, <span class="org-string
 
 <div class="outline-text-3" id="text-5-5">
 
-<div id="orga7bab8c" class="figure">
+<div id="org5cf2c73" class="figure">
 <p><img src="figs/comp_transmissibility.png" alt="comp_transmissibility.png" />
 </p>
-<p><span class="figure-number">Figure 20: </span>Comparison of the transmissibility</p>
+<p><span class="figure-number">Figure 25: </span>Comparison of the transmissibility</p>
 </div>
 </div>
 
 <div class="outline-text-3" id="text-5-5">
 
-<div id="orgfd8c372" class="figure">
+<div id="orga885ca6" class="figure">
 <p><img src="figs/comp_compliance.png" alt="comp_compliance.png" />
 </p>
-<p><span class="figure-number">Figure 21: </span>Comparison of the obtained Compliance</p>
+<p><span class="figure-number">Figure 26: </span>Comparison of the obtained Compliance</p>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org0deef61" class="outline-2">
-<h2 id="org0deef61"><span class="section-number-2">6</span> Notations</h2>
+<div id="outline-container-org5f907f2" class="outline-2">
+<h2 id="org5f907f2"><span class="section-number-2">6</span> Notations</h2>
 <div class="outline-text-2" id="text-6">
 <p>
-<a id="orgf01f0c5"></a>
+<a id="org15fb531"></a>
 </p>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
@@ -1494,7 +1526,7 @@ G_kp.OutputName = {<span class="org-string">'Dx'</span>, <span class="org-string
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Thomas Dehaeze</p>
-<p class="date">Created: 2020-10-27 mar. 09:18</p>
+<p class="date">Created: 2020-11-12 jeu. 10:40</p>
 </div>
 </body>
 </html>

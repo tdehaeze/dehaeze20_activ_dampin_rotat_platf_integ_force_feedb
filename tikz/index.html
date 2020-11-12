@@ -3,17 +3,13 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-07-09 jeu. 09:31 -->
+<!-- 2020-11-12 jeu. 10:40 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>Active Damping of Rotating Platforms using Integral Force Feedback - Tikz Figures</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="Thomas Dehaeze" />
-<link rel="stylesheet" type="text/css" href="../css/htmlize.css"/>
-<link rel="stylesheet" type="text/css" href="../css/readtheorg.css"/>
-<script src="../js/jquery.min.js"></script>
-<script src="../js/bootstrap.min.js"></script>
-<script src="../js/jquery.stickytableheaders.min.js"></script>
-<script src="../js/readtheorg.js"></script>
+<link rel="stylesheet" type="text/css" href="https://research.tdehaeze.xyz/css/style.css"/>
+<script type="text/javascript" src="https://research.tdehaeze.xyz/js/script.js"></script>
 </head>
 <body>
 <div id="org-div-home-and-up">
@@ -26,10 +22,10 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgb9c9150">1. X-Y Rotating Positioning Platform</a></li>
-<li><a href="#org0c90cdd">2. X-Y Rotating Positioning Platform</a></li>
-<li><a href="#orgef77a1d">3. Decentralized Integral Force Feedback</a></li>
-<li><a href="#org5339b95">4. Springs in parallel</a></li>
+<li><a href="#orgd15976a">1. X-Y Rotating Positioning Platform</a></li>
+<li><a href="#orgfba88c8">2. X-Y Rotating Positioning Platform</a></li>
+<li><a href="#org732f401">3. Decentralized Integral Force Feedback</a></li>
+<li><a href="#org1dd642f">4. Springs in parallel</a></li>
 </ul>
 </div>
 </div>
@@ -37,280 +33,280 @@
 Configuration file is accessible <a href="config.html">here</a>.
 </p>
 
-<div id="outline-container-orgb9c9150" class="outline-2">
-<h2 id="orgb9c9150"><span class="section-number-2">1</span> X-Y Rotating Positioning Platform</h2>
+<div id="outline-container-orgd15976a" class="outline-2">
+<h2 id="orgd15976a"><span class="section-number-2">1</span> X-Y Rotating Positioning Platform</h2>
 <div class="outline-text-2" id="text-1">
 <div class="org-src-container">
-<pre class="src src-latex">\begin{tikzpicture}
-  % Angle
-  \def\thetau{25}
+<pre class="src src-latex"><span class="org-font-latex-sedate"><span class="org-keyword">\begin</span></span>{<span class="org-function-name">tikzpicture</span>}
+  <span class="org-comment">% Angle</span>
+  <span class="org-font-latex-sedate">\def\thetau</span>{25}
 
-  % Rotational Stage
-  \draw[fill=black!60!white] (0, 0) circle (4.3);
-  \draw[fill=black!40!white] (0, 0) circle (3.8);
+  <span class="org-comment">% Rotational Stage</span>
+  <span class="org-font-latex-sedate">\draw</span>[fill=black!60!white] (0, 0) circle (4.3);
+  <span class="org-font-latex-sedate">\draw</span>[fill=black!40!white] (0, 0) circle (3.8);
 
-  % Label
-  \node[anchor=north west, rotate=\thetau] at (-2.5, 2.5) {\small Rotating Stage};
+  <span class="org-comment">% Label</span>
+  <span class="org-font-latex-sedate">\node</span>[anchor=north west, rotate=<span class="org-font-latex-sedate">\thetau</span>] at (-2.5, 2.5) {<span class="org-font-latex-sedate"><span class="org-keyword">\small</span></span><span class="org-type"> Rotating Stage</span>};
 
-  % Rotating Scope
-  \begin{scope}[rotate=\thetau]
-    % Rotating Frame
-    \draw[fill=black!20!white] (-2.6, -2.6) rectangle (2.6, 2.6);
-    % Label
-    \node[anchor=north west, rotate=\thetau] at (-2.6, 2.6) {\small Suspended Platform};
+  <span class="org-comment">% Rotating Scope</span>
+  <span class="org-font-latex-sedate"><span class="org-keyword">\begin</span></span>{<span class="org-function-name">scope</span>}[rotate=<span class="org-font-latex-sedate">\thetau</span>]
+    <span class="org-comment">% Rotating Frame</span>
+    <span class="org-font-latex-sedate">\draw</span>[fill=black!20!white] (-2.6, -2.6) rectangle (2.6, 2.6);
+    <span class="org-comment">% Label</span>
+    <span class="org-font-latex-sedate">\node</span>[anchor=north west, rotate=<span class="org-font-latex-sedate">\thetau</span>] at (-2.6, 2.6) {<span class="org-font-latex-sedate"><span class="org-keyword">\small</span></span><span class="org-type"> Suspended Platform</span>};
 
-    % Mass
-    \draw[fill=white] (-1, -1) rectangle (1, 1);
-    % Label
-    \node[anchor=south west, rotate=\thetau] at (-1, -1) {\small Payload};
+    <span class="org-comment">% Mass</span>
+    <span class="org-font-latex-sedate">\draw</span>[fill=white] (-1, -1) rectangle (1, 1);
+    <span class="org-comment">% Label</span>
+    <span class="org-font-latex-sedate">\node</span>[anchor=south west, rotate=<span class="org-font-latex-sedate">\thetau</span>] at (-1, -1) {<span class="org-font-latex-sedate"><span class="org-keyword">\small</span></span><span class="org-type"> Payload</span>};
 
-    % Attached Points
-    \node[] at (-1, 0){$\bullet$};
-    \draw[] (-1, 0) -- ++(-0.2, 0) coordinate(cu);
-    \draw[] ($(cu) + (0, -0.8)$) coordinate(actu) -- ($(cu) + (0, 0.8)$) coordinate(ku);
-    \node[] at (0, -1){$\bullet$};
-    \draw[] (0, -1) -- ++(0, -0.2) coordinate(cv);
-    \draw[] ($(cv) + (-0.8, 0)$)coordinate(kv) -- ($(cv) + (0.8, 0)$) coordinate(actv);
+    <span class="org-comment">% Attached Points</span>
+    <span class="org-font-latex-sedate">\node</span>[] at (-1, 0){<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\bullet</span></span><span class="org-font-latex-math">$</span>};
+    <span class="org-font-latex-sedate">\draw</span>[] (-1, 0) -- ++(-0.2, 0) coordinate(cu);
+    <span class="org-font-latex-sedate">\draw</span>[] (<span class="org-font-latex-math">$(cu) + (0, -0.8)$</span>) coordinate(actu) -- (<span class="org-font-latex-math">$(cu) + (0, 0.8)$</span>) coordinate(ku);
+    <span class="org-font-latex-sedate">\node</span>[] at (0, -1){<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\bullet</span></span><span class="org-font-latex-math">$</span>};
+    <span class="org-font-latex-sedate">\draw</span>[] (0, -1) -- ++(0, -0.2) coordinate(cv);
+    <span class="org-font-latex-sedate">\draw</span>[] (<span class="org-font-latex-math">$(cv) + (-0.8, 0)$</span>)coordinate(kv) -- (<span class="org-font-latex-math">$(cv) + (0.8, 0)$</span>) coordinate(actv);
 
-    % Spring and Actuator for U
-    \draw[actuator={0.6}{0.2}] (actu) -- node[above=0.1, rotate=\thetau]{$F_u$} (actu-|-2.6,0);
-    \draw[spring=0.2] (ku) -- node[above=0.1, rotate=\thetau]{$k$} (ku-|-2.6,0);
-    \draw[damper={8}{8}] (cu) -- node[above left=0.2 and -0.1, rotate=\thetau]{$c$} (cu-|-2.6,0);
+    <span class="org-comment">% Spring and Actuator for U</span>
+    <span class="org-font-latex-sedate">\draw</span>[actuator={0.6}{0.2}] (actu) -- node[above=0.1, rotate=<span class="org-font-latex-sedate">\thetau</span>]{<span class="org-font-latex-math">$F</span><span class="org-font-latex-math"><span class="org-font-latex-script-char">_</span></span><span class="org-font-latex-math">u$</span>} (actu-|-2.6,0);
+    <span class="org-font-latex-sedate">\draw</span>[spring=0.2] (ku) -- node[above=0.1, rotate=<span class="org-font-latex-sedate">\thetau</span>]{<span class="org-font-latex-math">$k$</span>} (ku-|-2.6,0);
+    <span class="org-font-latex-sedate">\draw</span>[damper={8}{8}] (cu) -- node[above left=0.2 and -0.1, rotate=<span class="org-font-latex-sedate">\thetau</span>]{<span class="org-font-latex-math">$c$</span>} (cu-|-2.6,0);
 
-    \draw[actuator={0.6}{0.2}] (actv) -- node[left, rotate=\thetau]{$F_v$} (actv|-0,-2.6);
-    \draw[spring=0.2] (kv) -- node[left, rotate=\thetau]{$k$} (kv|-0,-2.6);
-    \draw[damper={8}{8}] (cv) -- node[left=0.1, rotate=\thetau]{$c$} (cv|-0,-2.6);
-  \end{scope}
+    <span class="org-font-latex-sedate">\draw</span>[actuator={0.6}{0.2}] (actv) -- node[left, rotate=<span class="org-font-latex-sedate">\thetau</span>]{<span class="org-font-latex-math">$F</span><span class="org-font-latex-math"><span class="org-font-latex-script-char">_</span></span><span class="org-font-latex-math">v$</span>} (actv|-0,-2.6);
+    <span class="org-font-latex-sedate">\draw</span>[spring=0.2] (kv) -- node[left, rotate=<span class="org-font-latex-sedate">\thetau</span>]{<span class="org-font-latex-math">$k$</span>} (kv|-0,-2.6);
+    <span class="org-font-latex-sedate">\draw</span>[damper={8}{8}] (cv) -- node[left=0.1, rotate=<span class="org-font-latex-sedate">\thetau</span>]{<span class="org-font-latex-math">$c$</span>} (cv|-0,-2.6);
+  <span class="org-font-latex-sedate"><span class="org-keyword">\end</span></span>{<span class="org-function-name">scope</span>}
 
-  % Inertial Frame
-  \draw[-&gt;] (-4, -4) -- ++(2, 0) node[below]{$\vec{i}_x$};
-  \draw[-&gt;] (-4, -4) -- ++(0, 2) node[left]{$\vec{i}_y$};
-  \draw[fill, color=black] (-4, -4) circle (0.06);
-  \node[draw, circle, inner sep=0pt, minimum size=0.3cm, label=left:$\vec{i}_z$] at (-4, -4){};
+  <span class="org-comment">% Inertial Frame</span>
+  <span class="org-font-latex-sedate">\draw</span>[-&gt;] (-4, -4) -- ++(2, 0) node[below]{<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\vec</span></span><span class="org-font-latex-math">{i}</span><span class="org-font-latex-math"><span class="org-font-latex-script-char">_</span></span><span class="org-font-latex-math">x$</span>};
+  <span class="org-font-latex-sedate">\draw</span>[-&gt;] (-4, -4) -- ++(0, 2) node[left]{<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\vec</span></span><span class="org-font-latex-math">{i}</span><span class="org-font-latex-math"><span class="org-font-latex-script-char">_</span></span><span class="org-font-latex-math">y$</span>};
+  <span class="org-font-latex-sedate">\draw</span>[fill, color=black] (-4, -4) circle (0.06);
+  <span class="org-font-latex-sedate">\node</span>[draw, circle, inner sep=0pt, minimum size=0.3cm, label=left:<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\vec</span></span><span class="org-font-latex-math">{i}</span><span class="org-font-latex-math"><span class="org-font-latex-script-char">_</span></span><span class="org-font-latex-math">z$</span>] at (-4, -4){};
 
-  \draw[-&gt;] (0, 0) node[above left, rotate=\thetau]{$\vec{i}_w$} -- ++(\thetau:2) node[above, rotate=\thetau]{$\vec{i}_u$};
-  \draw[-&gt;] (0, 0) -- ++(\thetau+90:2) node[left, rotate=\thetau]{$\vec{i}_v$};
-  \draw[fill, color=black] (0,0) circle (0.06);
-  \node[draw, circle, inner sep=0pt, minimum size=0.3cm] at (0, 0){};
-  \draw[dashed] (0, 0) -- ++(2, 0);
-  \draw[] (1.5, 0) arc (0:\thetau:1.5) node[midway, right]{$\theta$};
+  <span class="org-font-latex-sedate">\draw</span>[-&gt;] (0, 0) node[above left, rotate=<span class="org-font-latex-sedate">\thetau</span>]{<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\vec</span></span><span class="org-font-latex-math">{i}</span><span class="org-font-latex-math"><span class="org-font-latex-script-char">_</span></span><span class="org-font-latex-math">w$</span>} -- ++(<span class="org-font-latex-sedate">\thetau</span>:2) node[above, rotate=<span class="org-font-latex-sedate">\thetau</span>]{<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\vec</span></span><span class="org-font-latex-math">{i}</span><span class="org-font-latex-math"><span class="org-font-latex-script-char">_</span></span><span class="org-font-latex-math">u$</span>};
+  <span class="org-font-latex-sedate">\draw</span>[-&gt;] (0, 0) -- ++(<span class="org-font-latex-sedate">\thetau</span>+90:2) node[left, rotate=<span class="org-font-latex-sedate">\thetau</span>]{<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\vec</span></span><span class="org-font-latex-math">{i}</span><span class="org-font-latex-math"><span class="org-font-latex-script-char">_</span></span><span class="org-font-latex-math">v$</span>};
+  <span class="org-font-latex-sedate">\draw</span>[fill, color=black] (0,0) circle (0.06);
+  <span class="org-font-latex-sedate">\node</span>[draw, circle, inner sep=0pt, minimum size=0.3cm] at (0, 0){};
+  <span class="org-font-latex-sedate">\draw</span>[dashed] (0, 0) -- ++(2, 0);
+  <span class="org-font-latex-sedate">\draw</span>[] (1.5, 0) arc (0:<span class="org-font-latex-sedate">\thetau</span>:1.5) node[midway, right]{<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\theta</span></span><span class="org-font-latex-math">$</span>};
 
-  \draw[-&gt;] (3.5, 0) arc (0:40:3.5) node[midway, left]{$\Omega$};
-\end{tikzpicture}
+  <span class="org-font-latex-sedate">\draw</span>[-&gt;] (3.5, 0) arc (0:40:3.5) node[midway, left]{<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\Omega</span></span><span class="org-font-latex-math">$</span>};
+<span class="org-font-latex-sedate"><span class="org-keyword">\end</span></span>{<span class="org-function-name">tikzpicture</span>}
 </pre>
 </div>
 
 
-<div class="figure">
+<div id="orge4c1dec" class="figure">
 <p><img src="figs/system.png" alt="system.png" />
 </p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org0c90cdd" class="outline-2">
-<h2 id="org0c90cdd"><span class="section-number-2">2</span> X-Y Rotating Positioning Platform</h2>
+<div id="outline-container-orgfba88c8" class="outline-2">
+<h2 id="orgfba88c8"><span class="section-number-2">2</span> X-Y Rotating Positioning Platform</h2>
 <div class="outline-text-2" id="text-2">
 <div class="org-src-container">
-<pre class="src src-latex">\tikzset{block/.default={0.8cm}{0.8cm}}
-\tikzset{addb/.append style={scale=0.7}}
-\tikzset{node distance=0.6}
+<pre class="src src-latex"><span class="org-font-latex-sedate">\tikzset</span>{block/.default={0.8cm}{0.8cm}}
+<span class="org-font-latex-sedate">\tikzset</span>{addb/.append style={scale=0.7}}
+<span class="org-font-latex-sedate">\tikzset</span>{node distance=0.6}
 
-\begin{tikzpicture}
-  \node[block={1.8cm}{2.2cm}] (G) {$\bm{G}_f$};
+<span class="org-font-latex-sedate"><span class="org-keyword">\begin</span></span>{<span class="org-function-name">tikzpicture</span>}
+  <span class="org-font-latex-sedate">\node</span>[block={1.8cm}{2.2cm}] (G) {<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\bm</span></span><span class="org-font-latex-math">{G}</span><span class="org-font-latex-math"><span class="org-font-latex-script-char">_</span></span><span class="org-font-latex-math">f$</span>};
 
-  % Inputs of the controllers
-  \coordinate[] (output1) at ($(G.south east)!0.75!(G.north east)$);
-  \coordinate[] (output2) at ($(G.south east)!0.25!(G.north east)$);
-  \coordinate[] (input1)  at ($(G.south west)!0.75!(G.north west)$);
-  \coordinate[] (input2)  at ($(G.south west)!0.25!(G.north west)$);
+  <span class="org-comment">% Inputs of the controllers</span>
+  <span class="org-font-latex-sedate">\coordinate</span>[] (output1) at (<span class="org-font-latex-math">$(G.south east)!0.75!(G.north east)$</span>);
+  <span class="org-font-latex-sedate">\coordinate</span>[] (output2) at (<span class="org-font-latex-math">$(G.south east)!0.25!(G.north east)$</span>);
+  <span class="org-font-latex-sedate">\coordinate</span>[] (input1)  at (<span class="org-font-latex-math">$(G.south west)!0.75!(G.north west)$</span>);
+  <span class="org-font-latex-sedate">\coordinate</span>[] (input2)  at (<span class="org-font-latex-math">$(G.south west)!0.25!(G.north west)$</span>);
 
-  \node[block, left=1.8 of input1] (K1) {$K_F$};
-  \node[block] (K2) at ($(K1.east|-input2)+(0.6, 0)$) {$K_F$};
+  <span class="org-font-latex-sedate">\node</span>[block, left=1.8 of input1] (K1) {<span class="org-font-latex-math">$K</span><span class="org-font-latex-math"><span class="org-font-latex-script-char">_</span></span><span class="org-font-latex-math">F$</span>};
+  <span class="org-font-latex-sedate">\node</span>[block] (K2) at (<span class="org-font-latex-math">$(K1.east|-input2)+(0.6, 0)$</span>) {<span class="org-font-latex-math">$K</span><span class="org-font-latex-math"><span class="org-font-latex-script-char">_</span></span><span class="org-font-latex-math">F$</span>};
 
-  % Connections and labels
-  \draw[-&gt;] (K1.east) -- (input1)node[above left]{$F_u$}node[below left]{$-$};
-  \draw[-&gt;] (K2.east) -- (input2)node[above left]{$F_v$}node[below left]{$-$};
+  <span class="org-comment">% Connections and labels</span>
+  <span class="org-font-latex-sedate">\draw</span>[-&gt;] (K1.east) -- (input1)node[above left]{<span class="org-font-latex-math">$F</span><span class="org-font-latex-math"><span class="org-font-latex-script-char">_</span></span><span class="org-font-latex-math">u$</span>}node[below left]{<span class="org-font-latex-math">$-$</span>};
+  <span class="org-font-latex-sedate">\draw</span>[-&gt;] (K2.east) -- (input2)node[above left]{<span class="org-font-latex-math">$F</span><span class="org-font-latex-math"><span class="org-font-latex-script-char">_</span></span><span class="org-font-latex-math">v$</span>}node[below left]{<span class="org-font-latex-math">$-$</span>};
 
-  \draw[-&gt;] (output1) -- ++(0.8, 0) node[above left]{$f_u$};
-  \draw[-&gt;] (output2) -- ++(0.8, 0) node[above left]{$f_v$};
+  <span class="org-font-latex-sedate">\draw</span>[-&gt;] (output1) -- ++(0.8, 0) node[above left]{<span class="org-font-latex-math">$f</span><span class="org-font-latex-math"><span class="org-font-latex-script-char">_</span></span><span class="org-font-latex-math">u$</span>};
+  <span class="org-font-latex-sedate">\draw</span>[-&gt;] (output2) -- ++(0.8, 0) node[above left]{<span class="org-font-latex-math">$f</span><span class="org-font-latex-math"><span class="org-font-latex-script-char">_</span></span><span class="org-font-latex-math">v$</span>};
 
-  \draw[-&gt;] ($(output1)+(0.2, 0)$)node[branch]{} -- ++(0,  1.2) -| ($(K1.west) + (-0.8, 0)$)coordinate(start) -- (K1.west);
-  \draw[-&gt;] ($(output2)+(0.2, 0)$)node[branch]{} -- ++(0, -1.2) -| (start|-K2) -- (K2.west);
+  <span class="org-font-latex-sedate">\draw</span>[-&gt;] (<span class="org-font-latex-math">$(output1)+(0.2, 0)$</span>)node[branch]{} -- ++(0,  1.2) -| (<span class="org-font-latex-math">$(K1.west) + (-0.8, 0)$</span>)coordinate(start) -- (K1.west);
+  <span class="org-font-latex-sedate">\draw</span>[-&gt;] (<span class="org-font-latex-math">$(output2)+(0.2, 0)$</span>)node[branch]{} -- ++(0, -1.2) -| (start|-K2) -- (K2.west);
 
-  \begin{scope}[on background layer]
-    \node[fit={(K1.north west) (K2.south east)}, inner sep=6pt, draw, dashed, fill=black!20!white] (K) {};
-    \node[below left] at (K.north east) {$\bm{K}_F$};
-  \end{scope}
-\end{tikzpicture}
+  <span class="org-font-latex-sedate"><span class="org-keyword">\begin</span></span>{<span class="org-function-name">scope</span>}[on background layer]
+    <span class="org-font-latex-sedate">\node</span>[fit={(K1.north west) (K2.south east)}, inner sep=6pt, draw, dashed, fill=black!20!white] (K) {};
+    <span class="org-font-latex-sedate">\node</span>[below left] at (K.north east) {<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\bm</span></span><span class="org-font-latex-math">{K}</span><span class="org-font-latex-math"><span class="org-font-latex-script-char">_</span></span><span class="org-font-latex-math">F$</span>};
+  <span class="org-font-latex-sedate"><span class="org-keyword">\end</span></span>{<span class="org-function-name">scope</span>}
+<span class="org-font-latex-sedate"><span class="org-keyword">\end</span></span>{<span class="org-function-name">tikzpicture</span>}
 </pre>
 </div>
 
 
-<div class="figure">
+<div id="orgd28fad3" class="figure">
 <p><img src="figs/control_diagram_iff.png" alt="control_diagram_iff.png" />
 </p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgef77a1d" class="outline-2">
-<h2 id="orgef77a1d"><span class="section-number-2">3</span> Decentralized Integral Force Feedback</h2>
+<div id="outline-container-org732f401" class="outline-2">
+<h2 id="org732f401"><span class="section-number-2">3</span> Decentralized Integral Force Feedback</h2>
 <div class="outline-text-2" id="text-3">
 <div class="org-src-container">
-<pre class="src src-latex">\begin{tikzpicture}
-  % Angle
-  \def\thetau{25}
+<pre class="src src-latex"><span class="org-font-latex-sedate"><span class="org-keyword">\begin</span></span>{<span class="org-function-name">tikzpicture</span>}
+  <span class="org-comment">% Angle</span>
+  <span class="org-font-latex-sedate">\def\thetau</span>{25}
 
-  % Rotational Stage
-  \draw[fill=black!60!white] (0, 0) circle (4.3);
-  \draw[fill=black!40!white] (0, 0) circle (3.8);
+  <span class="org-comment">% Rotational Stage</span>
+  <span class="org-font-latex-sedate">\draw</span>[fill=black!60!white] (0, 0) circle (4.3);
+  <span class="org-font-latex-sedate">\draw</span>[fill=black!40!white] (0, 0) circle (3.8);
 
-  % Label
-  \node[anchor=north west, rotate=\thetau] at (-2.5, 2.5) {\small Rotating Stage};
+  <span class="org-comment">% Label</span>
+  <span class="org-font-latex-sedate">\node</span>[anchor=north west, rotate=<span class="org-font-latex-sedate">\thetau</span>] at (-2.5, 2.5) {<span class="org-font-latex-sedate"><span class="org-keyword">\small</span></span><span class="org-type"> Rotating Stage</span>};
 
-  % Rotating Scope
-  \begin{scope}[rotate=\thetau]
-    % Rotating Frame
-    \draw[fill=black!20!white] (-2.6, -2.6) rectangle (2.6, 2.6);
-    % Label
-    \node[anchor=north west, rotate=\thetau] at (-2.6, 2.6) {\small Suspended Platform};
+  <span class="org-comment">% Rotating Scope</span>
+  <span class="org-font-latex-sedate"><span class="org-keyword">\begin</span></span>{<span class="org-function-name">scope</span>}[rotate=<span class="org-font-latex-sedate">\thetau</span>]
+    <span class="org-comment">% Rotating Frame</span>
+    <span class="org-font-latex-sedate">\draw</span>[fill=black!20!white] (-2.6, -2.6) rectangle (2.6, 2.6);
+    <span class="org-comment">% Label</span>
+    <span class="org-font-latex-sedate">\node</span>[anchor=north west, rotate=<span class="org-font-latex-sedate">\thetau</span>] at (-2.6, 2.6) {<span class="org-font-latex-sedate"><span class="org-keyword">\small</span></span><span class="org-type"> Suspended Platform</span>};
 
-    % Mass
-    \draw[fill=white] (-1, -1) rectangle (1, 1);
-    % Label
-    \node[anchor=south west, rotate=\thetau] at (-1, -1) {\small Payload};
+    <span class="org-comment">% Mass</span>
+    <span class="org-font-latex-sedate">\draw</span>[fill=white] (-1, -1) rectangle (1, 1);
+    <span class="org-comment">% Label</span>
+    <span class="org-font-latex-sedate">\node</span>[anchor=south west, rotate=<span class="org-font-latex-sedate">\thetau</span>] at (-1, -1) {<span class="org-font-latex-sedate"><span class="org-keyword">\small</span></span><span class="org-type"> Payload</span>};
 
-    % Attached Points
-    \node[] at (-1, 0){$\bullet$};
-    \draw[] (-1, 0) -- ++(-0.2, 0) coordinate(au);
-    \node[] at (0, -1){$\bullet$};
-    \draw[] (0, -1) -- ++(0, -0.2) coordinate(av);
+    <span class="org-comment">% Attached Points</span>
+    <span class="org-font-latex-sedate">\node</span>[] at (-1, 0){<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\bullet</span></span><span class="org-font-latex-math">$</span>};
+    <span class="org-font-latex-sedate">\draw</span>[] (-1, 0) -- ++(-0.2, 0) coordinate(au);
+    <span class="org-font-latex-sedate">\node</span>[] at (0, -1){<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\bullet</span></span><span class="org-font-latex-math">$</span>};
+    <span class="org-font-latex-sedate">\draw</span>[] (0, -1) -- ++(0, -0.2) coordinate(av);
 
-    % Force Sensors
-    \draw[fill=white] ($(au) + (-0.2, -0.5)$) rectangle ($(au) + (0, 0.5)$);
-    \draw[] ($(au) + (-0.2, -0.5)$)coordinate(actu) -- ($(au) + (0,  0.5)$);
-    \draw[] ($(au) + (-0.2,  0.5)$)coordinate(ku)   -- ($(au) + (0, -0.5)$);
+    <span class="org-comment">% Force Sensors</span>
+    <span class="org-font-latex-sedate">\draw</span>[fill=white] (<span class="org-font-latex-math">$(au) + (-0.2, -0.5)$</span>) rectangle (<span class="org-font-latex-math">$(au) + (0, 0.5)$</span>);
+    <span class="org-font-latex-sedate">\draw</span>[] (<span class="org-font-latex-math">$(au) + (-0.2, -0.5)$</span>)coordinate(actu) -- (<span class="org-font-latex-math">$(au) + (0,  0.5)$</span>);
+    <span class="org-font-latex-sedate">\draw</span>[] (<span class="org-font-latex-math">$(au) + (-0.2,  0.5)$</span>)coordinate(ku)   -- (<span class="org-font-latex-math">$(au) + (0, -0.5)$</span>);
 
-    \draw[fill=white] ($(av) + (-0.5, -0.2)$) rectangle ($(av) + (0.5, 0)$);
-    \draw[] ($(av) + ( 0.5, -0.2)$)coordinate(actv) -- ($(av) + (-0.5,  0)$);
-    \draw[] ($(av) + (-0.5, -0.2)$)coordinate(kv)   -- ($(av) + ( 0.5,  0)$);
+    <span class="org-font-latex-sedate">\draw</span>[fill=white] (<span class="org-font-latex-math">$(av) + (-0.5, -0.2)$</span>) rectangle (<span class="org-font-latex-math">$(av) + (0.5, 0)$</span>);
+    <span class="org-font-latex-sedate">\draw</span>[] (<span class="org-font-latex-math">$(av) + ( 0.5, -0.2)$</span>)coordinate(actv) -- (<span class="org-font-latex-math">$(av) + (-0.5,  0)$</span>);
+    <span class="org-font-latex-sedate">\draw</span>[] (<span class="org-font-latex-math">$(av) + (-0.5, -0.2)$</span>)coordinate(kv)   -- (<span class="org-font-latex-math">$(av) + ( 0.5,  0)$</span>);
 
-    % Spring and Actuator for U
-    \draw[actuator={0.6}{0.2}] (actu) -- coordinate[midway](actumid) (actu-|-2.6,0);
-    \draw[spring=0.2] (ku) -- node[above=0.1, rotate=\thetau]{$k$} (ku-|-2.6,0);
+    <span class="org-comment">% Spring and Actuator for U</span>
+    <span class="org-font-latex-sedate">\draw</span>[actuator={0.6}{0.2}] (actu) -- coordinate[midway](actumid) (actu-|-2.6,0);
+    <span class="org-font-latex-sedate">\draw</span>[spring=0.2] (ku) -- node[above=0.1, rotate=<span class="org-font-latex-sedate">\thetau</span>]{<span class="org-font-latex-math">$k$</span>} (ku-|-2.6,0);
 
-    % \draw[actuator={0.6}{0.2}] (actv) -- node[right, rotate=\thetau]{$F_v$} (actv|-0,-2.6);
-    \draw[actuator={0.6}{0.2}] (actv) -- coordinate[midway](actvmid) (actv|-0,-2.6);
-    \draw[spring=0.2] (kv) -- node[left, rotate=\thetau]{$k$} (kv|-0,-2.6);
+    <span class="org-comment">% </span><span class="org-font-latex-sedate"><span class="org-comment">\draw</span></span><span class="org-comment">[actuator={0.6}{0.2}] (actv) -- node[right, rotate=</span><span class="org-font-latex-sedate"><span class="org-comment">\thetau</span></span><span class="org-comment">]{$F_v$} (actv|-0,-2.6);</span>
+    <span class="org-font-latex-sedate">\draw</span>[actuator={0.6}{0.2}] (actv) -- coordinate[midway](actvmid) (actv|-0,-2.6);
+    <span class="org-font-latex-sedate">\draw</span>[spring=0.2] (kv) -- node[left, rotate=<span class="org-font-latex-sedate">\thetau</span>]{<span class="org-font-latex-math">$k$</span>} (kv|-0,-2.6);
 
-    \node[block={0.8cm}{0.6cm}, rotate=\thetau] (Ku) at ($(actumid) + (0, -1.2)$) {$K_{F}$};
-    \draw[-&gt;] ($(au) + (-0.1, -0.5)$) |- (Ku.east) node[below right, rotate=\thetau]{$f_{u}$};
-    \draw[-&gt;] (Ku.north) -- ($(actumid) + (0, -0.1)$) node[below left, rotate=\thetau]{$F_u$} node[below right, rotate=\thetau]{$-$};
+    <span class="org-font-latex-sedate">\node</span>[block={0.8cm}{0.6cm}, rotate=<span class="org-font-latex-sedate">\thetau</span>] (Ku) at (<span class="org-font-latex-math">$(actumid) + (0, -1.2)$</span>) {<span class="org-font-latex-math">$K_{F}$</span>};
+    <span class="org-font-latex-sedate">\draw</span>[-&gt;] (<span class="org-font-latex-math">$(au) + (-0.1, -0.5)$</span>) |- (Ku.east) node[below right, rotate=<span class="org-font-latex-sedate">\thetau</span>]{<span class="org-font-latex-math">$f_{u}$</span>};
+    <span class="org-font-latex-sedate">\draw</span>[-&gt;] (Ku.north) -- (<span class="org-font-latex-math">$(actumid) + (0, -0.1)$</span>) node[below left, rotate=<span class="org-font-latex-sedate">\thetau</span>]{<span class="org-font-latex-math">$F_u$</span>} node[below right, rotate=<span class="org-font-latex-sedate">\thetau</span>]{<span class="org-font-latex-math">$-$</span>};
 
-    \node[block={0.8cm}{0.6cm}, rotate=\thetau] (Kv) at ($(actvmid) + (1.2, 0)$) {$K_{F}$};
-    \draw[-&gt;] ($(av) + (0.5, -0.1)$) -| (Kv.north) node[above right, rotate=\thetau]{$f_{v}$};
-    \draw[-&gt;] (Kv.west) -- ($(actvmid) + (0.1, 0)$) node[below right, rotate=\thetau]{$F_v$} node[above right, rotate=\thetau]{$-$};
-  \end{scope}
+    <span class="org-font-latex-sedate">\node</span>[block={0.8cm}{0.6cm}, rotate=<span class="org-font-latex-sedate">\thetau</span>] (Kv) at (<span class="org-font-latex-math">$(actvmid) + (1.2, 0)$</span>) {<span class="org-font-latex-math">$K_{F}$</span>};
+    <span class="org-font-latex-sedate">\draw</span>[-&gt;] (<span class="org-font-latex-math">$(av) + (0.5, -0.1)$</span>) -| (Kv.north) node[above right, rotate=<span class="org-font-latex-sedate">\thetau</span>]{<span class="org-font-latex-math">$f_{v}$</span>};
+    <span class="org-font-latex-sedate">\draw</span>[-&gt;] (Kv.west) -- (<span class="org-font-latex-math">$(actvmid) + (0.1, 0)$</span>) node[below right, rotate=<span class="org-font-latex-sedate">\thetau</span>]{<span class="org-font-latex-math">$F_v$</span>} node[above right, rotate=<span class="org-font-latex-sedate">\thetau</span>]{<span class="org-font-latex-math">$-$</span>};
+  <span class="org-font-latex-sedate"><span class="org-keyword">\end</span></span>{<span class="org-function-name">scope</span>}
 
-  % Inertial Frame
-  \draw[-&gt;] (-4, -4) -- ++(2, 0) node[below]{$\vec{i}_x$};
-  \draw[-&gt;] (-4, -4) -- ++(0, 2) node[left]{$\vec{i}_y$};
-  \draw[fill, color=black] (-4, -4) circle (0.06);
-  \node[draw, circle, inner sep=0pt, minimum size=0.3cm, label=left:$\vec{i}_z$] at (-4, -4){};
+  <span class="org-comment">% Inertial Frame</span>
+  <span class="org-font-latex-sedate">\draw</span>[-&gt;] (-4, -4) -- ++(2, 0) node[below]{<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\vec</span></span><span class="org-font-latex-math">{i}_x$</span>};
+  <span class="org-font-latex-sedate">\draw</span>[-&gt;] (-4, -4) -- ++(0, 2) node[left]{<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\vec</span></span><span class="org-font-latex-math">{i}_y$</span>};
+  <span class="org-font-latex-sedate">\draw</span>[fill, color=black] (-4, -4) circle (0.06);
+  <span class="org-font-latex-sedate">\node</span>[draw, circle, inner sep=0pt, minimum size=0.3cm, label=left:<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\vec</span></span><span class="org-font-latex-math">{i}_z$</span>] at (-4, -4){};
 
-  \node[draw, circle, inner sep=0pt, minimum size=0.3cm] at (0, 0){};
-  \draw[-&gt;] (0, 0) node[above left, rotate=\thetau]{$\vec{i}_w$} -- ++(\thetau:2) node[above, rotate=\thetau]{$\vec{i}_u$};
-  \draw[-&gt;] (0, 0) -- ++(\thetau+90:2) node[left, rotate=\thetau]{$\vec{i}_v$};
-  \draw[dashed] (0, 0) -- ++(2, 0);
-  \draw[] (1.5, 0) arc (0:\thetau:1.5) node[midway, right]{$\theta$};
-  \node[] at (0,0) {$\bullet$};
+  <span class="org-font-latex-sedate">\node</span>[draw, circle, inner sep=0pt, minimum size=0.3cm] at (0, 0){};
+  <span class="org-font-latex-sedate">\draw</span>[-&gt;] (0, 0) node[above left, rotate=<span class="org-font-latex-sedate">\thetau</span>]{<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\vec</span></span><span class="org-font-latex-math">{i}_w$</span>} -- ++(<span class="org-font-latex-sedate">\thetau</span>:2) node[above, rotate=<span class="org-font-latex-sedate">\thetau</span>]{<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\vec</span></span><span class="org-font-latex-math">{i}_u$</span>};
+  <span class="org-font-latex-sedate">\draw</span>[-&gt;] (0, 0) -- ++(<span class="org-font-latex-sedate">\thetau</span>+90:2) node[left, rotate=<span class="org-font-latex-sedate">\thetau</span>]{<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\vec</span></span><span class="org-font-latex-math">{i}_v$</span>};
+  <span class="org-font-latex-sedate">\draw</span>[dashed] (0, 0) -- ++(2, 0);
+  <span class="org-font-latex-sedate">\draw</span>[] (1.5, 0) arc (0:<span class="org-font-latex-sedate">\thetau</span>:1.5) node[midway, right]{<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\theta</span></span><span class="org-font-latex-math">$</span>};
+  <span class="org-font-latex-sedate">\node</span>[] at (0,0) {<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\bullet</span></span><span class="org-font-latex-math">$</span>};
 
-  \draw[-&gt;] (3.5, 0) arc (0:40:3.5) node[midway, left]{$\Omega$};
-\end{tikzpicture}
+  <span class="org-font-latex-sedate">\draw</span>[-&gt;] (3.5, 0) arc (0:40:3.5) node[midway, left]{<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\Omega</span></span><span class="org-font-latex-math">$</span>};
+<span class="org-font-latex-sedate"><span class="org-keyword">\end</span></span>{<span class="org-function-name">tikzpicture</span>}
 </pre>
 </div>
 
 
-<div class="figure">
+<div id="orgfc98ac7" class="figure">
 <p><img src="figs/system_iff.png" alt="system_iff.png" />
 </p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org5339b95" class="outline-2">
-<h2 id="org5339b95"><span class="section-number-2">4</span> Springs in parallel</h2>
+<div id="outline-container-org1dd642f" class="outline-2">
+<h2 id="org1dd642f"><span class="section-number-2">4</span> Springs in parallel</h2>
 <div class="outline-text-2" id="text-4">
 <div class="org-src-container">
-<pre class="src src-latex">\begin{tikzpicture}
-  % Angle
-  \def\thetau{25}
+<pre class="src src-latex"><span class="org-font-latex-sedate"><span class="org-keyword">\begin</span></span>{<span class="org-function-name">tikzpicture</span>}
+  <span class="org-comment">% Angle</span>
+  <span class="org-font-latex-sedate">\def\thetau</span>{25}
 
-  % Rotational Stage
-  \draw[fill=black!60!white] (0, 0) circle (4.3);
-  \draw[fill=black!40!white] (0, 0) circle (3.8);
+  <span class="org-comment">% Rotational Stage</span>
+  <span class="org-font-latex-sedate">\draw</span>[fill=black!60!white] (0, 0) circle (4.3);
+  <span class="org-font-latex-sedate">\draw</span>[fill=black!40!white] (0, 0) circle (3.8);
 
-  % Label
-  \node[anchor=north west, rotate=\thetau] at (-2.5, 2.5) {\small Rotating Stage};
+  <span class="org-comment">% Label</span>
+  <span class="org-font-latex-sedate">\node</span>[anchor=north west, rotate=<span class="org-font-latex-sedate">\thetau</span>] at (-2.5, 2.5) {<span class="org-font-latex-sedate"><span class="org-keyword">\small</span></span><span class="org-type"> Rotating Stage</span>};
 
-  % Rotating Scope
-  \begin{scope}[rotate=\thetau]
-    % Rotating Frame
-    \draw[fill=black!20!white] (-2.6, -2.6) rectangle (2.6, 2.6);
-    % Label
-    \node[anchor=north west, rotate=\thetau] at (-2.6, 2.6) {\small Suspended Platform};
+  <span class="org-comment">% Rotating Scope</span>
+  <span class="org-font-latex-sedate"><span class="org-keyword">\begin</span></span>{<span class="org-function-name">scope</span>}[rotate=<span class="org-font-latex-sedate">\thetau</span>]
+    <span class="org-comment">% Rotating Frame</span>
+    <span class="org-font-latex-sedate">\draw</span>[fill=black!20!white] (-2.6, -2.6) rectangle (2.6, 2.6);
+    <span class="org-comment">% Label</span>
+    <span class="org-font-latex-sedate">\node</span>[anchor=north west, rotate=<span class="org-font-latex-sedate">\thetau</span>] at (-2.6, 2.6) {<span class="org-font-latex-sedate"><span class="org-keyword">\small</span></span><span class="org-type"> Suspended Platform</span>};
 
-    % Mass
-    \draw[fill=white] (-1, -1) rectangle (1, 1);
-    % Label
-    \node[anchor=south west, rotate=\thetau] at (-1, -1) {\small Payload};
+    <span class="org-comment">% Mass</span>
+    <span class="org-font-latex-sedate">\draw</span>[fill=white] (-1, -1) rectangle (1, 1);
+    <span class="org-comment">% Label</span>
+    <span class="org-font-latex-sedate">\node</span>[anchor=south west, rotate=<span class="org-font-latex-sedate">\thetau</span>] at (-1, -1) {<span class="org-font-latex-sedate"><span class="org-keyword">\small</span></span><span class="org-type"> Payload</span>};
 
-    % Attached Points
-    \draw[] (-1, 0) -- ++(-0.2, 0) coordinate(au);
-    \draw[] (0, -1) -- ++(0, -0.2) coordinate(av);
+    <span class="org-comment">% Attached Points</span>
+    <span class="org-font-latex-sedate">\draw</span>[] (-1, 0) -- ++(-0.2, 0) coordinate(au);
+    <span class="org-font-latex-sedate">\draw</span>[] (0, -1) -- ++(0, -0.2) coordinate(av);
 
-    % Force Sensors
-    \draw[fill=white] ($(au) + (-0.2, -0.5)$) rectangle ($(au) + (0, 0.5)$);
-    \draw[] ($(au) + (-0.2, -0.5)$)coordinate(actu) -- ($(au) + (0,  0.5)$);
-    \draw[] ($(au) + (-0.2,  0.5)$)coordinate(ku)   -- ($(au) + (0, -0.5)$);
-    \node[below=0.1, rotate=\thetau] at ($(au) + (-0.1, -0.5)$) {$f_{u}$}
+    <span class="org-comment">% Force Sensors</span>
+    <span class="org-font-latex-sedate">\draw</span>[fill=white] (<span class="org-font-latex-math">$(au) + (-0.2, -0.5)$</span>) rectangle (<span class="org-font-latex-math">$(au) + (0, 0.5)$</span>);
+    <span class="org-font-latex-sedate">\draw</span>[] (<span class="org-font-latex-math">$(au) + (-0.2, -0.5)$</span>)coordinate(actu) -- (<span class="org-font-latex-math">$(au) + (0,  0.5)$</span>);
+    <span class="org-font-latex-sedate">\draw</span>[] (<span class="org-font-latex-math">$(au) + (-0.2,  0.5)$</span>)coordinate(ku)   -- (<span class="org-font-latex-math">$(au) + (0, -0.5)$</span>);
+    <span class="org-font-latex-sedate">\node</span>[below=0.1, rotate=<span class="org-font-latex-sedate">\thetau</span>] at (<span class="org-font-latex-math">$(au) + (-0.1, -0.5)$</span>) {<span class="org-font-latex-math">$f</span><span class="org-font-latex-math"><span class="org-font-latex-script-char">_</span></span><span class="org-font-latex-math">{u}$</span>}
 
-    \draw[fill=white] ($(av) + (-0.5, -0.2)$) rectangle ($(av) + (0.5, 0)$);
-    \draw[] ($(av) + ( 0.5, -0.2)$)coordinate(actv) -- ($(av) + (-0.5,  0)$);
-    \draw[] ($(av) + (-0.5, -0.2)$)coordinate(kv)   -- ($(av) + ( 0.5,  0)$) ;
-    \node[right=0.1, rotate=\thetau] at ($(av) + (0.5, -0.1)$) {$f_{v}$}
+    <span class="org-font-latex-sedate">\draw</span>[fill=white] (<span class="org-font-latex-math">$(av) + (-0.5, -0.2)$</span>) rectangle (<span class="org-font-latex-math">$(av) + (0.5, 0)$</span>);
+    <span class="org-font-latex-sedate">\draw</span>[] (<span class="org-font-latex-math">$(av) + ( 0.5, -0.2)$</span>)coordinate(actv) -- (<span class="org-font-latex-math">$(av) + (-0.5,  0)$</span>);
+    <span class="org-font-latex-sedate">\draw</span>[] (<span class="org-font-latex-math">$(av) + (-0.5, -0.2)$</span>)coordinate(kv)   -- (<span class="org-font-latex-math">$(av) + ( 0.5,  0)$</span>) ;
+    <span class="org-font-latex-sedate">\node</span>[right=0.1, rotate=<span class="org-font-latex-sedate">\thetau</span>] at (<span class="org-font-latex-math">$(av) + (0.5, -0.1)$</span>) {<span class="org-font-latex-math">$f</span><span class="org-font-latex-math"><span class="org-font-latex-script-char">_</span></span><span class="org-font-latex-math">{v}$</span>}
 
-    % Spring and Actuator for U
-    \draw[actuator={0.6}{0.2}] (actu) -- node[below=0.1, rotate=\thetau]{$F_u$} (actu-|-2.6,0);
-    \draw[spring=0.2] (ku) -- node[below=0.1, rotate=\thetau]{$k_a$} (ku-|-2.6,0);
-    \draw[spring=0.2] (-1, 0.8) -- node[above=0.1, rotate=\thetau]{$k_p$} (-1, 0.8-|-2.6,0);
+    <span class="org-comment">% Spring and Actuator for U</span>
+    <span class="org-font-latex-sedate">\draw</span>[actuator={0.6}{0.2}] (actu) -- node[below=0.1, rotate=<span class="org-font-latex-sedate">\thetau</span>]{<span class="org-font-latex-math">$F</span><span class="org-font-latex-math"><span class="org-font-latex-script-char">_</span></span><span class="org-font-latex-math">u$</span>} (actu-|-2.6,0);
+    <span class="org-font-latex-sedate">\draw</span>[spring=0.2] (ku) -- node[below=0.1, rotate=<span class="org-font-latex-sedate">\thetau</span>]{<span class="org-font-latex-math">$k</span><span class="org-font-latex-math"><span class="org-font-latex-script-char">_</span></span><span class="org-font-latex-math">a$</span>} (ku-|-2.6,0);
+    <span class="org-font-latex-sedate">\draw</span>[spring=0.2] (-1, 0.8) -- node[above=0.1, rotate=<span class="org-font-latex-sedate">\thetau</span>]{<span class="org-font-latex-math">$k</span><span class="org-font-latex-math"><span class="org-font-latex-script-char">_</span></span><span class="org-font-latex-math">p$</span>} (-1, 0.8-|-2.6,0);
 
-    \draw[actuator={0.6}{0.2}] (actv) -- node[right=0.1, rotate=\thetau]{$F_v$} (actv|-0,-2.6);
-    \draw[spring=0.2] (kv) -- node[right=0.1, rotate=\thetau]{$k_a$} (kv|-0,-2.6);
-    \draw[spring=0.2] (-0.8, -1) -- node[left=0.1, rotate=\thetau]{$k_p$} (-0.8, -1|-0,-2.6);
-  \end{scope}
+    <span class="org-font-latex-sedate">\draw</span>[actuator={0.6}{0.2}] (actv) -- node[right=0.1, rotate=<span class="org-font-latex-sedate">\thetau</span>]{<span class="org-font-latex-math">$F</span><span class="org-font-latex-math"><span class="org-font-latex-script-char">_</span></span><span class="org-font-latex-math">v$</span>} (actv|-0,-2.6);
+    <span class="org-font-latex-sedate">\draw</span>[spring=0.2] (kv) -- node[right=0.1, rotate=<span class="org-font-latex-sedate">\thetau</span>]{<span class="org-font-latex-math">$k</span><span class="org-font-latex-math"><span class="org-font-latex-script-char">_</span></span><span class="org-font-latex-math">a$</span>} (kv|-0,-2.6);
+    <span class="org-font-latex-sedate">\draw</span>[spring=0.2] (-0.8, -1) -- node[left=0.1, rotate=<span class="org-font-latex-sedate">\thetau</span>]{<span class="org-font-latex-math">$k</span><span class="org-font-latex-math"><span class="org-font-latex-script-char">_</span></span><span class="org-font-latex-math">p$</span>} (-0.8, -1|-0,-2.6);
+  <span class="org-font-latex-sedate"><span class="org-keyword">\end</span></span>{<span class="org-function-name">scope</span>}
 
-  % Inertial Frame
-  \draw[-&gt;] (-4, -4) -- ++(2, 0) node[below]{$\vec{i}_x$};
-  \draw[-&gt;] (-4, -4) -- ++(0, 2) node[left]{$\vec{i}_y$};
-  \draw[fill, color=black] (-4, -4) circle (0.06);
-  \node[draw, circle, inner sep=0pt, minimum size=0.3cm, label=left:$\vec{i}_z$] at (-4, -4){};
+  <span class="org-comment">% Inertial Frame</span>
+  <span class="org-font-latex-sedate">\draw</span>[-&gt;] (-4, -4) -- ++(2, 0) node[below]{<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\vec</span></span><span class="org-font-latex-math">{i}</span><span class="org-font-latex-math"><span class="org-font-latex-script-char">_</span></span><span class="org-font-latex-math">x$</span>};
+  <span class="org-font-latex-sedate">\draw</span>[-&gt;] (-4, -4) -- ++(0, 2) node[left]{<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\vec</span></span><span class="org-font-latex-math">{i}</span><span class="org-font-latex-math"><span class="org-font-latex-script-char">_</span></span><span class="org-font-latex-math">y$</span>};
+  <span class="org-font-latex-sedate">\draw</span>[fill, color=black] (-4, -4) circle (0.06);
+  <span class="org-font-latex-sedate">\node</span>[draw, circle, inner sep=0pt, minimum size=0.3cm, label=left:<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\vec</span></span><span class="org-font-latex-math">{i}</span><span class="org-font-latex-math"><span class="org-font-latex-script-char">_</span></span><span class="org-font-latex-math">z$</span>] at (-4, -4){};
 
-  \node[draw, circle, inner sep=0pt, minimum size=0.3cm] at (0, 0){};
-  \draw[-&gt;] (0, 0) node[above left, rotate=\thetau]{$\vec{i}_w$} -- ++(\thetau:2) node[above, rotate=\thetau]{$\vec{i}_u$};
-  \draw[-&gt;] (0, 0) -- ++(\thetau+90:2) node[left, rotate=\thetau]{$\vec{i}_v$};
-  \draw[dashed] (0, 0) -- ++(2, 0);
-  \draw[] (1.5, 0) arc (0:\thetau:1.5) node[midway, right]{$\theta$};
-  \node[] at (0,0) {$\bullet$};
+  <span class="org-font-latex-sedate">\node</span>[draw, circle, inner sep=0pt, minimum size=0.3cm] at (0, 0){};
+  <span class="org-font-latex-sedate">\draw</span>[-&gt;] (0, 0) node[above left, rotate=<span class="org-font-latex-sedate">\thetau</span>]{<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\vec</span></span><span class="org-font-latex-math">{i}</span><span class="org-font-latex-math"><span class="org-font-latex-script-char">_</span></span><span class="org-font-latex-math">w$</span>} -- ++(<span class="org-font-latex-sedate">\thetau</span>:2) node[above, rotate=<span class="org-font-latex-sedate">\thetau</span>]{<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\vec</span></span><span class="org-font-latex-math">{i}</span><span class="org-font-latex-math"><span class="org-font-latex-script-char">_</span></span><span class="org-font-latex-math">u$</span>};
+  <span class="org-font-latex-sedate">\draw</span>[-&gt;] (0, 0) -- ++(<span class="org-font-latex-sedate">\thetau</span>+90:2) node[left, rotate=<span class="org-font-latex-sedate">\thetau</span>]{<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\vec</span></span><span class="org-font-latex-math">{i}</span><span class="org-font-latex-math"><span class="org-font-latex-script-char">_</span></span><span class="org-font-latex-math">v$</span>};
+  <span class="org-font-latex-sedate">\draw</span>[dashed] (0, 0) -- ++(2, 0);
+  <span class="org-font-latex-sedate">\draw</span>[] (1.5, 0) arc (0:<span class="org-font-latex-sedate">\thetau</span>:1.5) node[midway, right]{<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\theta</span></span><span class="org-font-latex-math">$</span>};
+  <span class="org-font-latex-sedate">\node</span>[] at (0,0) {<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\bullet</span></span><span class="org-font-latex-math">$</span>};
 
-  \draw[-&gt;] (3.5, 0) arc (0:40:3.5) node[midway, left]{$\Omega$};
-\end{tikzpicture}
+  <span class="org-font-latex-sedate">\draw</span>[-&gt;] (3.5, 0) arc (0:40:3.5) node[midway, left]{<span class="org-font-latex-math">$</span><span class="org-font-latex-sedate"><span class="org-font-latex-math">\Omega</span></span><span class="org-font-latex-math">$</span>};
+<span class="org-font-latex-sedate"><span class="org-keyword">\end</span></span>{<span class="org-function-name">tikzpicture</span>}
 </pre>
 </div>
 
 
-<div class="figure">
+<div id="orgc785e50" class="figure">
 <p><img src="figs/system_parallel_springs.png" alt="system_parallel_springs.png" />
 </p>
 </div>
@@ -319,7 +315,7 @@ Configuration file is accessible <a href="config.html">here</a>.
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Thomas Dehaeze</p>
-<p class="date">Created: 2020-07-09 jeu. 09:31</p>
+<p class="date">Created: 2020-11-12 jeu. 10:40</p>
 </div>
 </body>
 </html>
