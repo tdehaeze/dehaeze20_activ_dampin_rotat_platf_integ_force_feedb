@@ -21,14 +21,54 @@ Guaranteed stability, typical benefit of IFF, is lost as soon as the system is r
 To overcome this issue, two modifications of the classical IFF control scheme are proposed.
 The first consists of slightly modifying the control law while the second consists of adding springs in parallel with the force sensors.
 Conditions for stability and optimal parameters are derived.
-The results reveal that, despite their different implementations, both modified IFF control scheme have almost identical damping authority on suspension modes.
+The results reveal that, despite their different implementations, both modified IFF control scheme have almost identical damping authority on the suspension modes.
 #+end_quote
 
-* Paper ([[file:paper/dehaeze20_activ_dampin_rotat_platf_integ_force_feedb.pdf][link]])
+* Journal Paper ([[file:journal/dehaeze21_activ_dampin_rotat_platf_using.pdf][pdf]])
 :PROPERTIES:
 :UNNUMBERED: t
 :END:
+
 The paper has been created using [[https://orgmode.org/][Org Mode]] (generating [[https://www.latex-project.org/][LaTeX]] code) under [[https://www.gnu.org/software/emacs/][Emacs]].
+
+To cite this journal paper use the following bibtex code.
+#+begin_src bibtex
+@article{dehaeze21_activ_dampin_rotat_platf_using,
+  author          = {Thomas Dehaeze and Christophe Collette},
+  title           = {Active Damping of Rotating Platforms Using Integral Force
+                  Feedback},
+  journal         = {Engineering Research Express},
+  year            = 2021,
+  url             = {http://iopscience.iop.org/article/10.1088/2631-8695/abe803},
+}
+#+end_src
+
+You can also use the formatted citation below.
+#+begin_quote
+Dehaeze, T., & Collette, C., Active damping of rotating platforms using integral force feedback, Engineering Research Express,  (2021).
+#+end_quote
+
+* Conference Paper ([[file:paper/dehaeze20_activ_dampin_rotat_platf_integ_force_feedb.pdf][pdf]])
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+
+To cite this conference paper use the following bibtex code.
+#+begin_src bibtex
+@inproceedings{dehaeze20_activ_dampin_rotat_platf_integ_force_feedb,
+  author          = {Dehaeze, T. and Collette, C.},
+  title           = {Active Damping of Rotating Platforms using Integral Force
+                  Feedback},
+  booktitle       = {Proceedings of the International Conference on Modal
+                  Analysis Noise and Vibration Engineering (ISMA)},
+  year            = 2020,
+}
+#+end_src
+
+You can also use the formatted citation below.
+#+begin_quote
+Dehaeze, T., & Collette, C., Active damping of rotating platforms using integral force feedback, In , Proceedings of the International Conference on Modal Analysis Noise and Vibration Engineering (ISMA) (pp. ) (2020)
+#+end_quote
 
 * Matlab Scripts ([[file:matlab/index.org][link]])
 :PROPERTIES:
@@ -54,23 +94,3 @@ All the figures in the paper are generated using either [[https://sourceforge.ne
      frameborder="0" allowfullscreen> </iframe>
 #+end_export
 
-* Cite this paper
-:PROPERTIES:
-:UNNUMBERED: t
-:END:
-To cite this paper use the following bibtex code.
-#+begin_src bibtex
-@inproceedings{dehaeze20_activ_dampin_rotat_platf_integ_force_feedb,
-  author          = {Dehaeze, T. and Collette, C.},
-  title           = {Active Damping of Rotating Platforms using Integral Force
-                  Feedback},
-  booktitle       = {Proceedings of the International Conference on Modal
-                  Analysis Noise and Vibration Engineering (ISMA)},
-  year            = 2020,
-}
-#+end_src
-
-You can also use the formatted citation below.
-#+begin_quote
-Dehaeze, T., & Collette, C., Active damping of rotating platforms using integral force feedback, In , Proceedings of the International Conference on Modal Analysis Noise and Vibration Engineering (ISMA) (pp. ) (2020)
-#+end_quote
