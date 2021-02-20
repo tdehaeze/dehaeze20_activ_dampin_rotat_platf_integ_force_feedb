@@ -1,0 +1,114 @@
+\usepackage{float}
+
+\usepackage{caption,tabularx,booktabs}
+
+\usepackage{biblatex}
+
+\usepackage{fontawesome}
+
+\usepackage{caption}
+\usepackage{subcaption}
+
+\captionsetup[figure]{labelfont=bf}
+\captionsetup[subfigure]{labelfont=bf}
+\captionsetup[listing]{labelfont=bf}
+\captionsetup[table]{labelfont=bf}
+
+\usepackage{xcolor}
+
+\definecolor{my-blue}{HTML}{6b7adb}
+\definecolor{my-pale-blue}{HTML}{e6e9f9}
+\definecolor{my-red}{HTML}{db6b6b}
+\definecolor{my-pale-red}{HTML}{f9e6e6}
+\definecolor{my-green}{HTML}{6bdbb6}
+\definecolor{my-pale-green}{HTML}{e6f9f3}
+\definecolor{my-yellow}{HTML}{dbd26b}
+\definecolor{my-pale-yellow}{HTML}{f9f7e6}
+\definecolor{my-orange}{HTML}{dba76b}
+\definecolor{my-pale-orange}{HTML}{f9f0e6}
+\definecolor{my-grey}{HTML}{a3a3a3}
+\definecolor{my-pale-grey}{HTML}{f0f0f0}
+\definecolor{my-turq}{HTML}{6bc7db}
+\definecolor{my-pale-turq}{HTML}{e6f6f9}
+
+\usepackage{inconsolata}
+
+\usepackage[newfloat=true, chapter]{minted}
+\usemintedstyle{autumn}
+
+\setminted{frame=lines,breaklines=true,tabsize=4,fontsize=\scriptsize,autogobble=true,labelposition=topline,bgcolor=my-pale-grey}
+\setminted[matlab]{label=Matlab}
+\setminted[latex]{label=LaTeX}
+\setminted[bash]{label=Bash}
+\setminted[python]{label=Python}
+\setminted[text]{label=Results}
+\setminted[md]{label=Org Mode}
+
+\setmintedinline{fontsize=\normalsize,bgcolor=my-pale-grey}
+
+\usepackage[most]{tcolorbox}
+
+\tcbuselibrary{minted}
+
+\newtcolorbox{seealso}{   enhanced,breakable,colback=my-pale-grey,colframe=my-grey,fonttitle=\bfseries,title=See Also}
+\newtcolorbox{hint}{      enhanced,breakable,colback=my-pale-grey,colframe=my-grey,fonttitle=\bfseries,title=Hint}
+\newtcolorbox{definition}{enhanced,breakable,colback=my-pale-red, colframe=my-red, fonttitle=\bfseries,title=Definition}
+\newtcolorbox{important}{ enhanced,breakable,colback=my-pale-red, colframe=my-red, fonttitle=\bfseries,title=Important}
+\newtcolorbox{exampl}[1][]{    enhanced,breakable,colback=my-pale-green,colframe=my-green,fonttitle=\bfseries,title=Example,#1}
+\newtcolorbox{exercice}{  enhanced,breakable,colback=my-pale-yellow,colframe=my-yellow,fonttitle=\bfseries,title=Exercice}
+\newtcolorbox{question}{  enhanced,breakable,colback=my-pale-yellow,colframe=my-yellow,fonttitle=\bfseries,title=Question}
+\newtcolorbox{answer}{    enhanced,breakable,colback=my-pale-turq,colframe=my-turq,fonttitle=\bfseries,title=Answer}
+\newtcolorbox{summary}{   enhanced,breakable,colback=my-pale-blue,colframe=my-blue,fonttitle=\bfseries,title=Summary}
+\newtcolorbox{note}{      enhanced,breakable,colback=my-pale-blue,colframe=my-blue,fonttitle=\bfseries,title=Note}
+\newtcolorbox{caution}{   enhanced,breakable,colback=my-pale-orange,colframe=my-orange,fonttitle=\bfseries,title=Caution}
+\newtcolorbox{warning}{   enhanced,breakable,colback=my-pale-orange,colframe=my-orange,fonttitle=\bfseries,title=Warning}
+
+\newtcolorbox{my-quote}[1]{%
+  colback=my-pale-grey,
+  grow to right by=-10mm,
+  grow to left by=-10mm,
+  boxrule=0pt,
+  boxsep=0pt,
+  breakable,
+  enhanced jigsaw,
+  borderline west={4pt}{0pt}{my-grey}}
+
+\renewenvironment{quote}{\begin{my-quote}}{\end{my-quote}}
+
+\newtcolorbox{my-verse}[1]{%
+  colback=my-pale-grey,
+  grow to right by=-10mm,
+  grow to left by=-10mm,
+  boxrule=0pt,
+  boxsep=0pt,
+  breakable,
+  enhanced jigsaw,
+  borderline west={4pt}{0pt}{my-grey}}
+
+\renewenvironment{verse}{\begin{my-verse}}{\end{my-verse}}
+
+\usepackage{environ}% http://ctan.org/pkg/environ
+\NewEnviron{aside}{%
+  \marginpar{\BODY}
+}
+
+\renewenvironment{verbatim}{\VerbatimEnvironment\begin{minted}[]{text}}{\end{minted}}
+
+\usepackage{soul}
+\sethlcolor{my-pale-grey}
+
+\let\OldTexttt\texttt
+\renewcommand{\texttt}[1]{{\ttfamily\hl{\mbox{\,#1\,}}}}
+
+\makeatletter
+\preto\Gin@extensions{png,}
+\DeclareGraphicsRule{.png}{pdf}{.pdf}{\noexpand\Gin@base.pdf}
+\makeatother
+
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks = true,
+  allcolors = my-blue
+}
+
+\usepackage{hypcap}

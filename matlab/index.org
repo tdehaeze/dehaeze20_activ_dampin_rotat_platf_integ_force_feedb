@@ -6,8 +6,14 @@
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://research.tdehaeze.xyz/css/style.css"/>
 #+HTML_HEAD: <script type="text/javascript" src="https://research.tdehaeze.xyz/js/script.js"></script>
 
-#+LATEX_CLASS: cleanreport
-#+LATEX_CLASS_OPTIONS: [tocnp, secbreak, minted]
+#+BIND: org-latex-image-default-option "scale=1"
+#+BIND: org-latex-bib-compiler "biber"
+#+BIND: org-latex-image-default-width ""
+
+#+LaTeX_CLASS: scrreprt
+#+LaTeX_CLASS_OPTIONS: [a4paper, 10pt, DIV=12, parskip=full]
+#+LaTeX_HEADER_EXTRA: \input{preamble.tex}
+#+LATEX_HEADER_EXTRA: \addbibresource{ref.bib}
 
 #+PROPERTY: header-args:matlab  :session *MATLAB*
 #+PROPERTY: header-args:matlab+ :comments org
@@ -19,8 +25,14 @@
 #+PROPERTY: header-args:matlab+ :output-dir figs
 :END:
 
+#+begin_export html
+  <hr>
+  <p>This report is also available as a <a href="./index.pdf">pdf</a>.</p>
+  <hr>
+#+end_export
+
 * Introduction                                                        :ignore:
-This document gathers the Matlab code used to for the paper cite:dehaeze20_activ_dampin_rotat_platf_integ_force_feedb.
+This document gathers the Matlab code used to for the conference paper cite:dehaeze20_activ_dampin_rotat_platf_integ_force_feedb and the journal paper cite:dehaeze21_activ_dampin_rotat_platf_using.
 
 It is structured in several sections:
 - Section [[sec:system_description]]: presents a simple model of a rotating suspended platform that will be used throughout this study.
@@ -30,7 +42,7 @@ It is structured in several sections:
 - Section [[sec:comparison]]: compares both proposed modifications to the classical IFF in terms of damping authority and closed-loop system behavior.
 - Section [[sec:notations]]: contains the notations used for both the Matlab code and the paper
 
-The matlab code is accessible on [[https://zenodo.org/record/3894343][Zonodo]] and [[https://github.com/tdehaeze/dehaeze20_contr_stewa_platf][Github]] cite:dehaeze20_activ_dampin_rotat_posit_platf.
+The matlab code is accessible on [[https://zenodo.org/record/3894343][Zonodo]] and [[https://github.com/tdehaeze/dehaeze20_contr_stewa_platf][Github]] cite:dehaeze20_activ_dampin_rotat_posit_platf. It can also be download as a =.zip= file [[file:matlab.zip][here]].
 
 To run the Matlab code, go in the =matlab= directory and run the following Matlab files corresponding to each section.
 
@@ -2131,8 +2143,9 @@ Critical Damping corresponds to to $\xi = 1$, and thus:
 | Frequency        | $\omega$              | =w=    | [rad/s] |
 
 * Bibliography                                                        :ignore:
-bibliographystyle:unsrt
+#+latex: \printbibliography
 bibliography:ref.bib
+
 * Functions                                                         :noexport:
 ** Sort Poles for the Root Locus
 :PROPERTIES:
@@ -2291,3 +2304,4 @@ This Matlab function is accessible [[file:src/rootLocusPolesSorted.m][here]].
       end
   end
 #+end_src
+

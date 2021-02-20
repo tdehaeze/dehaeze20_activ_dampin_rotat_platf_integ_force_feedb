@@ -3,21 +3,30 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-11-12 jeu. 10:40 -->
+<!-- 2021-02-20 sam. 14:44 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>Active Damping of Rotating Platforms using Integral Force Feedback - Matlab Computation</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="Thomas Dehaeze" />
 <link rel="stylesheet" type="text/css" href="https://research.tdehaeze.xyz/css/style.css"/>
 <script type="text/javascript" src="https://research.tdehaeze.xyz/js/script.js"></script>
-<script>MathJax = {
-          tex: {
-            tags: 'ams',
-            macros: {bm: ["\\boldsymbol{#1}",1],}
-            }
-          };
-          </script>
-          <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script>
+           MathJax = {
+             svg: {
+               scale: 1,
+               fontCache: "global"
+             },
+             tex: {
+               tags: "ams",
+               multlineWidth: "%MULTLINEWIDTH",
+               tagSide: "right",
+                       macros: {bm: ["\\boldsymbol{#1}",1],},
+               tagIndent: ".8em"
+             }
+           };
+           </script>
+           <script id="MathJax-script" async
+             src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 <div id="org-div-home-and-up">
@@ -30,80 +39,83 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org19f8b41">1. System Description and Analysis</a>
+<li><a href="#org06be299">1. System Description and Analysis</a>
 <ul>
-<li><a href="#org98a8dea">1.1. System description</a></li>
-<li><a href="#orgfaaa549">1.2. Equations</a></li>
-<li><a href="#org34789ad">1.3. Numerical Values</a></li>
-<li><a href="#org1e81232">1.4. Campbell Diagram</a></li>
-<li><a href="#orga9a73f1">1.5. Simscape Model</a></li>
-<li><a href="#org70c5289">1.6. Effect of the rotation speed</a></li>
+<li><a href="#org4600b5b">1.1. System description</a></li>
+<li><a href="#org2d46257">1.2. Equations</a></li>
+<li><a href="#org1698c67">1.3. Numerical Values</a></li>
+<li><a href="#org12f3c6c">1.4. Campbell Diagram</a></li>
+<li><a href="#org7a2ea7e">1.5. Simscape Model</a></li>
+<li><a href="#orgd90ebb8">1.6. Effect of the rotation speed</a></li>
 </ul>
 </li>
-<li><a href="#orgd11a8cf">2. Problem with pure Integral Force Feedback</a>
+<li><a href="#org59dec10">2. Problem with pure Integral Force Feedback</a>
 <ul>
-<li><a href="#org9987b80">2.1. Plant Parameters</a></li>
-<li><a href="#orgbd3b27a">2.2. Equations</a></li>
-<li><a href="#orgfa7d7a2">2.3. Comparison of the Analytical Model and the Simscape Model</a></li>
-<li><a href="#orgcab9733">2.4. Effect of the rotation speed</a></li>
-<li><a href="#org358cdd6">2.5. Decentralized Integral Force Feedback</a></li>
+<li><a href="#orge6cb2c2">2.1. Plant Parameters</a></li>
+<li><a href="#org86cebac">2.2. Equations</a></li>
+<li><a href="#org5733bdd">2.3. Comparison of the Analytical Model and the Simscape Model</a></li>
+<li><a href="#org25f390d">2.4. Effect of the rotation speed</a></li>
+<li><a href="#orgb92b242">2.5. Decentralized Integral Force Feedback</a></li>
 </ul>
 </li>
-<li><a href="#orgd71a2dc">3. Integral Force Feedback with an High Pass Filter</a>
+<li><a href="#org2e3307b">3. Integral Force Feedback with an High Pass Filter</a>
 <ul>
-<li><a href="#orgf7495fd">3.1. Plant Parameters</a></li>
-<li><a href="#org2950938">3.2. Modified Integral Force Feedback Controller</a></li>
-<li><a href="#org38695fe">3.3. Root Locus</a></li>
-<li><a href="#org60aa70e">3.4. What is the optimal \(\omega_i\) and \(g\)?</a></li>
+<li><a href="#orgd87bec0">3.1. Plant Parameters</a></li>
+<li><a href="#org38459ba">3.2. Modified Integral Force Feedback Controller</a></li>
+<li><a href="#org1fe7230">3.3. Root Locus</a></li>
+<li><a href="#orgbe65c44">3.4. What is the optimal \(\omega_i\) and \(g\)?</a></li>
 </ul>
 </li>
-<li><a href="#orgdb918b6">4. IFF with a stiffness in parallel with the force sensor</a>
+<li><a href="#orgd7e3817">4. IFF with a stiffness in parallel with the force sensor</a>
 <ul>
-<li><a href="#orgad442be">4.1. Schematic</a></li>
-<li><a href="#orgeaf20e9">4.2. Equations</a></li>
-<li><a href="#org754aa7c">4.3. Plant Parameters</a></li>
-<li><a href="#org09dcf36">4.4. Comparison of the Analytical Model and the Simscape Model</a></li>
-<li><a href="#orga083ad0">4.5. Effect of the parallel stiffness on the IFF plant</a></li>
-<li><a href="#org9a801a8">4.6. IFF when adding a spring in parallel</a></li>
-<li><a href="#org43bf919">4.7. Effect of \(k_p\) on the attainable damping</a></li>
+<li><a href="#org84e074b">4.1. Schematic</a></li>
+<li><a href="#orgafb020a">4.2. Equations</a></li>
+<li><a href="#org218ccb0">4.3. Plant Parameters</a></li>
+<li><a href="#org92b8dc6">4.4. Comparison of the Analytical Model and the Simscape Model</a></li>
+<li><a href="#orgffb6014">4.5. Effect of the parallel stiffness on the IFF plant</a></li>
+<li><a href="#orgccd60cd">4.6. IFF when adding a spring in parallel</a></li>
+<li><a href="#org62a8e82">4.7. Effect of \(k_p\) on the attainable damping</a></li>
 </ul>
 </li>
-<li><a href="#org49b4648">5. Comparison</a>
+<li><a href="#org57a9404">5. Comparison</a>
 <ul>
-<li><a href="#org49053ce">5.1. Plant Parameters</a></li>
-<li><a href="#orgb7ee15d">5.2. Root Locus</a></li>
-<li><a href="#org410d42d">5.3. Controllers - Optimal Gains</a></li>
-<li><a href="#orga369eef">5.4. Passive Damping - Critical Damping</a></li>
-<li><a href="#orga86e2e4">5.5. Transmissibility And Compliance</a>
+<li><a href="#org10a2ed1">5.1. Plant Parameters</a></li>
+<li><a href="#orgc78a96c">5.2. Root Locus</a></li>
+<li><a href="#org2018523">5.3. Controllers - Optimal Gains</a></li>
+<li><a href="#orgfe35652">5.4. Passive Damping - Critical Damping</a></li>
+<li><a href="#org8aebf94">5.5. Transmissibility And Compliance</a>
 <ul>
-<li><a href="#orga1f0122">5.5.1. Passive Damping</a></li>
+<li><a href="#org53602c4">5.5.1. Passive Damping</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org5f907f2">6. Notations</a></li>
+<li><a href="#org6c5b405">6. Notations</a></li>
 </ul>
 </div>
 </div>
+<hr>
+<p>This report is also available as a <a href="./index.pdf">pdf</a>.</p>
+<hr>
 
 <p>
-This document gathers the Matlab code used to for the paper (<a href="#citeproc_bib_item_1">Dehaeze and Collette 2020</a>).
+This document gathers the Matlab code used to for the conference paper (<a href="#citeproc_bib_item_1">Dehaeze and Collette 2020</a>) and the journal paper (<a href="#citeproc_bib_item_3">Dehaeze and Collette 2021</a>).
 </p>
 
 <p>
 It is structured in several sections:
 </p>
 <ul class="org-ul">
-<li>Section <a href="#orge2ad7e2">1</a>: presents a simple model of a rotating suspended platform that will be used throughout this study.</li>
-<li>Section <a href="#org5675407">2</a>: explains how the unconditional stability of IFF is lost due to Gyroscopic effects induced by the rotation.</li>
-<li>Section <a href="#orgbed1a10">3</a>: suggests a simple modification of the control law such that damping can be added to the suspension modes in a robust way.</li>
-<li>Section <a href="#org63d6e2c">4</a>: proposes to add springs in parallel with the force sensors to regain the unconditional stability of IFF.</li>
-<li>Section <a href="#orgaede0ad">5</a>: compares both proposed modifications to the classical IFF in terms of damping authority and closed-loop system behavior.</li>
-<li>Section <a href="#org15fb531">6</a>: contains the notations used for both the Matlab code and the paper</li>
+<li>Section <a href="#org33d481f">1</a>: presents a simple model of a rotating suspended platform that will be used throughout this study.</li>
+<li>Section <a href="#org4004ae5">2</a>: explains how the unconditional stability of IFF is lost due to Gyroscopic effects induced by the rotation.</li>
+<li>Section <a href="#org6148a93">3</a>: suggests a simple modification of the control law such that damping can be added to the suspension modes in a robust way.</li>
+<li>Section <a href="#orgb35716d">4</a>: proposes to add springs in parallel with the force sensors to regain the unconditional stability of IFF.</li>
+<li>Section <a href="#org4387152">5</a>: compares both proposed modifications to the classical IFF in terms of damping authority and closed-loop system behavior.</li>
+<li>Section <a href="#org19b2219">6</a>: contains the notations used for both the Matlab code and the paper</li>
 </ul>
 
 <p>
-The matlab code is accessible on <a href="https://zenodo.org/record/3894343">Zonodo</a> and <a href="https://github.com/tdehaeze/dehaeze20_contr_stewa_platf">Github</a> (<a href="#citeproc_bib_item_2">Dehaeze 2020</a>).
+The matlab code is accessible on <a href="https://zenodo.org/record/3894343">Zonodo</a> and <a href="https://github.com/tdehaeze/dehaeze20_contr_stewa_platf">Github</a> (<a href="#citeproc_bib_item_2">Dehaeze 2020</a>). It can also be download as a <code>.zip</code> file <a href="matlab.zip">here</a>.
 </p>
 
 <p>
@@ -126,49 +138,49 @@ To run the Matlab code, go in the <code>matlab</code> directory and run the foll
 </thead>
 <tbody>
 <tr>
-<td class="org-left">Section <a href="#orge2ad7e2">1</a></td>
+<td class="org-left">Section <a href="#org33d481f">1</a></td>
 <td class="org-left"><code>s1_system_description.m</code></td>
 </tr>
 
 <tr>
-<td class="org-left">Section <a href="#org5675407">2</a></td>
+<td class="org-left">Section <a href="#org4004ae5">2</a></td>
 <td class="org-left"><code>s2_iff_pure_int.m</code></td>
 </tr>
 
 <tr>
-<td class="org-left">Section <a href="#orgbed1a10">3</a></td>
+<td class="org-left">Section <a href="#org6148a93">3</a></td>
 <td class="org-left"><code>s3_iff_hpf.m</code></td>
 </tr>
 
 <tr>
-<td class="org-left">Section <a href="#org63d6e2c">4</a></td>
+<td class="org-left">Section <a href="#orgb35716d">4</a></td>
 <td class="org-left"><code>s4_iff_kp.m</code></td>
 </tr>
 
 <tr>
-<td class="org-left">Section <a href="#orgaede0ad">5</a></td>
+<td class="org-left">Section <a href="#org4387152">5</a></td>
 <td class="org-left"><code>s5_act_damp_comparison.m</code></td>
 </tr>
 </tbody>
 </table>
 
-<div id="outline-container-org19f8b41" class="outline-2">
-<h2 id="org19f8b41"><span class="section-number-2">1</span> System Description and Analysis</h2>
+<div id="outline-container-org06be299" class="outline-2">
+<h2 id="org06be299"><span class="section-number-2">1</span> System Description and Analysis</h2>
 <div class="outline-text-2" id="text-1">
 <p>
-<a id="orge2ad7e2"></a>
+<a id="org33d481f"></a>
 </p>
 </div>
 
-<div id="outline-container-org98a8dea" class="outline-3">
-<h3 id="org98a8dea"><span class="section-number-3">1.1</span> System description</h3>
+<div id="outline-container-org4600b5b" class="outline-3">
+<h3 id="org4600b5b"><span class="section-number-3">1.1</span> System description</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
-The system consists of one 2 degree of freedom translation stage on top of a spindle (figure <a href="#org1c9a817">1</a>).
+The system consists of one 2 degree of freedom translation stage on top of a spindle (figure <a href="#org06f9bae">1</a>).
 </p>
 
 
-<div id="org1c9a817" class="figure">
+<div id="org06f9bae" class="figure">
 <p><img src="figs-paper/system.png" alt="system.png" />
 </p>
 <p><span class="figure-number">Figure 1: </span>Schematic of the studied system</p>
@@ -181,13 +193,13 @@ As the translation stage is rotating around the Z axis due to the spindle, the f
 </div>
 </div>
 
-<div id="outline-container-orgfaaa549" class="outline-3">
-<h3 id="orgfaaa549"><span class="section-number-3">1.2</span> Equations</h3>
+<div id="outline-container-org2d46257" class="outline-3">
+<h3 id="org2d46257"><span class="section-number-3">1.2</span> Equations</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
-Based on the Figure <a href="#org1c9a817">1</a>, the equations of motions are:
+Based on the Figure <a href="#org06f9bae">1</a>, the equations of motions are:
 </p>
-<div class="important" id="org68f2629">
+<div class="important" id="orge2d1a3a">
 \begin{equation}
 \begin{bmatrix} d_u \\ d_v \end{bmatrix} =
 \bm{G}_d
@@ -217,47 +229,47 @@ With:
 </div>
 </div>
 
-<div id="outline-container-org34789ad" class="outline-3">
-<h3 id="org34789ad"><span class="section-number-3">1.3</span> Numerical Values</h3>
+<div id="outline-container-org1698c67" class="outline-3">
+<h3 id="org1698c67"><span class="section-number-3">1.3</span> Numerical Values</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
 Let&rsquo;s define initial values for the model.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">k = 1;    <span class="org-comment">% Actuator Stiffness [N/m]</span>
-c = 0.05; <span class="org-comment">% Actuator Damping [N/(m/s)]</span>
-m = 1;    <span class="org-comment">% Payload mass [kg]</span>
+<pre class="src src-matlab">  k = 1;    <span class="org-comment">% Actuator Stiffness [N/m]</span>
+  c = 0.05; <span class="org-comment">% Actuator Damping [N/(m/s)]</span>
+  m = 1;    <span class="org-comment">% Payload mass [kg]</span>
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab">xi = c<span class="org-type">/</span>(2<span class="org-type">*</span>sqrt(k<span class="org-type">*</span>m));
-w0 = sqrt(k<span class="org-type">/</span>m); <span class="org-comment">% [rad/s]</span>
+<pre class="src src-matlab">  xi = c<span class="org-type">/</span>(2<span class="org-type">*</span>sqrt(k<span class="org-type">*</span>m));
+  w0 = sqrt(k<span class="org-type">/</span>m); <span class="org-comment">% [rad/s]</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org1e81232" class="outline-3">
-<h3 id="org1e81232"><span class="section-number-3">1.4</span> Campbell Diagram</h3>
+<div id="outline-container-org12f3c6c" class="outline-3">
+<h3 id="org12f3c6c"><span class="section-number-3">1.4</span> Campbell Diagram</h3>
 <div class="outline-text-3" id="text-1-4">
 <p>
 The Campbell Diagram displays the evolution of the real and imaginary parts of the system as a function of the rotating speed.
 </p>
 
 <p>
-It is shown in Figures <a href="#org4431307">2</a> and <a href="#orgca54070">3</a>, and one can see that the system becomes unstable for \(\Omega > \omega_0\) (the real part of one of the poles becomes positive).
+It is shown in Figures <a href="#org3e5c429">2</a> and <a href="#org3bb19b1">3</a>, and one can see that the system becomes unstable for \(\Omega > \omega_0\) (the real part of one of the poles becomes positive).
 </p>
 
 
-<div id="org4431307" class="figure">
+<div id="org3e5c429" class="figure">
 <p><img src="figs/campbell_diagram_real.png" alt="campbell_diagram_real.png" />
 </p>
 <p><span class="figure-number">Figure 2: </span>Campbell Diagram - Real Part</p>
 </div>
 
 
-<div id="orgca54070" class="figure">
+<div id="org3bb19b1" class="figure">
 <p><img src="figs/campbell_diagram_imag.png" alt="campbell_diagram_imag.png" />
 </p>
 <p><span class="figure-number">Figure 3: </span>Campbell Diagram - Imaginary Part</p>
@@ -265,8 +277,8 @@ It is shown in Figures <a href="#org4431307">2</a> and <a href="#orgca54070">3</
 </div>
 </div>
 
-<div id="outline-container-orga9a73f1" class="outline-3">
-<h3 id="orga9a73f1"><span class="section-number-3">1.5</span> Simscape Model</h3>
+<div id="outline-container-org7a2ea7e" class="outline-3">
+<h3 id="org7a2ea7e"><span class="section-number-3">1.5</span> Simscape Model</h3>
 <div class="outline-text-3" id="text-1-5">
 <p>
 In order to validate all the equations of motion, a Simscape model of the same system has been developed.
@@ -277,12 +289,12 @@ The dynamics of the system can be identified from the Simscape model and compare
 The rotating speed for the Simscape Model is defined.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">W = 0.1; <span class="org-comment">% Rotation Speed [rad/s]</span>
+<pre class="src src-matlab">  W = 0.1; <span class="org-comment">% Rotation Speed [rad/s]</span>
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab">open(<span class="org-string">'rotating_frame.slx'</span>);
+<pre class="src src-matlab">  open(<span class="org-string">'rotating_frame.slx'</span>);
 </pre>
 </div>
 
@@ -291,22 +303,22 @@ The transfer function from \([F_u, F_v]\) to \([d_u, d_v]\) is identified from t
 </p>
 
 <div class="org-src-container">
-<pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Name of the Simulink File</span></span>
-mdl = <span class="org-string">'rotating_frame'</span>;
+<pre class="src src-matlab">  <span class="org-matlab-cellbreak"><span class="org-comment">%% Name of the Simulink File</span></span>
+  mdl = <span class="org-string">'rotating_frame'</span>;
 
-<span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
-clear io; io_i = 1;
-io(io_i) = linio([mdl, <span class="org-string">'/K'</span>], 1, <span class="org-string">'openinput'</span>);  io_i = io_i <span class="org-type">+</span> 1;
-io(io_i) = linio([mdl, <span class="org-string">'/G'</span>], 2, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1;
+  <span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, <span class="org-string">'/K'</span>], 1, <span class="org-string">'openinput'</span>);  io_i = io_i <span class="org-type">+</span> 1;
+  io(io_i) = linio([mdl, <span class="org-string">'/G'</span>], 2, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1;
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab">G = linearize(mdl, io, 0);
+<pre class="src src-matlab">  G = linearize(mdl, io, 0);
 
-<span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
-G.InputName  = {<span class="org-string">'Fu'</span>, <span class="org-string">'Fv'</span>};
-G.OutputName = {<span class="org-string">'du'</span>, <span class="org-string">'dv'</span>};
+  <span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
+  G.InputName  = {<span class="org-string">'Fu'</span>, <span class="org-string">'Fv'</span>};
+  G.OutputName = {<span class="org-string">'du'</span>, <span class="org-string">'dv'</span>};
 </pre>
 </div>
 
@@ -314,18 +326,18 @@ G.OutputName = {<span class="org-string">'du'</span>, <span class="org-string">'
 The same transfer function from \([F_u, F_v]\) to \([d_u, d_v]\) is written down from the analytical model.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">Gth = (1<span class="org-type">/</span>k)<span class="org-type">/</span>(((s<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2) <span class="org-type">+</span> 2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1 <span class="org-type">-</span> (W<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">^</span>2 <span class="org-type">+</span> (2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">^</span>2) <span class="org-type">*</span> ...
-      [(s<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2) <span class="org-type">+</span> 2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1 <span class="org-type">-</span> (W<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2), 2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2) ; ...
-       <span class="org-type">-</span>2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2), (s<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2) <span class="org-type">+</span> 2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1 <span class="org-type">-</span> (W<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2)];
+<pre class="src src-matlab">  Gth = (1<span class="org-type">/</span>k)<span class="org-type">/</span>(((s<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2) <span class="org-type">+</span> 2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1 <span class="org-type">-</span> (W<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">^</span>2 <span class="org-type">+</span> (2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">^</span>2) <span class="org-type">*</span> ...
+        [(s<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2) <span class="org-type">+</span> 2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1 <span class="org-type">-</span> (W<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2), 2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2) ; ...
+         <span class="org-type">-</span>2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2), (s<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2) <span class="org-type">+</span> 2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1 <span class="org-type">-</span> (W<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2)];
 </pre>
 </div>
 
 <p>
-Both transfer functions are compared in Figure <a href="#orga2b2c73">4</a> and are found to perfectly match.
+Both transfer functions are compared in Figure <a href="#orgfc7990e">4</a> and are found to perfectly match.
 </p>
 
 
-<div id="orga2b2c73" class="figure">
+<div id="orgfc7990e" class="figure">
 <p><img src="figs/plant_simscape_analytical.png" alt="plant_simscape_analytical.png" />
 </p>
 <p><span class="figure-number">Figure 4: </span>Bode plot of the transfer function from \([F_u, F_v]\) to \([d_u, d_v]\) as identified from the Simscape model and from an analytical model</p>
@@ -333,43 +345,43 @@ Both transfer functions are compared in Figure <a href="#orga2b2c73">4</a> and a
 </div>
 </div>
 
-<div id="outline-container-org70c5289" class="outline-3">
-<h3 id="org70c5289"><span class="section-number-3">1.6</span> Effect of the rotation speed</h3>
+<div id="outline-container-orgd90ebb8" class="outline-3">
+<h3 id="orgd90ebb8"><span class="section-number-3">1.6</span> Effect of the rotation speed</h3>
 <div class="outline-text-3" id="text-1-6">
 <p>
 The transfer functions from \([F_u, F_v]\) to \([d_u, d_v]\) are identified for the following rotating speeds.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">Ws = [0, 0.2, 0.7, 1.1]<span class="org-type">*</span>w0; <span class="org-comment">% Rotating Speeds [rad/s]</span>
+<pre class="src src-matlab">  Ws = [0, 0.2, 0.7, 1.1]<span class="org-type">*</span>w0; <span class="org-comment">% Rotating Speeds [rad/s]</span>
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab">Gs = {zeros(2, 2, length(Ws))};
+<pre class="src src-matlab">  Gs = {zeros(2, 2, length(Ws))};
 
-<span class="org-keyword">for</span> <span class="org-variable-name">W_i</span> = <span class="org-constant">1:length(Ws)</span>
-    W = Ws(W_i);
+  <span class="org-keyword">for</span> <span class="org-variable-name">W_i</span> = <span class="org-constant">1:length(Ws)</span>
+      W = Ws(W_i);
 
-    Gs(<span class="org-type">:</span>, <span class="org-type">:</span>, W_i) = {(1<span class="org-type">/</span>k)<span class="org-type">/</span>(((s<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2) <span class="org-type">+</span> 2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1 <span class="org-type">-</span> (W<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">^</span>2 <span class="org-type">+</span> (2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">^</span>2) <span class="org-type">*</span> ...
-                     [(s<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2) <span class="org-type">+</span> 2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1 <span class="org-type">-</span> (W<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2), 2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2) ; ...
-                      <span class="org-type">-</span>2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2), (s<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2) <span class="org-type">+</span> 2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1 <span class="org-type">-</span> (W<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2)]};
-<span class="org-keyword">end</span>
+      Gs(<span class="org-type">:</span>, <span class="org-type">:</span>, W_i) = {(1<span class="org-type">/</span>k)<span class="org-type">/</span>(((s<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2) <span class="org-type">+</span> 2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1 <span class="org-type">-</span> (W<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">^</span>2 <span class="org-type">+</span> (2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">^</span>2) <span class="org-type">*</span> ...
+                       [(s<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2) <span class="org-type">+</span> 2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1 <span class="org-type">-</span> (W<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2), 2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2) ; ...
+                        <span class="org-type">-</span>2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2), (s<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2) <span class="org-type">+</span> 2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1 <span class="org-type">-</span> (W<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2)]};
+  <span class="org-keyword">end</span>
 </pre>
 </div>
 
 <p>
-They are compared in Figures <a href="#orgb60dd62">5</a> and <a href="#org8c7bb13">6</a>.
+They are compared in Figures <a href="#org032061b">5</a> and <a href="#orgec75241">6</a>.
 </p>
 
 
-<div id="orgb60dd62" class="figure">
+<div id="org032061b" class="figure">
 <p><img src="figs/plant_compare_rotating_speed_direct.png" alt="plant_compare_rotating_speed_direct.png" />
 </p>
 <p><span class="figure-number">Figure 5: </span>Comparison of the transfer functions from \([F_u, F_v]\) to \([d_u, d_v]\) for several rotating speed - Direct Terms</p>
 </div>
 
 
-<div id="org8c7bb13" class="figure">
+<div id="orgec75241" class="figure">
 <p><img src="figs/plant_compare_rotating_speed_coupling.png" alt="plant_compare_rotating_speed_coupling.png" />
 </p>
 <p><span class="figure-number">Figure 6: </span>Comparison of the transfer functions from \([F_u, F_v]\) to \([d_u, d_v]\) for several rotating speed - Coupling Terms</p>
@@ -378,14 +390,14 @@ They are compared in Figures <a href="#orgb60dd62">5</a> and <a href="#org8c7bb1
 </div>
 </div>
 
-<div id="outline-container-orgd11a8cf" class="outline-2">
-<h2 id="orgd11a8cf"><span class="section-number-2">2</span> Problem with pure Integral Force Feedback</h2>
+<div id="outline-container-org59dec10" class="outline-2">
+<h2 id="org59dec10"><span class="section-number-2">2</span> Problem with pure Integral Force Feedback</h2>
 <div class="outline-text-2" id="text-2">
 <p>
-<a id="org5675407"></a>
+<a id="org4004ae5"></a>
 </p>
 <p>
-Force sensors are added in series with the two actuators (Figure <a href="#org2c86f67">7</a>).
+Force sensors are added in series with the two actuators (Figure <a href="#org368ee29">7</a>).
 </p>
 
 <p>
@@ -393,36 +405,36 @@ Two identical controllers \(K_F\) are used to feedback each of the sensed force 
 </p>
 
 
-<div id="org2c86f67" class="figure">
+<div id="org368ee29" class="figure">
 <p><img src="figs-paper/system_iff.png" alt="system_iff.png" />
 </p>
 <p><span class="figure-number">Figure 7: </span>System with added Force Sensor in series with the actuators</p>
 </div>
 </div>
 
-<div id="outline-container-org9987b80" class="outline-3">
-<h3 id="org9987b80"><span class="section-number-3">2.1</span> Plant Parameters</h3>
+<div id="outline-container-orge6cb2c2" class="outline-3">
+<h3 id="orge6cb2c2"><span class="section-number-3">2.1</span> Plant Parameters</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 Let&rsquo;s define initial values for the model.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">k = 1;    <span class="org-comment">% Actuator Stiffness [N/m]</span>
-c = 0.05; <span class="org-comment">% Actuator Damping [N/(m/s)]</span>
-m = 1;    <span class="org-comment">% Payload mass [kg]</span>
+<pre class="src src-matlab">  k = 1;    <span class="org-comment">% Actuator Stiffness [N/m]</span>
+  c = 0.05; <span class="org-comment">% Actuator Damping [N/(m/s)]</span>
+  m = 1;    <span class="org-comment">% Payload mass [kg]</span>
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab">xi = c<span class="org-type">/</span>(2<span class="org-type">*</span>sqrt(k<span class="org-type">*</span>m));
-w0 = sqrt(k<span class="org-type">/</span>m); <span class="org-comment">% [rad/s]</span>
+<pre class="src src-matlab">  xi = c<span class="org-type">/</span>(2<span class="org-type">*</span>sqrt(k<span class="org-type">*</span>m));
+  w0 = sqrt(k<span class="org-type">/</span>m); <span class="org-comment">% [rad/s]</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgbd3b27a" class="outline-3">
-<h3 id="orgbd3b27a"><span class="section-number-3">2.2</span> Equations</h3>
+<div id="outline-container-org86cebac" class="outline-3">
+<h3 id="org86cebac"><span class="section-number-3">2.2</span> Equations</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 The sensed forces are equal to:
@@ -440,7 +452,7 @@ The sensed forces are equal to:
 <p>
 Which then gives:
 </p>
-<div class="important" id="org19dc48f">
+<div class="important" id="org31425e1">
 \begin{equation}
 \begin{bmatrix} f_{u} \\ f_{v} \end{bmatrix} =
 \bm{G}_{f}
@@ -467,19 +479,19 @@ Which then gives:
 </div>
 </div>
 
-<div id="outline-container-orgfa7d7a2" class="outline-3">
-<h3 id="orgfa7d7a2"><span class="section-number-3">2.3</span> Comparison of the Analytical Model and the Simscape Model</h3>
+<div id="outline-container-org5733bdd" class="outline-3">
+<h3 id="org5733bdd"><span class="section-number-3">2.3</span> Comparison of the Analytical Model and the Simscape Model</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 The rotation speed is set to \(\Omega = 0.1 \omega_0\).
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">W = 0.1<span class="org-type">*</span>w0; <span class="org-comment">% [rad/s]</span>
+<pre class="src src-matlab">  W = 0.1<span class="org-type">*</span>w0; <span class="org-comment">% [rad/s]</span>
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab">open(<span class="org-string">'rotating_frame.slx'</span>);
+<pre class="src src-matlab">  open(<span class="org-string">'rotating_frame.slx'</span>);
 </pre>
 </div>
 
@@ -487,22 +499,22 @@ The rotation speed is set to \(\Omega = 0.1 \omega_0\).
 And the transfer function from \([F_u, F_v]\) to \([f_u, f_v]\) is identified using the Simscape model.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Name of the Simulink File</span></span>
-mdl = <span class="org-string">'rotating_frame'</span>;
+<pre class="src src-matlab">  <span class="org-matlab-cellbreak"><span class="org-comment">%% Name of the Simulink File</span></span>
+  mdl = <span class="org-string">'rotating_frame'</span>;
 
-<span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
-clear io; io_i = 1;
-io(io_i) = linio([mdl, <span class="org-string">'/K'</span>], 1, <span class="org-string">'openinput'</span>);  io_i = io_i <span class="org-type">+</span> 1;
-io(io_i) = linio([mdl, <span class="org-string">'/G'</span>], 1, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1;
+  <span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, <span class="org-string">'/K'</span>], 1, <span class="org-string">'openinput'</span>);  io_i = io_i <span class="org-type">+</span> 1;
+  io(io_i) = linio([mdl, <span class="org-string">'/G'</span>], 1, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1;
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab">Giff = linearize(mdl, io, 0);
+<pre class="src src-matlab">  Giff = linearize(mdl, io, 0);
 
-<span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
-Giff.InputName  = {<span class="org-string">'Fu'</span>, <span class="org-string">'Fv'</span>};
-Giff.OutputName = {<span class="org-string">'fu'</span>, <span class="org-string">'fv'</span>};
+  <span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
+  Giff.InputName  = {<span class="org-string">'Fu'</span>, <span class="org-string">'Fv'</span>};
+  Giff.OutputName = {<span class="org-string">'fu'</span>, <span class="org-string">'fv'</span>};
 </pre>
 </div>
 
@@ -510,17 +522,17 @@ Giff.OutputName = {<span class="org-string">'fu'</span>, <span class="org-string
 The same transfer function from \([F_u, F_v]\) to \([f_u, f_v]\) is written down from the analytical model.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">Giff_th = 1<span class="org-type">/</span>(((s<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2) <span class="org-type">+</span> 2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1 <span class="org-type">-</span> (W<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">^</span>2 <span class="org-type">+</span> (2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">^</span>2) <span class="org-type">*</span> ...
-          [(s<span class="org-type">^</span>2<span class="org-type">/</span>w0<span class="org-type">^</span>2 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0<span class="org-type">^</span>2)<span class="org-type">*</span>((s<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2) <span class="org-type">+</span> 2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1 <span class="org-type">-</span> (W<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2)) <span class="org-type">+</span> (2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">^</span>2, <span class="org-type">-</span> (2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1)<span class="org-type">*</span>2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2) ; ...
-           (2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1)<span class="org-type">*</span>2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2), (s<span class="org-type">^</span>2<span class="org-type">/</span>w0<span class="org-type">^</span>2 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0<span class="org-type">^</span>2)<span class="org-type">*</span>((s<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2) <span class="org-type">+</span> 2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1 <span class="org-type">-</span> (W<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">+</span> (2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">^</span>2];
+<pre class="src src-matlab">  Giff_th = 1<span class="org-type">/</span>(((s<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2) <span class="org-type">+</span> 2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1 <span class="org-type">-</span> (W<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">^</span>2 <span class="org-type">+</span> (2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">^</span>2) <span class="org-type">*</span> ...
+            [(s<span class="org-type">^</span>2<span class="org-type">/</span>w0<span class="org-type">^</span>2 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0<span class="org-type">^</span>2)<span class="org-type">*</span>((s<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2) <span class="org-type">+</span> 2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1 <span class="org-type">-</span> (W<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2)) <span class="org-type">+</span> (2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">^</span>2, <span class="org-type">-</span> (2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1)<span class="org-type">*</span>2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2) ; ...
+             (2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1)<span class="org-type">*</span>2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2), (s<span class="org-type">^</span>2<span class="org-type">/</span>w0<span class="org-type">^</span>2 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0<span class="org-type">^</span>2)<span class="org-type">*</span>((s<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2) <span class="org-type">+</span> 2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1 <span class="org-type">-</span> (W<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">+</span> (2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">^</span>2];
 </pre>
 </div>
 
 <p>
-The two are compared in Figure <a href="#org38c526e">8</a> and found to perfectly match.
+The two are compared in Figure <a href="#org93df5f4">8</a> and found to perfectly match.
 </p>
 
-<div id="org38c526e" class="figure">
+<div id="org93df5f4" class="figure">
 <p><img src="figs/plant_iff_comp_simscape_analytical.png" alt="plant_iff_comp_simscape_analytical.png" />
 </p>
 <p><span class="figure-number">Figure 8: </span>Comparison of the transfer functions from \([F_u, F_v]\) to \([f_u, f_v]\) between the Simscape model and the analytical one</p>
@@ -528,35 +540,35 @@ The two are compared in Figure <a href="#org38c526e">8</a> and found to perfectl
 </div>
 </div>
 
-<div id="outline-container-orgcab9733" class="outline-3">
-<h3 id="orgcab9733"><span class="section-number-3">2.4</span> Effect of the rotation speed</h3>
+<div id="outline-container-org25f390d" class="outline-3">
+<h3 id="org25f390d"><span class="section-number-3">2.4</span> Effect of the rotation speed</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
 The transfer functions from \([F_u, F_v]\) to \([f_u, f_v]\) are identified for the following rotating speeds.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">Ws = [0, 0.2, 0.7]<span class="org-type">*</span>w0; <span class="org-comment">% Rotating Speeds [rad/s]</span>
+<pre class="src src-matlab">  Ws = [0, 0.2, 0.7]<span class="org-type">*</span>w0; <span class="org-comment">% Rotating Speeds [rad/s]</span>
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab">Gsiff = {zeros(2, 2, length(Ws))};
+<pre class="src src-matlab">  Gsiff = {zeros(2, 2, length(Ws))};
 
-<span class="org-keyword">for</span> <span class="org-variable-name">W_i</span> = <span class="org-constant">1:length(Ws)</span>
-    W = Ws(W_i);
+  <span class="org-keyword">for</span> <span class="org-variable-name">W_i</span> = <span class="org-constant">1:length(Ws)</span>
+      W = Ws(W_i);
 
-    Gsiff(<span class="org-type">:</span>, <span class="org-type">:</span>, W_i) = {1<span class="org-type">/</span>(((s<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2) <span class="org-type">+</span> 2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1 <span class="org-type">-</span> (W<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">^</span>2 <span class="org-type">+</span> (2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">^</span>2) <span class="org-type">*</span> ...
-                      [(s<span class="org-type">^</span>2<span class="org-type">/</span>w0<span class="org-type">^</span>2 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0<span class="org-type">^</span>2)<span class="org-type">*</span>((s<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2) <span class="org-type">+</span> 2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1 <span class="org-type">-</span> (W<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2)) <span class="org-type">+</span> (2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">^</span>2, <span class="org-type">-</span> (2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1)<span class="org-type">*</span>2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2) ; ...
-                       (2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1)<span class="org-type">*</span>2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2), (s<span class="org-type">^</span>2<span class="org-type">/</span>w0<span class="org-type">^</span>2 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0<span class="org-type">^</span>2)<span class="org-type">*</span>((s<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2) <span class="org-type">+</span> 2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1 <span class="org-type">-</span> (W<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">+</span> (2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">^</span>2]};
-<span class="org-keyword">end</span>
+      Gsiff(<span class="org-type">:</span>, <span class="org-type">:</span>, W_i) = {1<span class="org-type">/</span>(((s<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2) <span class="org-type">+</span> 2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1 <span class="org-type">-</span> (W<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">^</span>2 <span class="org-type">+</span> (2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">^</span>2) <span class="org-type">*</span> ...
+                        [(s<span class="org-type">^</span>2<span class="org-type">/</span>w0<span class="org-type">^</span>2 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0<span class="org-type">^</span>2)<span class="org-type">*</span>((s<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2) <span class="org-type">+</span> 2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1 <span class="org-type">-</span> (W<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2)) <span class="org-type">+</span> (2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">^</span>2, <span class="org-type">-</span> (2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1)<span class="org-type">*</span>2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2) ; ...
+                         (2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1)<span class="org-type">*</span>2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2), (s<span class="org-type">^</span>2<span class="org-type">/</span>w0<span class="org-type">^</span>2 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0<span class="org-type">^</span>2)<span class="org-type">*</span>((s<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2) <span class="org-type">+</span> 2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1 <span class="org-type">-</span> (W<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">+</span> (2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">^</span>2]};
+  <span class="org-keyword">end</span>
 </pre>
 </div>
 
 <p>
-The obtained transfer functions are shown in Figure <a href="#org6f772b1">9</a>.
+The obtained transfer functions are shown in Figure <a href="#org0fcab55">9</a>.
 </p>
 
-<div id="org6f772b1" class="figure">
+<div id="org0fcab55" class="figure">
 <p><img src="figs/plant_iff_compare_rotating_speed.png" alt="plant_iff_compare_rotating_speed.png" />
 </p>
 <p><span class="figure-number">Figure 9: </span>Comparison of the transfer functions from \([F_u, F_v]\) to \([f_u, f_v]\) for several rotating speed</p>
@@ -564,8 +576,8 @@ The obtained transfer functions are shown in Figure <a href="#org6f772b1">9</a>.
 </div>
 </div>
 
-<div id="outline-container-org358cdd6" class="outline-3">
-<h3 id="org358cdd6"><span class="section-number-3">2.5</span> Decentralized Integral Force Feedback</h3>
+<div id="outline-container-orgb92b242" class="outline-3">
+<h3 id="orgb92b242"><span class="section-number-3">2.5</span> Decentralized Integral Force Feedback</h3>
 <div class="outline-text-3" id="text-2-5">
 <p>
 The decentralized IFF controller consists of pure integrators:
@@ -578,12 +590,12 @@ The decentralized IFF controller consists of pure integrators:
 \end{equation}
 
 <p>
-The Root Locus (evolution of the poles of the closed loop system in the complex plane as a function of \(g\)) is shown in Figure <a href="#org3cd7728">10</a>.
+The Root Locus (evolution of the poles of the closed loop system in the complex plane as a function of \(g\)) is shown in Figure <a href="#orgd204056">10</a>.
 It is shown that for non-null rotating speed, one pole is bound to the right-half plane, and thus the closed loop system is unstable.
 </p>
 
 
-<div id="org3cd7728" class="figure">
+<div id="orgd204056" class="figure">
 <p><img src="figs/root_locus_pure_iff.png" alt="root_locus_pure_iff.png" />
 </p>
 <p><span class="figure-number">Figure 10: </span>Root Locus for the Decentralized Integral Force Feedback controller. Several rotating speed are shown.</p>
@@ -592,37 +604,37 @@ It is shown that for non-null rotating speed, one pole is bound to the right-hal
 </div>
 </div>
 
-<div id="outline-container-orgd71a2dc" class="outline-2">
-<h2 id="orgd71a2dc"><span class="section-number-2">3</span> Integral Force Feedback with an High Pass Filter</h2>
+<div id="outline-container-org2e3307b" class="outline-2">
+<h2 id="org2e3307b"><span class="section-number-2">3</span> Integral Force Feedback with an High Pass Filter</h2>
 <div class="outline-text-2" id="text-3">
 <p>
-<a id="orgbed1a10"></a>
+<a id="org6148a93"></a>
 </p>
 </div>
 
-<div id="outline-container-orgf7495fd" class="outline-3">
-<h3 id="orgf7495fd"><span class="section-number-3">3.1</span> Plant Parameters</h3>
+<div id="outline-container-orgd87bec0" class="outline-3">
+<h3 id="orgd87bec0"><span class="section-number-3">3.1</span> Plant Parameters</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 Let&rsquo;s define initial values for the model.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">k = 1;    <span class="org-comment">% Actuator Stiffness [N/m]</span>
-c = 0.05; <span class="org-comment">% Actuator Damping [N/(m/s)]</span>
-m = 1;    <span class="org-comment">% Payload mass [kg]</span>
+<pre class="src src-matlab">  k = 1;    <span class="org-comment">% Actuator Stiffness [N/m]</span>
+  c = 0.05; <span class="org-comment">% Actuator Damping [N/(m/s)]</span>
+  m = 1;    <span class="org-comment">% Payload mass [kg]</span>
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab">xi = c<span class="org-type">/</span>(2<span class="org-type">*</span>sqrt(k<span class="org-type">*</span>m));
-w0 = sqrt(k<span class="org-type">/</span>m); <span class="org-comment">% [rad/s]</span>
+<pre class="src src-matlab">  xi = c<span class="org-type">/</span>(2<span class="org-type">*</span>sqrt(k<span class="org-type">*</span>m));
+  w0 = sqrt(k<span class="org-type">/</span>m); <span class="org-comment">% [rad/s]</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org2950938" class="outline-3">
-<h3 id="org2950938"><span class="section-number-3">3.2</span> Modified Integral Force Feedback Controller</h3>
+<div id="outline-container-org38459ba" class="outline-3">
+<h3 id="org38459ba"><span class="section-number-3">3.2</span> Modified Integral Force Feedback Controller</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 Let&rsquo;s modify the initial Integral Force Feedback Controller ; instead of using pure integrators, pseudo integrators (i.e. low pass filters) are used:
@@ -641,8 +653,8 @@ where \(\omega_i\) characterize down to which frequency the signal is integrated
 Let&rsquo;s arbitrary choose the following control parameters:
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">g = 2;
-wi = 0.1<span class="org-type">*</span>w0;
+<pre class="src src-matlab">  g = 2;
+  wi = 0.1<span class="org-type">*</span>w0;
 </pre>
 </div>
 
@@ -650,17 +662,17 @@ wi = 0.1<span class="org-type">*</span>w0;
 And the following rotating speed.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">Giff = 1<span class="org-type">/</span>(((s<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2) <span class="org-type">+</span> 2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1 <span class="org-type">-</span> (W<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">^</span>2 <span class="org-type">+</span> (2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">^</span>2) <span class="org-type">*</span> ...
-        [(s<span class="org-type">^</span>2<span class="org-type">/</span>w0<span class="org-type">^</span>2 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0<span class="org-type">^</span>2)<span class="org-type">*</span>((s<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2) <span class="org-type">+</span> 2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1 <span class="org-type">-</span> (W<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2)) <span class="org-type">+</span> (2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">^</span>2, <span class="org-type">-</span> (2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1)<span class="org-type">*</span>2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2) ; ...
-         (2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1)<span class="org-type">*</span>2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2), (s<span class="org-type">^</span>2<span class="org-type">/</span>w0<span class="org-type">^</span>2 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0<span class="org-type">^</span>2)<span class="org-type">*</span>((s<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2) <span class="org-type">+</span> 2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1 <span class="org-type">-</span> (W<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">+</span> (2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">^</span>2];
+<pre class="src src-matlab">  Giff = 1<span class="org-type">/</span>(((s<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2) <span class="org-type">+</span> 2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1 <span class="org-type">-</span> (W<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">^</span>2 <span class="org-type">+</span> (2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">^</span>2) <span class="org-type">*</span> ...
+          [(s<span class="org-type">^</span>2<span class="org-type">/</span>w0<span class="org-type">^</span>2 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0<span class="org-type">^</span>2)<span class="org-type">*</span>((s<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2) <span class="org-type">+</span> 2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1 <span class="org-type">-</span> (W<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2)) <span class="org-type">+</span> (2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">^</span>2, <span class="org-type">-</span> (2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1)<span class="org-type">*</span>2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2) ; ...
+           (2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1)<span class="org-type">*</span>2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2), (s<span class="org-type">^</span>2<span class="org-type">/</span>w0<span class="org-type">^</span>2 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0<span class="org-type">^</span>2)<span class="org-type">*</span>((s<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2) <span class="org-type">+</span> 2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1 <span class="org-type">-</span> (W<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">+</span> (2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">^</span>2];
 </pre>
 </div>
 
 <p>
-The obtained Loop Gain is shown in Figure <a href="#org30acdfb">11</a>.
+The obtained Loop Gain is shown in Figure <a href="#org2511f91">11</a>.
 </p>
 
-<div id="org30acdfb" class="figure">
+<div id="org2511f91" class="figure">
 <p><img src="figs/loop_gain_modified_iff.png" alt="loop_gain_modified_iff.png" />
 </p>
 <p><span class="figure-number">Figure 11: </span>Loop Gain for the modified IFF controller</p>
@@ -668,22 +680,22 @@ The obtained Loop Gain is shown in Figure <a href="#org30acdfb">11</a>.
 </div>
 </div>
 
-<div id="outline-container-org38695fe" class="outline-3">
-<h3 id="org38695fe"><span class="section-number-3">3.3</span> Root Locus</h3>
+<div id="outline-container-org1fe7230" class="outline-3">
+<h3 id="org1fe7230"><span class="section-number-3">3.3</span> Root Locus</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
-As shown in the Root Locus plot (Figure <a href="#org8fd08f7">12</a>), for some value of the gain, the system remains stable.
+As shown in the Root Locus plot (Figure <a href="#org65c72ad">12</a>), for some value of the gain, the system remains stable.
 </p>
 
 
-<div id="org8fd08f7" class="figure">
+<div id="org65c72ad" class="figure">
 <p><img src="figs/root_locus_modified_iff.png" alt="root_locus_modified_iff.png" />
 </p>
 <p><span class="figure-number">Figure 12: </span>Root Locus for the modified IFF controller</p>
 </div>
 
 
-<div id="org6bf833a" class="figure">
+<div id="orgd6abc3e" class="figure">
 <p><img src="figs/root_locus_modified_iff_zoom.png" alt="root_locus_modified_iff_zoom.png" />
 </p>
 <p><span class="figure-number">Figure 13: </span>Root Locus for the modified IFF controller - Zoom</p>
@@ -691,26 +703,26 @@ As shown in the Root Locus plot (Figure <a href="#org8fd08f7">12</a>), for some 
 </div>
 </div>
 
-<div id="outline-container-org60aa70e" class="outline-3">
-<h3 id="org60aa70e"><span class="section-number-3">3.4</span> What is the optimal \(\omega_i\) and \(g\)?</h3>
+<div id="outline-container-orgbe65c44" class="outline-3">
+<h3 id="orgbe65c44"><span class="section-number-3">3.4</span> What is the optimal \(\omega_i\) and \(g\)?</h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
-In order to visualize the effect of \(\omega_i\) on the attainable damping, the Root Locus is displayed in Figure <a href="#orgc07662f">14</a> for the following \(\omega_i\):
+In order to visualize the effect of \(\omega_i\) on the attainable damping, the Root Locus is displayed in Figure <a href="#org7f8fd53">14</a> for the following \(\omega_i\):
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">wis = [0.01, 0.1, 0.5, 1]<span class="org-type">*</span>w0; <span class="org-comment">% [rad/s]</span>
+<pre class="src src-matlab">  wis = [0.01, 0.1, 0.5, 1]<span class="org-type">*</span>w0; <span class="org-comment">% [rad/s]</span>
 </pre>
 </div>
 
 
-<div id="orgc07662f" class="figure">
+<div id="org7f8fd53" class="figure">
 <p><img src="figs/root_locus_wi_modified_iff.png" alt="root_locus_wi_modified_iff.png" />
 </p>
 <p><span class="figure-number">Figure 14: </span>Root Locus for the modified IFF controller (zoomed plot on the left)</p>
 </div>
 
 
-<div id="org9068d66" class="figure">
+<div id="org7fe57c8" class="figure">
 <p><img src="figs/root_locus_wi_modified_iff_zoom.png" alt="root_locus_wi_modified_iff_zoom.png" />
 </p>
 <p><span class="figure-number">Figure 15: </span>Root Locus for the modified IFF controller (zoomed plot on the left)</p>
@@ -733,35 +745,35 @@ The gain at which the system becomes unstable is
 \end{equation}
 
 <p>
-While it seems that small \(\omega_i\) do allow more damping to be added to the system (Figure <a href="#orgc07662f">14</a>), the control gains may be limited to small values due to \eqref{eq:iff_gmax} thus reducing the attainable damping.
+While it seems that small \(\omega_i\) do allow more damping to be added to the system (Figure <a href="#org7f8fd53">14</a>), the control gains may be limited to small values due to \eqref{eq:iff_gmax} thus reducing the attainable damping.
 </p>
 
 <p>
 There must be an optimum for \(\omega_i\).
-To find the optimum, the gain that maximize the simultaneous damping of the mode is identified for a wide range of \(\omega_i\) (Figure <a href="#org609eb89">16</a>).
+To find the optimum, the gain that maximize the simultaneous damping of the mode is identified for a wide range of \(\omega_i\) (Figure <a href="#org5abda38">16</a>).
 </p>
 
 <div class="org-src-container">
-<pre class="src src-matlab">wis = logspace(<span class="org-type">-</span>2, 1, 100)<span class="org-type">*</span>w0; <span class="org-comment">% [rad/s]</span>
+<pre class="src src-matlab">  wis = logspace(<span class="org-type">-</span>2, 1, 100)<span class="org-type">*</span>w0; <span class="org-comment">% [rad/s]</span>
 
-opt_xi = zeros(1, length(wis)); <span class="org-comment">% Optimal simultaneous damping</span>
-opt_gain = zeros(1, length(wis)); <span class="org-comment">% Corresponding optimal gain</span>
+  opt_xi = zeros(1, length(wis)); <span class="org-comment">% Optimal simultaneous damping</span>
+  opt_gain = zeros(1, length(wis)); <span class="org-comment">% Corresponding optimal gain</span>
 
-<span class="org-keyword">for</span> <span class="org-variable-name">wi_i</span> = <span class="org-constant">1:length(wis)</span>
-    wi = wis(wi_i);
-    Kiff = 1<span class="org-type">/</span>(s <span class="org-type">+</span> wi)<span class="org-type">*</span>eye(2);
+  <span class="org-keyword">for</span> <span class="org-variable-name">wi_i</span> = <span class="org-constant">1:length(wis)</span>
+      wi = wis(wi_i);
+      Kiff = 1<span class="org-type">/</span>(s <span class="org-type">+</span> wi)<span class="org-type">*</span>eye(2);
 
-    fun = @(g)computeSimultaneousDamping(g, Giff, Kiff);
+      fun = @(g)computeSimultaneousDamping(g, Giff, Kiff);
 
-    [g_opt, xi_opt] = fminsearch(fun, 0.5<span class="org-type">*</span>wi<span class="org-type">*</span>((w0<span class="org-type">/</span>W)<span class="org-type">^</span>2 <span class="org-type">-</span> 1));
-    opt_xi(wi_i) = 1<span class="org-type">/</span>xi_opt;
-    opt_gain(wi_i) = g_opt;
-<span class="org-keyword">end</span>
+      [g_opt, xi_opt] = fminsearch(fun, 0.5<span class="org-type">*</span>wi<span class="org-type">*</span>((w0<span class="org-type">/</span>W)<span class="org-type">^</span>2 <span class="org-type">-</span> 1));
+      opt_xi(wi_i) = 1<span class="org-type">/</span>xi_opt;
+      opt_gain(wi_i) = g_opt;
+  <span class="org-keyword">end</span>
 </pre>
 </div>
 
 
-<div id="org609eb89" class="figure">
+<div id="org5abda38" class="figure">
 <p><img src="figs/mod_iff_damping_wi.png" alt="mod_iff_damping_wi.png" />
 </p>
 <p><span class="figure-number">Figure 16: </span>Simultaneous attainable damping of the closed loop poles as a function of \(\omega_i\)</p>
@@ -770,23 +782,23 @@ opt_gain = zeros(1, length(wis)); <span class="org-comment">% Corresponding opti
 </div>
 </div>
 
-<div id="outline-container-orgdb918b6" class="outline-2">
-<h2 id="orgdb918b6"><span class="section-number-2">4</span> IFF with a stiffness in parallel with the force sensor</h2>
+<div id="outline-container-orgd7e3817" class="outline-2">
+<h2 id="orgd7e3817"><span class="section-number-2">4</span> IFF with a stiffness in parallel with the force sensor</h2>
 <div class="outline-text-2" id="text-4">
 <p>
-<a id="org63d6e2c"></a>
+<a id="orgb35716d"></a>
 </p>
 </div>
 
-<div id="outline-container-orgad442be" class="outline-3">
-<h3 id="orgad442be"><span class="section-number-3">4.1</span> Schematic</h3>
+<div id="outline-container-org84e074b" class="outline-3">
+<h3 id="org84e074b"><span class="section-number-3">4.1</span> Schematic</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 In this section additional springs in parallel with the force sensors are added to counteract the negative stiffness induced by the rotation.
 </p>
 
 
-<div id="org13edf46" class="figure">
+<div id="orge3677aa" class="figure">
 <p><img src="figs-paper/system_parallel_springs.png" alt="system_parallel_springs.png" />
 </p>
 <p><span class="figure-number">Figure 17: </span>Studied system with additional springs in parallel with the actuators and force sensors</p>
@@ -801,10 +813,10 @@ In order to keep the overall stiffness \(k = k_a + k_p\) constant, a scalar para
 </div>
 </div>
 
-<div id="outline-container-orgeaf20e9" class="outline-3">
-<h3 id="orgeaf20e9"><span class="section-number-3">4.2</span> Equations</h3>
+<div id="outline-container-orgafb020a" class="outline-3">
+<h3 id="orgafb020a"><span class="section-number-3">4.2</span> Equations</h3>
 <div class="outline-text-3" id="text-4-2">
-<div class="important" id="org6c89777">
+<div class="important" id="org5c8ee21">
 \begin{equation}
 \begin{bmatrix} f_u \\ f_v \end{bmatrix} =
 \bm{G}_k
@@ -841,77 +853,77 @@ In order to have two complex conjugate zeros (instead of real zeros):
 </div>
 </div>
 
-<div id="outline-container-org754aa7c" class="outline-3">
-<h3 id="org754aa7c"><span class="section-number-3">4.3</span> Plant Parameters</h3>
+<div id="outline-container-org218ccb0" class="outline-3">
+<h3 id="org218ccb0"><span class="section-number-3">4.3</span> Plant Parameters</h3>
 <div class="outline-text-3" id="text-4-3">
 <p>
 Let&rsquo;s define initial values for the model.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">k = 1;    <span class="org-comment">% Actuator Stiffness [N/m]</span>
-c = 0.05; <span class="org-comment">% Actuator Damping [N/(m/s)]</span>
-m = 1;    <span class="org-comment">% Payload mass [kg]</span>
+<pre class="src src-matlab">  k = 1;    <span class="org-comment">% Actuator Stiffness [N/m]</span>
+  c = 0.05; <span class="org-comment">% Actuator Damping [N/(m/s)]</span>
+  m = 1;    <span class="org-comment">% Payload mass [kg]</span>
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab">xi = c<span class="org-type">/</span>(2<span class="org-type">*</span>sqrt(k<span class="org-type">*</span>m));
-w0 = sqrt(k<span class="org-type">/</span>m); <span class="org-comment">% [rad/s]</span>
+<pre class="src src-matlab">  xi = c<span class="org-type">/</span>(2<span class="org-type">*</span>sqrt(k<span class="org-type">*</span>m));
+  w0 = sqrt(k<span class="org-type">/</span>m); <span class="org-comment">% [rad/s]</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org09dcf36" class="outline-3">
-<h3 id="org09dcf36"><span class="section-number-3">4.4</span> Comparison of the Analytical Model and the Simscape Model</h3>
+<div id="outline-container-org92b8dc6" class="outline-3">
+<h3 id="org92b8dc6"><span class="section-number-3">4.4</span> Comparison of the Analytical Model and the Simscape Model</h3>
 <div class="outline-text-3" id="text-4-4">
 <p>
 The same transfer function from \([F_u, F_v]\) to \([f_u, f_v]\) is written down from the analytical model.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">W = 0.1<span class="org-type">*</span>w0; <span class="org-comment">% [rad/s]</span>
+<pre class="src src-matlab">  W = 0.1<span class="org-type">*</span>w0; <span class="org-comment">% [rad/s]</span>
 
-kp = 1.5<span class="org-type">*</span>m<span class="org-type">*</span>W<span class="org-type">^</span>2;
-cp = 0;
+  kp = 1.5<span class="org-type">*</span>m<span class="org-type">*</span>W<span class="org-type">^</span>2;
+  cp = 0;
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab">open(<span class="org-string">'rotating_frame.slx'</span>);
+<pre class="src src-matlab">  open(<span class="org-string">'rotating_frame.slx'</span>);
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Name of the Simulink File</span></span>
-mdl = <span class="org-string">'rotating_frame'</span>;
+<pre class="src src-matlab">  <span class="org-matlab-cellbreak"><span class="org-comment">%% Name of the Simulink File</span></span>
+  mdl = <span class="org-string">'rotating_frame'</span>;
 
-<span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
-clear io; io_i = 1;
-io(io_i) = linio([mdl, <span class="org-string">'/K'</span>], 1, <span class="org-string">'openinput'</span>);  io_i = io_i <span class="org-type">+</span> 1;
-io(io_i) = linio([mdl, <span class="org-string">'/G'</span>], 1, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1;
+  <span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, <span class="org-string">'/K'</span>], 1, <span class="org-string">'openinput'</span>);  io_i = io_i <span class="org-type">+</span> 1;
+  io(io_i) = linio([mdl, <span class="org-string">'/G'</span>], 1, <span class="org-string">'openoutput'</span>); io_i = io_i <span class="org-type">+</span> 1;
 
-Giff = linearize(mdl, io, 0);
+  Giff = linearize(mdl, io, 0);
 
-<span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
-Giff.InputName  = {<span class="org-string">'Fu'</span>, <span class="org-string">'Fv'</span>};
-Giff.OutputName = {<span class="org-string">'fu'</span>, <span class="org-string">'fv'</span>};
+  <span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
+  Giff.InputName  = {<span class="org-string">'Fu'</span>, <span class="org-string">'Fv'</span>};
+  Giff.OutputName = {<span class="org-string">'fu'</span>, <span class="org-string">'fv'</span>};
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab">w0p = sqrt((k <span class="org-type">+</span> kp)<span class="org-type">/</span>m);
-xip = c<span class="org-type">/</span>(2<span class="org-type">*</span>sqrt((k<span class="org-type">+</span>kp)<span class="org-type">*</span>m));
+<pre class="src src-matlab">  w0p = sqrt((k <span class="org-type">+</span> kp)<span class="org-type">/</span>m);
+  xip = c<span class="org-type">/</span>(2<span class="org-type">*</span>sqrt((k<span class="org-type">+</span>kp)<span class="org-type">*</span>m));
 
-Giff_th = 1<span class="org-type">/</span>( (s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> 2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> 1 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2)<span class="org-type">^</span>2 <span class="org-type">+</span> (2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p))<span class="org-type">^</span>2 ) <span class="org-type">*</span> [ ...
-                   (s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> kp<span class="org-type">/</span>(k <span class="org-type">+</span> kp) <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2)<span class="org-type">*</span>(s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> 2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> 1 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2) <span class="org-type">+</span> (2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p))<span class="org-type">^</span>2, <span class="org-type">-</span>(2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> k<span class="org-type">/</span>(k <span class="org-type">+</span> kp))<span class="org-type">*</span>(2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p));
-                   (2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> k<span class="org-type">/</span>(k <span class="org-type">+</span> kp))<span class="org-type">*</span>(2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p)), (s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> kp<span class="org-type">/</span>(k <span class="org-type">+</span> kp) <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2)<span class="org-type">*</span>(s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> 2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> 1 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2) <span class="org-type">+</span> (2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p))<span class="org-type">^</span>2 ];
-Giff_th.InputName  = {<span class="org-string">'Fu'</span>, <span class="org-string">'Fv'</span>};
-Giff_th.OutputName = {<span class="org-string">'fu'</span>, <span class="org-string">'fv'</span>};
+  Giff_th = 1<span class="org-type">/</span>( (s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> 2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> 1 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2)<span class="org-type">^</span>2 <span class="org-type">+</span> (2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p))<span class="org-type">^</span>2 ) <span class="org-type">*</span> [ ...
+                     (s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> kp<span class="org-type">/</span>(k <span class="org-type">+</span> kp) <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2)<span class="org-type">*</span>(s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> 2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> 1 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2) <span class="org-type">+</span> (2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p))<span class="org-type">^</span>2, <span class="org-type">-</span>(2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> k<span class="org-type">/</span>(k <span class="org-type">+</span> kp))<span class="org-type">*</span>(2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p));
+                     (2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> k<span class="org-type">/</span>(k <span class="org-type">+</span> kp))<span class="org-type">*</span>(2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p)), (s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> kp<span class="org-type">/</span>(k <span class="org-type">+</span> kp) <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2)<span class="org-type">*</span>(s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> 2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> 1 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2) <span class="org-type">+</span> (2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p))<span class="org-type">^</span>2 ];
+  Giff_th.InputName  = {<span class="org-string">'Fu'</span>, <span class="org-string">'Fv'</span>};
+  Giff_th.OutputName = {<span class="org-string">'fu'</span>, <span class="org-string">'fv'</span>};
 </pre>
 </div>
 
 
-<div id="org87b6263" class="figure">
+<div id="orge74dc78" class="figure">
 <p><img src="figs/plant_iff_kp_comp_simscape_analytical.png" alt="plant_iff_kp_comp_simscape_analytical.png" />
 </p>
 <p><span class="figure-number">Figure 18: </span>Comparison of the transfer functions from \([F_u, F_v]\) to \([f_u, f_v]\) between the Simscape model and the analytical one</p>
@@ -919,14 +931,14 @@ Giff_th.OutputName = {<span class="org-string">'fu'</span>, <span class="org-str
 </div>
 </div>
 
-<div id="outline-container-orga083ad0" class="outline-3">
-<h3 id="orga083ad0"><span class="section-number-3">4.5</span> Effect of the parallel stiffness on the IFF plant</h3>
+<div id="outline-container-orgffb6014" class="outline-3">
+<h3 id="orgffb6014"><span class="section-number-3">4.5</span> Effect of the parallel stiffness on the IFF plant</h3>
 <div class="outline-text-3" id="text-4-5">
 <p>
 The rotation speed is set to \(\Omega = 0.1 \omega_0\).
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">W = 0.1<span class="org-type">*</span>w0; <span class="org-comment">% [rad/s]</span>
+<pre class="src src-matlab">  W = 0.1<span class="org-type">*</span>w0; <span class="org-comment">% [rad/s]</span>
 </pre>
 </div>
 
@@ -940,7 +952,7 @@ And the IFF plant (transfer function from \([F_u, F_v]\) to \([f_u, f_v]\)) is i
 </ul>
 
 <p>
-The results are shown in Figure <a href="#org6ecd303">19</a>.
+The results are shown in Figure <a href="#org30a4559">19</a>.
 </p>
 
 <p>
@@ -948,45 +960,45 @@ One can see that for \(k_p > m \Omega^2\), the systems shows alternating complex
 </p>
 
 <div class="org-src-container">
-<pre class="src src-matlab">kp = 0;
+<pre class="src src-matlab">  kp = 0;
 
-w0p = sqrt((k <span class="org-type">+</span> kp)<span class="org-type">/</span>m);
-xip = c<span class="org-type">/</span>(2<span class="org-type">*</span>sqrt((k<span class="org-type">+</span>kp)<span class="org-type">*</span>m));
+  w0p = sqrt((k <span class="org-type">+</span> kp)<span class="org-type">/</span>m);
+  xip = c<span class="org-type">/</span>(2<span class="org-type">*</span>sqrt((k<span class="org-type">+</span>kp)<span class="org-type">*</span>m));
 
-Giff = 1<span class="org-type">/</span>( (s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> 2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> 1 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2)<span class="org-type">^</span>2 <span class="org-type">+</span> (2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p))<span class="org-type">^</span>2 ) <span class="org-type">*</span> [ ...
-    (s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> kp<span class="org-type">/</span>(k <span class="org-type">+</span> kp) <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2)<span class="org-type">*</span>(s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> 2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> 1 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2) <span class="org-type">+</span> (2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p))<span class="org-type">^</span>2, <span class="org-type">-</span>(2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> k<span class="org-type">/</span>(k <span class="org-type">+</span> kp))<span class="org-type">*</span>(2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p));
-    (2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> k<span class="org-type">/</span>(k <span class="org-type">+</span> kp))<span class="org-type">*</span>(2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p)), (s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> kp<span class="org-type">/</span>(k <span class="org-type">+</span> kp) <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2)<span class="org-type">*</span>(s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> 2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> 1 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2) <span class="org-type">+</span> (2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p))<span class="org-type">^</span>2];
+  Giff = 1<span class="org-type">/</span>( (s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> 2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> 1 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2)<span class="org-type">^</span>2 <span class="org-type">+</span> (2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p))<span class="org-type">^</span>2 ) <span class="org-type">*</span> [ ...
+      (s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> kp<span class="org-type">/</span>(k <span class="org-type">+</span> kp) <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2)<span class="org-type">*</span>(s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> 2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> 1 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2) <span class="org-type">+</span> (2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p))<span class="org-type">^</span>2, <span class="org-type">-</span>(2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> k<span class="org-type">/</span>(k <span class="org-type">+</span> kp))<span class="org-type">*</span>(2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p));
+      (2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> k<span class="org-type">/</span>(k <span class="org-type">+</span> kp))<span class="org-type">*</span>(2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p)), (s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> kp<span class="org-type">/</span>(k <span class="org-type">+</span> kp) <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2)<span class="org-type">*</span>(s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> 2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> 1 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2) <span class="org-type">+</span> (2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p))<span class="org-type">^</span>2];
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab">kp = 0.5<span class="org-type">*</span>m<span class="org-type">*</span>W<span class="org-type">^</span>2;
-k = 1 <span class="org-type">-</span> kp;
+<pre class="src src-matlab">  kp = 0.5<span class="org-type">*</span>m<span class="org-type">*</span>W<span class="org-type">^</span>2;
+  k = 1 <span class="org-type">-</span> kp;
 
-w0p = sqrt((k <span class="org-type">+</span> kp)<span class="org-type">/</span>m);
-xip = c<span class="org-type">/</span>(2<span class="org-type">*</span>sqrt((k<span class="org-type">+</span>kp)<span class="org-type">*</span>m));
+  w0p = sqrt((k <span class="org-type">+</span> kp)<span class="org-type">/</span>m);
+  xip = c<span class="org-type">/</span>(2<span class="org-type">*</span>sqrt((k<span class="org-type">+</span>kp)<span class="org-type">*</span>m));
 
-Giff_s = 1<span class="org-type">/</span>( (s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> 2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> 1 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2)<span class="org-type">^</span>2 <span class="org-type">+</span> (2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p))<span class="org-type">^</span>2 ) <span class="org-type">*</span> [ ...
-    (s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> kp<span class="org-type">/</span>(k <span class="org-type">+</span> kp) <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2)<span class="org-type">*</span>(s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> 2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> 1 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2) <span class="org-type">+</span> (2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p))<span class="org-type">^</span>2, <span class="org-type">-</span>(2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> k<span class="org-type">/</span>(k <span class="org-type">+</span> kp))<span class="org-type">*</span>(2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p));
-    (2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> k<span class="org-type">/</span>(k <span class="org-type">+</span> kp))<span class="org-type">*</span>(2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p)), (s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> kp<span class="org-type">/</span>(k <span class="org-type">+</span> kp) <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2)<span class="org-type">*</span>(s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> 2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> 1 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2) <span class="org-type">+</span> (2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p))<span class="org-type">^</span>2];
+  Giff_s = 1<span class="org-type">/</span>( (s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> 2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> 1 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2)<span class="org-type">^</span>2 <span class="org-type">+</span> (2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p))<span class="org-type">^</span>2 ) <span class="org-type">*</span> [ ...
+      (s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> kp<span class="org-type">/</span>(k <span class="org-type">+</span> kp) <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2)<span class="org-type">*</span>(s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> 2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> 1 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2) <span class="org-type">+</span> (2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p))<span class="org-type">^</span>2, <span class="org-type">-</span>(2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> k<span class="org-type">/</span>(k <span class="org-type">+</span> kp))<span class="org-type">*</span>(2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p));
+      (2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> k<span class="org-type">/</span>(k <span class="org-type">+</span> kp))<span class="org-type">*</span>(2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p)), (s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> kp<span class="org-type">/</span>(k <span class="org-type">+</span> kp) <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2)<span class="org-type">*</span>(s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> 2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> 1 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2) <span class="org-type">+</span> (2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p))<span class="org-type">^</span>2];
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab">kp = 1.5<span class="org-type">*</span>m<span class="org-type">*</span>W<span class="org-type">^</span>2;
-k = 1 <span class="org-type">-</span> kp;
+<pre class="src src-matlab">  kp = 1.5<span class="org-type">*</span>m<span class="org-type">*</span>W<span class="org-type">^</span>2;
+  k = 1 <span class="org-type">-</span> kp;
 
-w0p = sqrt((k <span class="org-type">+</span> kp)<span class="org-type">/</span>m);
-xip = c<span class="org-type">/</span>(2<span class="org-type">*</span>sqrt((k<span class="org-type">+</span>kp)<span class="org-type">*</span>m));
+  w0p = sqrt((k <span class="org-type">+</span> kp)<span class="org-type">/</span>m);
+  xip = c<span class="org-type">/</span>(2<span class="org-type">*</span>sqrt((k<span class="org-type">+</span>kp)<span class="org-type">*</span>m));
 
-Giff_l = 1<span class="org-type">/</span>( (s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> 2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> 1 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2)<span class="org-type">^</span>2 <span class="org-type">+</span> (2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p))<span class="org-type">^</span>2 ) <span class="org-type">*</span> [ ...
-    (s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> kp<span class="org-type">/</span>(k <span class="org-type">+</span> kp) <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2)<span class="org-type">*</span>(s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> 2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> 1 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2) <span class="org-type">+</span> (2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p))<span class="org-type">^</span>2, <span class="org-type">-</span>(2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> k<span class="org-type">/</span>(k <span class="org-type">+</span> kp))<span class="org-type">*</span>(2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p));
-    (2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> k<span class="org-type">/</span>(k <span class="org-type">+</span> kp))<span class="org-type">*</span>(2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p)), (s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> kp<span class="org-type">/</span>(k <span class="org-type">+</span> kp) <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2)<span class="org-type">*</span>(s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> 2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> 1 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2) <span class="org-type">+</span> (2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p))<span class="org-type">^</span>2];
+  Giff_l = 1<span class="org-type">/</span>( (s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> 2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> 1 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2)<span class="org-type">^</span>2 <span class="org-type">+</span> (2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p))<span class="org-type">^</span>2 ) <span class="org-type">*</span> [ ...
+      (s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> kp<span class="org-type">/</span>(k <span class="org-type">+</span> kp) <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2)<span class="org-type">*</span>(s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> 2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> 1 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2) <span class="org-type">+</span> (2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p))<span class="org-type">^</span>2, <span class="org-type">-</span>(2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> k<span class="org-type">/</span>(k <span class="org-type">+</span> kp))<span class="org-type">*</span>(2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p));
+      (2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> k<span class="org-type">/</span>(k <span class="org-type">+</span> kp))<span class="org-type">*</span>(2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p)), (s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> kp<span class="org-type">/</span>(k <span class="org-type">+</span> kp) <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2)<span class="org-type">*</span>(s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> 2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> 1 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2) <span class="org-type">+</span> (2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p))<span class="org-type">^</span>2];
 </pre>
 </div>
 
 
-<div id="org6ecd303" class="figure">
+<div id="org30a4559" class="figure">
 <p><img src="figs/plant_iff_kp.png" alt="plant_iff_kp.png" />
 </p>
 <p><span class="figure-number">Figure 19: </span>Transfer function from \([F_u, F_v]\) to \([f_u, f_v]\) for \(k_p = 0\), \(k_p < m \Omega^2\) and \(k_p > m \Omega^2\)</p>
@@ -994,11 +1006,11 @@ Giff_l = 1<span class="org-type">/</span>( (s<span class="org-type">^</span>2<sp
 </div>
 </div>
 
-<div id="outline-container-org9a801a8" class="outline-3">
-<h3 id="org9a801a8"><span class="section-number-3">4.6</span> IFF when adding a spring in parallel</h3>
+<div id="outline-container-orgccd60cd" class="outline-3">
+<h3 id="orgccd60cd"><span class="section-number-3">4.6</span> IFF when adding a spring in parallel</h3>
 <div class="outline-text-3" id="text-4-6">
 <p>
-In Figure <a href="#org1f55ab2">20</a> is displayed the Root Locus in the three considered cases with
+In Figure <a href="#org6cd3905">20</a> is displayed the Root Locus in the three considered cases with
 </p>
 \begin{equation}
   K_{\text{IFF}} = \frac{g}{s} \begin{bmatrix}
@@ -1019,14 +1031,14 @@ Thus, decentralized IFF controller with pure integrators can be used if:
 \end{equation}
 
 
-<div id="org1f55ab2" class="figure">
+<div id="org6cd3905" class="figure">
 <p><img src="figs/root_locus_iff_kp.png" alt="root_locus_iff_kp.png" />
 </p>
 <p><span class="figure-number">Figure 20: </span>Root Locus</p>
 </div>
 
 
-<div id="orgf23aef5" class="figure">
+<div id="org79a6aef" class="figure">
 <p><img src="figs/root_locus_iff_kp_zoom.png" alt="root_locus_iff_kp_zoom.png" />
 </p>
 <p><span class="figure-number">Figure 21: </span>Root Locus</p>
@@ -1034,18 +1046,18 @@ Thus, decentralized IFF controller with pure integrators can be used if:
 </div>
 </div>
 
-<div id="outline-container-org43bf919" class="outline-3">
-<h3 id="org43bf919"><span class="section-number-3">4.7</span> Effect of \(k_p\) on the attainable damping</h3>
+<div id="outline-container-org62a8e82" class="outline-3">
+<h3 id="org62a8e82"><span class="section-number-3">4.7</span> Effect of \(k_p\) on the attainable damping</h3>
 <div class="outline-text-3" id="text-4-7">
 <p>
 However, having large values of \(k_p\) may decrease the attainable damping.
 </p>
 
 <p>
-To study the second point, Root Locus plots for the following values of \(k_p\) are shown in Figure <a href="#org49df006">22</a>.
+To study the second point, Root Locus plots for the following values of \(k_p\) are shown in Figure <a href="#orgfab2d58">22</a>.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">kps = [2, 20, 40]<span class="org-type">*</span>m<span class="org-type">*</span>W<span class="org-type">^</span>2;
+<pre class="src src-matlab">  kps = [2, 20, 40]<span class="org-type">*</span>m<span class="org-type">*</span>W<span class="org-type">^</span>2;
 </pre>
 </div>
 
@@ -1053,42 +1065,42 @@ To study the second point, Root Locus plots for the following values of \(k_p\) 
 It is shown that large values of \(k_p\) decreases the attainable damping.
 </p>
 
-<div id="org49df006" class="figure">
+<div id="orgfab2d58" class="figure">
 <p><img src="figs/root_locus_iff_kps.png" alt="root_locus_iff_kps.png" />
 </p>
 <p><span class="figure-number">Figure 22: </span>Root Locus plot</p>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab">alphas = logspace(<span class="org-type">-</span>2, 0, 100);
+<pre class="src src-matlab">  alphas = logspace(<span class="org-type">-</span>2, 0, 100);
 
-opt_xi = zeros(1, length(alphas)); <span class="org-comment">% Optimal simultaneous damping</span>
-opt_gain = zeros(1, length(alphas)); <span class="org-comment">% Corresponding optimal gain</span>
+  opt_xi = zeros(1, length(alphas)); <span class="org-comment">% Optimal simultaneous damping</span>
+  opt_gain = zeros(1, length(alphas)); <span class="org-comment">% Corresponding optimal gain</span>
 
-Kiff = 1<span class="org-type">/</span>s<span class="org-type">*</span>eye(2);
+  Kiff = 1<span class="org-type">/</span>s<span class="org-type">*</span>eye(2);
 
-<span class="org-keyword">for</span> <span class="org-variable-name">alpha_i</span> = <span class="org-constant">1:length(alphas)</span>
-    kp = alphas(alpha_i);
-    k = 1 <span class="org-type">-</span> alphas(alpha_i);
+  <span class="org-keyword">for</span> <span class="org-variable-name">alpha_i</span> = <span class="org-constant">1:length(alphas)</span>
+      kp = alphas(alpha_i);
+      k = 1 <span class="org-type">-</span> alphas(alpha_i);
 
-    w0p = sqrt((k <span class="org-type">+</span> kp)<span class="org-type">/</span>m);
-    xip = c<span class="org-type">/</span>(2<span class="org-type">*</span>sqrt((k<span class="org-type">+</span>kp)<span class="org-type">*</span>m));
+      w0p = sqrt((k <span class="org-type">+</span> kp)<span class="org-type">/</span>m);
+      xip = c<span class="org-type">/</span>(2<span class="org-type">*</span>sqrt((k<span class="org-type">+</span>kp)<span class="org-type">*</span>m));
 
-    Giff = 1<span class="org-type">/</span>( (s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> 2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> 1 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2)<span class="org-type">^</span>2 <span class="org-type">+</span> (2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p))<span class="org-type">^</span>2 ) <span class="org-type">*</span> [ ...
-        (s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> kp<span class="org-type">/</span>(k <span class="org-type">+</span> kp) <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2)<span class="org-type">*</span>(s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> 2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> 1 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2) <span class="org-type">+</span> (2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p))<span class="org-type">^</span>2, <span class="org-type">-</span>(2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> k<span class="org-type">/</span>(k <span class="org-type">+</span> kp))<span class="org-type">*</span>(2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p));
-        (2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> k<span class="org-type">/</span>(k <span class="org-type">+</span> kp))<span class="org-type">*</span>(2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p)), (s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> kp<span class="org-type">/</span>(k <span class="org-type">+</span> kp) <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2)<span class="org-type">*</span>(s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> 2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> 1 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2) <span class="org-type">+</span> (2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p))<span class="org-type">^</span>2];
+      Giff = 1<span class="org-type">/</span>( (s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> 2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> 1 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2)<span class="org-type">^</span>2 <span class="org-type">+</span> (2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p))<span class="org-type">^</span>2 ) <span class="org-type">*</span> [ ...
+          (s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> kp<span class="org-type">/</span>(k <span class="org-type">+</span> kp) <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2)<span class="org-type">*</span>(s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> 2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> 1 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2) <span class="org-type">+</span> (2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p))<span class="org-type">^</span>2, <span class="org-type">-</span>(2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> k<span class="org-type">/</span>(k <span class="org-type">+</span> kp))<span class="org-type">*</span>(2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p));
+          (2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> k<span class="org-type">/</span>(k <span class="org-type">+</span> kp))<span class="org-type">*</span>(2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p)), (s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> kp<span class="org-type">/</span>(k <span class="org-type">+</span> kp) <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2)<span class="org-type">*</span>(s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> 2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> 1 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2) <span class="org-type">+</span> (2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p))<span class="org-type">^</span>2];
 
-    fun = @(g)computeSimultaneousDamping(g, Giff, Kiff);
+      fun = @(g)computeSimultaneousDamping(g, Giff, Kiff);
 
-    [g_opt, xi_opt] = fminsearch(fun, 2);
-    opt_xi(alpha_i) = 1<span class="org-type">/</span>xi_opt;
-    opt_gain(alpha_i) = g_opt;
-<span class="org-keyword">end</span>
+      [g_opt, xi_opt] = fminsearch(fun, 2);
+      opt_xi(alpha_i) = 1<span class="org-type">/</span>xi_opt;
+      opt_gain(alpha_i) = g_opt;
+  <span class="org-keyword">end</span>
 </pre>
 </div>
 
 
-<div id="orgfa8828a" class="figure">
+<div id="org11fecca" class="figure">
 <p><img src="figs/opt_damp_alpha.png" alt="opt_damp_alpha.png" />
 </p>
 <p><span class="figure-number">Figure 23: </span>Attainable damping ratio and corresponding controller gain for different parameter \(\alpha\)</p>
@@ -1097,11 +1109,11 @@ Kiff = 1<span class="org-type">/</span>s<span class="org-type">*</span>eye(2);
 </div>
 </div>
 
-<div id="outline-container-org49b4648" class="outline-2">
-<h2 id="org49b4648"><span class="section-number-2">5</span> Comparison</h2>
+<div id="outline-container-org57a9404" class="outline-2">
+<h2 id="org57a9404"><span class="section-number-2">5</span> Comparison</h2>
 <div class="outline-text-2" id="text-5">
 <p>
-<a id="orgaede0ad"></a>
+<a id="org4387152"></a>
 </p>
 <p>
 Two modifications to adapt the IFF control strategy to rotating platforms have been proposed.
@@ -1109,22 +1121,22 @@ These two methods are now compared in terms of added damping, closed-loop compli
 </p>
 </div>
 
-<div id="outline-container-org49053ce" class="outline-3">
-<h3 id="org49053ce"><span class="section-number-3">5.1</span> Plant Parameters</h3>
+<div id="outline-container-org10a2ed1" class="outline-3">
+<h3 id="org10a2ed1"><span class="section-number-3">5.1</span> Plant Parameters</h3>
 <div class="outline-text-3" id="text-5-1">
 <p>
 Let&rsquo;s define initial values for the model.
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">k = 1;    <span class="org-comment">% Actuator Stiffness [N/m]</span>
-c = 0.05; <span class="org-comment">% Actuator Damping [N/(m/s)]</span>
-m = 1;    <span class="org-comment">% Payload mass [kg]</span>
+<pre class="src src-matlab">  k = 1;    <span class="org-comment">% Actuator Stiffness [N/m]</span>
+  c = 0.05; <span class="org-comment">% Actuator Damping [N/(m/s)]</span>
+  m = 1;    <span class="org-comment">% Payload mass [kg]</span>
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab">xi = c<span class="org-type">/</span>(2<span class="org-type">*</span>sqrt(k<span class="org-type">*</span>m));
-w0 = sqrt(k<span class="org-type">/</span>m); <span class="org-comment">% [rad/s]</span>
+<pre class="src src-matlab">  xi = c<span class="org-type">/</span>(2<span class="org-type">*</span>sqrt(k<span class="org-type">*</span>m));
+  w0 = sqrt(k<span class="org-type">/</span>m); <span class="org-comment">% [rad/s]</span>
 </pre>
 </div>
 
@@ -1132,24 +1144,24 @@ w0 = sqrt(k<span class="org-type">/</span>m); <span class="org-comment">% [rad/s
 The rotating speed is set to \(\Omega = 0.1 \omega_0\).
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">W = 0.1<span class="org-type">*</span>w0;
+<pre class="src src-matlab">  W = 0.1<span class="org-type">*</span>w0;
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgb7ee15d" class="outline-3">
-<h3 id="orgb7ee15d"><span class="section-number-3">5.2</span> Root Locus</h3>
+<div id="outline-container-orgc78a96c" class="outline-3">
+<h3 id="orgc78a96c"><span class="section-number-3">5.2</span> Root Locus</h3>
 <div class="outline-text-3" id="text-5-2">
 <p>
 IFF with High Pass Filter
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">wi = 0.1<span class="org-type">*</span>w0; <span class="org-comment">% [rad/s]</span>
+<pre class="src src-matlab">  wi = 0.1<span class="org-type">*</span>w0; <span class="org-comment">% [rad/s]</span>
 
-Giff = 1<span class="org-type">/</span>(((s<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2) <span class="org-type">+</span> 2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1 <span class="org-type">-</span> (W<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">^</span>2 <span class="org-type">+</span> (2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">^</span>2) <span class="org-type">*</span> ...
-        [(s<span class="org-type">^</span>2<span class="org-type">/</span>w0<span class="org-type">^</span>2 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0<span class="org-type">^</span>2)<span class="org-type">*</span>((s<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2) <span class="org-type">+</span> 2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1 <span class="org-type">-</span> (W<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2)) <span class="org-type">+</span> (2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">^</span>2, <span class="org-type">-</span> (2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1)<span class="org-type">*</span>2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2) ; ...
-         (2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1)<span class="org-type">*</span>2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2), (s<span class="org-type">^</span>2<span class="org-type">/</span>w0<span class="org-type">^</span>2 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0<span class="org-type">^</span>2)<span class="org-type">*</span>((s<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2) <span class="org-type">+</span> 2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1 <span class="org-type">-</span> (W<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">+</span> (2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">^</span>2];
+  Giff = 1<span class="org-type">/</span>(((s<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2) <span class="org-type">+</span> 2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1 <span class="org-type">-</span> (W<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">^</span>2 <span class="org-type">+</span> (2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">^</span>2) <span class="org-type">*</span> ...
+          [(s<span class="org-type">^</span>2<span class="org-type">/</span>w0<span class="org-type">^</span>2 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0<span class="org-type">^</span>2)<span class="org-type">*</span>((s<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2) <span class="org-type">+</span> 2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1 <span class="org-type">-</span> (W<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2)) <span class="org-type">+</span> (2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">^</span>2, <span class="org-type">-</span> (2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1)<span class="org-type">*</span>2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2) ; ...
+           (2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1)<span class="org-type">*</span>2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2), (s<span class="org-type">^</span>2<span class="org-type">/</span>w0<span class="org-type">^</span>2 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0<span class="org-type">^</span>2)<span class="org-type">*</span>((s<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2) <span class="org-type">+</span> 2<span class="org-type">*</span>xi<span class="org-type">*</span>s<span class="org-type">/</span>w0 <span class="org-type">+</span> 1 <span class="org-type">-</span> (W<span class="org-type">^</span>2)<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">+</span> (2<span class="org-type">*</span>W<span class="org-type">*</span>s<span class="org-type">/</span>(w0<span class="org-type">^</span>2))<span class="org-type">^</span>2];
 </pre>
 </div>
 
@@ -1157,22 +1169,22 @@ Giff = 1<span class="org-type">/</span>(((s<span class="org-type">^</span>2)<spa
 IFF With parallel Stiffness
 </p>
 <div class="org-src-container">
-<pre class="src src-matlab">kp = 5<span class="org-type">*</span>m<span class="org-type">*</span>W<span class="org-type">^</span>2;
-k = k <span class="org-type">-</span> kp;
+<pre class="src src-matlab">  kp = 5<span class="org-type">*</span>m<span class="org-type">*</span>W<span class="org-type">^</span>2;
+  k = k <span class="org-type">-</span> kp;
 
-w0p = sqrt((k <span class="org-type">+</span> kp)<span class="org-type">/</span>m);
-xip = c<span class="org-type">/</span>(2<span class="org-type">*</span>sqrt((k<span class="org-type">+</span>kp)<span class="org-type">*</span>m));
+  w0p = sqrt((k <span class="org-type">+</span> kp)<span class="org-type">/</span>m);
+  xip = c<span class="org-type">/</span>(2<span class="org-type">*</span>sqrt((k<span class="org-type">+</span>kp)<span class="org-type">*</span>m));
 
-Giff_kp = 1<span class="org-type">/</span>( (s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> 2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> 1 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2)<span class="org-type">^</span>2 <span class="org-type">+</span> (2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p))<span class="org-type">^</span>2 ) <span class="org-type">*</span> [ ...
-                   (s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> kp<span class="org-type">/</span>(k <span class="org-type">+</span> kp) <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2)<span class="org-type">*</span>(s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> 2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> 1 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2) <span class="org-type">+</span> (2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p))<span class="org-type">^</span>2, <span class="org-type">-</span>(2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> k<span class="org-type">/</span>(k <span class="org-type">+</span> kp))<span class="org-type">*</span>(2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p));
-                   (2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> k<span class="org-type">/</span>(k <span class="org-type">+</span> kp))<span class="org-type">*</span>(2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p)), (s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> kp<span class="org-type">/</span>(k <span class="org-type">+</span> kp) <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2)<span class="org-type">*</span>(s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> 2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> 1 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2) <span class="org-type">+</span> (2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p))<span class="org-type">^</span>2 ];
+  Giff_kp = 1<span class="org-type">/</span>( (s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> 2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> 1 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2)<span class="org-type">^</span>2 <span class="org-type">+</span> (2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p))<span class="org-type">^</span>2 ) <span class="org-type">*</span> [ ...
+                     (s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> kp<span class="org-type">/</span>(k <span class="org-type">+</span> kp) <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2)<span class="org-type">*</span>(s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> 2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> 1 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2) <span class="org-type">+</span> (2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p))<span class="org-type">^</span>2, <span class="org-type">-</span>(2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> k<span class="org-type">/</span>(k <span class="org-type">+</span> kp))<span class="org-type">*</span>(2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p));
+                     (2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> k<span class="org-type">/</span>(k <span class="org-type">+</span> kp))<span class="org-type">*</span>(2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p)), (s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> kp<span class="org-type">/</span>(k <span class="org-type">+</span> kp) <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2)<span class="org-type">*</span>(s<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2 <span class="org-type">+</span> 2<span class="org-type">*</span>xip<span class="org-type">*</span>s<span class="org-type">/</span>w0p <span class="org-type">+</span> 1 <span class="org-type">-</span> W<span class="org-type">^</span>2<span class="org-type">/</span>w0p<span class="org-type">^</span>2) <span class="org-type">+</span> (2<span class="org-type">*</span>(s<span class="org-type">/</span>w0p)<span class="org-type">*</span>(W<span class="org-type">/</span>w0p))<span class="org-type">^</span>2 ];
 
-k = k <span class="org-type">+</span> kp;
+  k = k <span class="org-type">+</span> kp;
 </pre>
 </div>
 
 
-<div id="orgda0a6de" class="figure">
+<div id="org75bbc2a" class="figure">
 <p><img src="figs/comp_root_locus.png" alt="comp_root_locus.png" />
 </p>
 <p><span class="figure-number">Figure 24: </span>Root Locus plot - Comparison of IFF with additional high pass filter, IFF with additional parallel stiffness</p>
@@ -1180,8 +1192,8 @@ k = k <span class="org-type">+</span> kp;
 </div>
 </div>
 
-<div id="outline-container-org410d42d" class="outline-3">
-<h3 id="org410d42d"><span class="section-number-3">5.3</span> Controllers - Optimal Gains</h3>
+<div id="outline-container-org2018523" class="outline-3">
+<h3 id="org2018523"><span class="section-number-3">5.3</span> Controllers - Optimal Gains</h3>
 <div class="outline-text-3" id="text-5-3">
 <p>
 In order to compare to three considered Active Damping techniques, gains that yield maximum damping of all the modes are computed for each case.
@@ -1225,8 +1237,8 @@ The obtained damping ratio and control are shown below.
 </div>
 </div>
 
-<div id="outline-container-orga369eef" class="outline-3">
-<h3 id="orga369eef"><span class="section-number-3">5.4</span> Passive Damping - Critical Damping</h3>
+<div id="outline-container-orgfe35652" class="outline-3">
+<h3 id="orgfe35652"><span class="section-number-3">5.4</span> Passive Damping - Critical Damping</h3>
 <div class="outline-text-3" id="text-5-4">
 \begin{equation}
   \xi = \frac{c}{2 \sqrt{km}}
@@ -1240,71 +1252,71 @@ Critical Damping corresponds to to \(\xi = 1\), and thus:
 \end{equation}
 
 <div class="org-src-container">
-<pre class="src src-matlab">c_opt = 2<span class="org-type">*</span>sqrt(k<span class="org-type">*</span>m);
+<pre class="src src-matlab">  c_opt = 2<span class="org-type">*</span>sqrt(k<span class="org-type">*</span>m);
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orga86e2e4" class="outline-3">
-<h3 id="orga86e2e4"><span class="section-number-3">5.5</span> Transmissibility And Compliance</h3>
+<div id="outline-container-org8aebf94" class="outline-3">
+<h3 id="org8aebf94"><span class="section-number-3">5.5</span> Transmissibility And Compliance</h3>
 <div class="outline-text-3" id="text-5-5">
 <p>
-<a id="orgd9d7966"></a>
+<a id="org6ee546c"></a>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-matlab">open(<span class="org-string">'rotating_frame.slx'</span>);
+<pre class="src src-matlab">  open(<span class="org-string">'rotating_frame.slx'</span>);
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab"><span class="org-matlab-cellbreak"><span class="org-comment">%% Name of the Simulink File</span></span>
-mdl = <span class="org-string">'rotating_frame'</span>;
+<pre class="src src-matlab">  <span class="org-matlab-cellbreak"><span class="org-comment">%% Name of the Simulink File</span></span>
+  mdl = <span class="org-string">'rotating_frame'</span>;
 
-<span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
-clear io; io_i = 1;
-io(io_i) = linio([mdl, <span class="org-string">'/dw'</span>], 1, <span class="org-string">'input'</span>);  io_i = io_i <span class="org-type">+</span> 1;
-io(io_i) = linio([mdl, <span class="org-string">'/fd'</span>], 1, <span class="org-string">'input'</span>);  io_i = io_i <span class="org-type">+</span> 1;
-io(io_i) = linio([mdl, <span class="org-string">'/Meas'</span>], 1, <span class="org-string">'output'</span>);  io_i = io_i <span class="org-type">+</span> 1;
+  <span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
+  clear io; io_i = 1;
+  io(io_i) = linio([mdl, <span class="org-string">'/dw'</span>], 1, <span class="org-string">'input'</span>);  io_i = io_i <span class="org-type">+</span> 1;
+  io(io_i) = linio([mdl, <span class="org-string">'/fd'</span>], 1, <span class="org-string">'input'</span>);  io_i = io_i <span class="org-type">+</span> 1;
+  io(io_i) = linio([mdl, <span class="org-string">'/Meas'</span>], 1, <span class="org-string">'output'</span>);  io_i = io_i <span class="org-type">+</span> 1;
 </pre>
 </div>
 <div class="org-src-container">
-<pre class="src src-matlab">G_ol = linearize(mdl, io, 0);
+<pre class="src src-matlab">  G_ol = linearize(mdl, io, 0);
 
-<span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
-G_ol.InputName  = {<span class="org-string">'Dwx'</span>, <span class="org-string">'Dwy'</span>, <span class="org-string">'Fdx'</span>, <span class="org-string">'Fdy'</span>};
-G_ol.OutputName = {<span class="org-string">'Dx'</span>, <span class="org-string">'Dy'</span>};
+  <span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
+  G_ol.InputName  = {<span class="org-string">'Dwx'</span>, <span class="org-string">'Dwy'</span>, <span class="org-string">'Fdx'</span>, <span class="org-string">'Fdy'</span>};
+  G_ol.OutputName = {<span class="org-string">'Dx'</span>, <span class="org-string">'Dy'</span>};
 </pre>
 </div>
 </div>
 
-<div id="outline-container-orga1f0122" class="outline-4">
-<h4 id="orga1f0122"><span class="section-number-4">5.5.1</span> Passive Damping</h4>
+<div id="outline-container-org53602c4" class="outline-4">
+<h4 id="org53602c4"><span class="section-number-4">5.5.1</span> Passive Damping</h4>
 <div class="outline-text-4" id="text-5-5-1">
 <div class="org-src-container">
-<pre class="src src-matlab">kp = 0;
-cp = 0;
+<pre class="src src-matlab">  kp = 0;
+  cp = 0;
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab">c_old = c;
-c = c_opt;
+<pre class="src src-matlab">  c_old = c;
+  c = c_opt;
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab">G_pas = linearize(mdl, io, 0);
+<pre class="src src-matlab">  G_pas = linearize(mdl, io, 0);
 
-<span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
-G_pas.InputName  = {<span class="org-string">'Dwx'</span>, <span class="org-string">'Dwy'</span>, <span class="org-string">'Fdx'</span>, <span class="org-string">'Fdy'</span>};
-G_pas.OutputName = {<span class="org-string">'Dx'</span>, <span class="org-string">'Dy'</span>};
+  <span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
+  G_pas.InputName  = {<span class="org-string">'Dwx'</span>, <span class="org-string">'Dwy'</span>, <span class="org-string">'Fdx'</span>, <span class="org-string">'Fdy'</span>};
+  G_pas.OutputName = {<span class="org-string">'Dx'</span>, <span class="org-string">'Dy'</span>};
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab">c = c_old;
+<pre class="src src-matlab">  c = c_old;
 </pre>
 </div>
 </div>
@@ -1312,45 +1324,45 @@ G_pas.OutputName = {<span class="org-string">'Dx'</span>, <span class="org-strin
 
 <div class="outline-text-3" id="text-5-5">
 <div class="org-src-container">
-<pre class="src src-matlab">Kiff = opt_gain_iff<span class="org-type">/</span>(wi <span class="org-type">+</span> s)<span class="org-type">*</span>tf(eye(2));
+<pre class="src src-matlab">  Kiff = opt_gain_iff<span class="org-type">/</span>(wi <span class="org-type">+</span> s)<span class="org-type">*</span>tf(eye(2));
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab">G_iff = linearize(mdl, io, 0);
+<pre class="src src-matlab">  G_iff = linearize(mdl, io, 0);
 
-<span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
-G_iff.InputName  = {<span class="org-string">'Dwx'</span>, <span class="org-string">'Dwy'</span>, <span class="org-string">'Fdx'</span>, <span class="org-string">'Fdy'</span>};
-G_iff.OutputName = {<span class="org-string">'Dx'</span>, <span class="org-string">'Dy'</span>};
+  <span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
+  G_iff.InputName  = {<span class="org-string">'Dwx'</span>, <span class="org-string">'Dwy'</span>, <span class="org-string">'Fdx'</span>, <span class="org-string">'Fdy'</span>};
+  G_iff.OutputName = {<span class="org-string">'Dx'</span>, <span class="org-string">'Dy'</span>};
 </pre>
 </div>
 </div>
 
 <div class="outline-text-3" id="text-5-5">
 <div class="org-src-container">
-<pre class="src src-matlab">kp = 5<span class="org-type">*</span>m<span class="org-type">*</span>W<span class="org-type">^</span>2;
-cp = 0.01;
+<pre class="src src-matlab">  kp = 5<span class="org-type">*</span>m<span class="org-type">*</span>W<span class="org-type">^</span>2;
+  cp = 0.01;
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab">Kiff = opt_gain_kp<span class="org-type">/</span>s<span class="org-type">*</span>tf(eye(2));
+<pre class="src src-matlab">  Kiff = opt_gain_kp<span class="org-type">/</span>s<span class="org-type">*</span>tf(eye(2));
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-matlab">G_kp = linearize(mdl, io, 0);
+<pre class="src src-matlab">  G_kp = linearize(mdl, io, 0);
 
-<span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
-G_kp.InputName  = {<span class="org-string">'Dwx'</span>, <span class="org-string">'Dwy'</span>, <span class="org-string">'Fdx'</span>, <span class="org-string">'Fdy'</span>};
-G_kp.OutputName = {<span class="org-string">'Dx'</span>, <span class="org-string">'Dy'</span>};
+  <span class="org-matlab-cellbreak"><span class="org-comment">%% Input/Output definition</span></span>
+  G_kp.InputName  = {<span class="org-string">'Dwx'</span>, <span class="org-string">'Dwy'</span>, <span class="org-string">'Fdx'</span>, <span class="org-string">'Fdy'</span>};
+  G_kp.OutputName = {<span class="org-string">'Dx'</span>, <span class="org-string">'Dy'</span>};
 </pre>
 </div>
 </div>
 
 <div class="outline-text-3" id="text-5-5">
 
-<div id="org5cf2c73" class="figure">
+<div id="orgb246369" class="figure">
 <p><img src="figs/comp_transmissibility.png" alt="comp_transmissibility.png" />
 </p>
 <p><span class="figure-number">Figure 25: </span>Comparison of the transmissibility</p>
@@ -1359,7 +1371,7 @@ G_kp.OutputName = {<span class="org-string">'Dx'</span>, <span class="org-string
 
 <div class="outline-text-3" id="text-5-5">
 
-<div id="orga885ca6" class="figure">
+<div id="org098f670" class="figure">
 <p><img src="figs/comp_compliance.png" alt="comp_compliance.png" />
 </p>
 <p><span class="figure-number">Figure 26: </span>Comparison of the obtained Compliance</p>
@@ -1368,11 +1380,11 @@ G_kp.OutputName = {<span class="org-string">'Dx'</span>, <span class="org-string
 </div>
 </div>
 
-<div id="outline-container-org5f907f2" class="outline-2">
-<h2 id="org5f907f2"><span class="section-number-2">6</span> Notations</h2>
+<div id="outline-container-org6c5b405" class="outline-2">
+<h2 id="org6c5b405"><span class="section-number-2">6</span> Notations</h2>
 <div class="outline-text-2" id="text-6">
 <p>
-<a id="org15fb531"></a>
+<a id="org19b2219"></a>
 </p>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
@@ -1514,19 +1526,16 @@ G_kp.OutputName = {<span class="org-string">'Dx'</span>, <span class="org-string
 </div>
 </div>
 
-<p>
-
-</p>
-
 <style>.csl-entry{text-indent: -1.5em; margin-left: 1.5em;}</style><h2 class='citeproc-org-bib-h2'>Bibliography</h2>
 <div class="csl-bib-body">
   <div class="csl-entry"><a name="citeproc_bib_item_1"></a>Dehaeze, T., and C. Collette. 2020. “Active Damping of Rotating Platforms Using Integral Force Feedback.” In <i>Proceedings of the International Conference on Modal Analysis Noise and Vibration Engineering (ISMA)</i>.</div>
   <div class="csl-entry"><a name="citeproc_bib_item_2"></a>Dehaeze, Thomas. 2020. “Active Damping of Rotating Positioning Platforms.” <a href="https://doi.org/10.5281/zenodo.3894342">https://doi.org/10.5281/zenodo.3894342</a>.</div>
+  <div class="csl-entry"><a name="citeproc_bib_item_3"></a>Dehaeze, Thomas, and Christophe Collette. 2021. “Active Damping of Rotating Platforms Using Integral Force Feedback.” <i>Engineering Research Express</i>. <a href="http://iopscience.iop.org/article/10.1088/2631-8695/abe803">http://iopscience.iop.org/article/10.1088/2631-8695/abe803</a>.</div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Thomas Dehaeze</p>
-<p class="date">Created: 2020-11-12 jeu. 10:40</p>
+<p class="date">Created: 2021-02-20 sam. 14:44</p>
 </div>
 </body>
 </html>
